@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SunTimeKids">
+<meta name="mobile-web-app-capable" content="yes">
+<title>SunTimeKids v2.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sun: #FFB800; --sun-deep: #FF8C00;
+    --sky: #5BC8F5; --sky-dark: #1A7AC4;
+    --grass: #4DC87A; --coral: #FF6060;
+    --ink: #1A2340; --soft: #7A8AAF;
+    --bg: #F0F7FF; --purple: #7C5CBF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #C8DFF5;
+    display: flex; justify-content: center; align-items: flex-start;
+    min-height: 100vh; padding: 20px;
+    margin: 0;
+  }
+  /* Full screen on real mobile, phone shell on desktop */
+  @media (max-width: 430px) {
+    body { padding: 0; background: var(--bg); align-items: stretch; }
+    .phone { width: 100% !important; min-height: 100vh !important; border-radius: 0 !important; box-shadow: none !important; }
+  }
+  .phone {
+    width: 390px; min-height: 844px;
+    background: var(--bg); border-radius: 48px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.25), 0 0 0 2px rgba(255,255,255,0.5) inset;
+    overflow: hidden; position: relative; display: flex; flex-direction: column;
+  }
+  .status-bar {
+    background: var(--sky-dark); padding: 12px 28px 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    color: white; font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+  }
+  .screen {
+    display: none; flex-direction: column; flex: 1;
+    overflow-y: auto; overflow-x: hidden; scrollbar-width: none;
+  }
+  .screen::-webkit-scrollbar { display: none; }
+  .screen.active { display: flex; animation: screen-in 0.25s ease-out; }
+  @keyframes screen-in { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
+
+/* –– SHARED COMPONENTS –– */
+.btn-primary {
+background: var(–sun); color: var(–ink); border: none; border-radius: 50px;
+padding: 16px 40px; font-family: ‘Nunito’,sans-serif; font-size: 1.05rem;
+font-weight: 800; cursor: pointer; box-shadow: 0 6px 24px rgba(255,184,0,0.45);
+transition: transform 0.15s; width: 100%; max-width: 100%;
+}
+.btn-primary:active { transform: scale(0.97); }
+.btn-secondary {
+background: white; color: var(–sky-dark); border: 2.5px solid var(–sky);
+border-radius: 50px; padding: 14px 32px; font-family: ‘Nunito’,sans-serif;
+font-size: 0.95rem; font-weight: 800; cursor: pointer; width: 100%;
+transition: transform 0.15s;
+}
+.btn-secondary:active { transform: scale(0.97); }
+.btn-nav {
+background: white; color: var(–sky-dark); border: 2px solid #DDE6F5;
+border-radius: 50px; padding: 14px; font-family: ‘Nunito’,sans-serif;
+font-size: 0.9rem; font-weight: 800; cursor: pointer; width: 100%;
+}
+.section-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(–soft); margin-bottom: 10px; }
+.field-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(–soft); margin-bottom: 8px; }
+.field-input {
+width: 100%; border: 2px solid #DDE6F5; border-radius: 14px; padding: 13px 16px;
+font-family: ‘Nunito’,sans-serif; font-size: 0.95rem; font-weight: 700;
+color: var(–ink); background: white; outline: none; transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(–sky); }
+.card {
+background: white; border-radius: 20px; padding: 16px;
+box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+/* –– WELCOME –– */
+#screen-welcome {
+background: linear-gradient(160deg, var(–sky-dark) 0%, #2D9ED8 50%, #5BC8F5 100%);
+justify-content: center; align-items: center; text-align: center; padding: 40px 32px; gap: 0;
+}
+.welcome-sun {
+width: 110px; height: 110px; background: radial-gradient(circle at 40% 35%, #FFE566, var(–sun) 60%, var(–sun-deep));
+border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;
+font-size: 3rem; box-shadow: 0 0 0 16px rgba(255,184,0,0.15), 0 0 0 32px rgba(255,184,0,0.07);
+animation: pulse-sun 3s ease-in-out infinite;
+}
+@keyframes pulse-sun { 0%,100%{box-shadow:0 0 0 16px rgba(255,184,0,0.15),0 0 0 32px rgba(255,184,0,0.07)} 50%{box-shadow:0 0 0 22px rgba(255,184,0,0.2),0 0 0 40px rgba(255,184,0,0.05)} }
+.welcome-title { font-family:‘Baloo 2’,cursive; font-size:2.8rem; font-weight:800; color:white; line-height:1; margin-bottom:8px; text-shadow:0 2px 12px rgba(0,0,0,0.2); }
+.welcome-title span { color: var(–sun); }
+.welcome-sub { color: rgba(255,255,255,0.85); font-size:0.95rem; font-weight:600; margin-bottom:48px; line-height:1.5; }
+.welcome-badge {
+background: rgba(255,255,255,0.15); border-radius: 50px; padding: 8px 16px;
+font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 24px;
+display: inline-block; backdrop-filter: blur(4px);
+}
+
+/* –– ONBOARDING –– */
+.onboard-header { background: linear-gradient(135deg, var(–sky-dark), #2D9ED8); padding: 28px 24px 32px; color: white; }
+.onboard-header h2 { font-family:‘Baloo 2’,cursive; font-size:1.6rem; font-weight:800; margin-bottom:4px; }
+.onboard-header p { font-size:0.85rem; opacity:0.85; font-weight:600; }
+.onboard-body { padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; }
+.photo-row { display: flex; align-items: center; gap: 16px; }
+.photo-circle {
+width: 72px; height: 72px; border-radius: 50%;
+background: linear-gradient(135deg, #E8F4FF, #D0E8FF);
+border: 2.5px dashed var(–sky); display: flex; align-items: center; justify-content: center;
+font-size: 1.8rem; cursor: pointer; flex-shrink: 0; overflow: hidden;
+}
+.photo-circle img { width:100%; height:100%; object-fit:cover; }
+.photo-hint { font-size:0.8rem; font-weight:600; color:var(–soft); line-height:1.5; }
+.photo-hint strong { color:var(–sky-dark); display:block; font-size:0.85rem; }
+.fitz-grid { display:flex; gap:8px; justify-content:space-between; }
+.fitz-btn {
+flex:1; border-radius:12px; border:2.5px solid transparent; padding:10px 4px;
+cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;
+background:white; transition:border-color 0.15s,transform 0.15s;
+}
+.fitz-btn:active { transform:scale(0.95); }
+.fitz-btn.selected { border-color:var(–sky-dark); box-shadow:0 2px 10px rgba(26,122,196,0.2); }
+.fitz-swatch { width:36px; height:36px; border-radius:50%; border:2px solid rgba(0,0,0,0.08); }
+.fitz-btn span { font-size:0.6rem; font-weight:800; color:var(–soft); }
+.privacy-note { display:flex; align-items:center; gap:8px; background:#F0FFF5; border:1.5px solid var(–grass); border-radius:12px; padding:10px 14px; font-size:0.75rem; font-weight:600; color:#2A7A40; }
+
+/* –– HOME –– */
+.home-header { background:linear-gradient(135deg,var(–sky-dark) 0%,#2D9ED8 100%); padding:24px 24px 48px; color:white; position:relative; overflow:hidden; }
+.home-header::after { content:’’; position:absolute; bottom:-20px; left:0; right:0; height:40px; background:var(–bg); border-radius:50% 50% 0 0/100% 100% 0 0; }
+.home-greeting { font-size:0.85rem; opacity:0.8; font-weight:600; }
+.home-title { font-family:‘Baloo 2’,cursive; font-size:1.5rem; font-weight:800; margin-bottom:16px; }
+.uv-pill { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.2); border-radius:50px; padding:8px 16px; font-size:0.82rem; font-weight:700; backdrop-filter:blur(4px); }
+.uv-dot { width:10px; height:10px; border-radius:50%; background:var(–sun); animation:pulse-uv 2s infinite; }
+@keyframes pulse-uv { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.home-body { padding:8px 20px 24px; display:flex; flex-direction:column; gap:14px; }
+.child-card { background:white; border-radius:20px; padding:16px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+.child-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; border:3px solid white; box-shadow:0 2px 8px rgba(255,184,0,0.3); overflow:hidden; }
+.child-avatar img { width:100%; height:100%; object-fit:cover; }
+.child-info { flex:1; }
+.child-name { font-weight:800; font-size:0.95rem; color:var(–ink); }
+.child-meta { font-size:0.75rem; color:var(–soft); font-weight:600; }
+.vit-bar-wrap { margin-top:6px; background:#EEF3FF; border-radius:50px; height:8px; overflow:hidden; }
+.vit-bar { height:100%; border-radius:50px; background:linear-gradient(90deg,var(–grass),#7BE89A); transition:width 0.5s; }
+.btn-headout {
+background:linear-gradient(135deg,var(–sun),var(–sun-deep)); color:white; border:none;
+border-radius:24px; padding:20px; font-family:‘Baloo 2’,cursive; font-size:1.3rem; font-weight:800;
+cursor:pointer; box-shadow:0 8px 28px rgba(255,140,0,0.45); transition:transform 0.15s;
+display:flex; align-items:center; justify-content:center; gap:10px;
+text-shadow:0 1px 4px rgba(0,0,0,0.15); width:100%;
+}
+.btn-headout:active { transform:scale(0.97); }
+.stats-row { display:flex; gap:12px; }
+.stat-card { flex:1; background:white; border-radius:16px; padding:14px 12px; text-align:center; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
+.stat-icon { font-size:1.4rem; display:block; margin-bottom:4px; }
+.stat-val { font-family:‘Baloo 2’,cursive; font-size:1.2rem; font-weight:800; color:var(–ink); }
+.stat-label { font-size:0.67rem; font-weight:700; color:var(–soft); text-transform:uppercase; letter-spacing:0.5px; }
+
+/* –– LOCATION BANNER –– */
+.loc-banner {
+background: #FFF8E8; border: 1.5px solid var(–sun); border-radius: 14px;
+padding: 10px 14px; font-size: 0.78rem; font-weight: 700; color: #7A5500;
+display: flex; align-items: center; gap: 8px;
+}
+
+/* –– WHO’S GOING OUT –– */
+#screen-whosout { justify-content: flex-end; }
+.modal-bg { flex:1; background:rgba(26,35,64,0.3); backdrop-filter:blur(2px); }
+.modal-sheet { background:white; border-radius:28px 28px 0 0; padding:24px 24px 40px; box-shadow:0 -8px 32px rgba(0,0,0,0.12); }
+.sheet-handle { width:40px; height:4px; background:#DDE6F5; border-radius:2px; margin:0 auto 20px; }
+.sheet-title { font-family:‘Baloo 2’,cursive; font-size:1.4rem; font-weight:800; color:var(–ink); margin-bottom:4px; }
+.sheet-sub { font-size:0.82rem; color:var(–soft); font-weight:600; margin-bottom:20px; }
+.who-child { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:16px; border:2.5px solid #EEF3FF; margin-bottom:10px; cursor:pointer; transition:border-color 0.15s,background 0.15s; background:#FAFCFF; }
+.who-child.selected { border-color:var(–sky-dark); background:#EEF6FF; }
+.who-check { width:26px; height:26px; border-radius:50%; border:2.5px solid #DDE6F5; display:flex; align-items:center; justify-content:center; margin-left:auto; font-size:0.9rem; transition:background 0.15s,border-color 0.15s; flex-shrink:0; }
+.who-child.selected .who-check { background:var(–sky-dark); border-color:var(–sky-dark); color:white; }
+
+/* –– SESSION SETUP –– */
+.setup-header { background:linear-gradient(135deg,var(–grass),#38A85C); padding:24px 24px 32px; color:white; }
+.setup-header h2 { font-family:‘Baloo 2’,cursive; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
+.setup-header p { font-size:0.82rem; opacity:0.85; font-weight:600; }
+.setup-body { padding:20px; display:flex; flex-direction:column; gap:20px; }
+.clothing-grid { display:flex; gap:8px; justify-content:space-between; }
+.clothing-btn { flex:1; border-radius:14px; border:2.5px solid #DDE6F5; padding:10px 4px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; background:white; transition:border-color 0.15s,background 0.15s; }
+.clothing-btn:active { transform:scale(0.95); }
+.clothing-btn.selected { border-color:var(–grass); background:#F0FFF5; }
+.clothing-icon { font-size:1.6rem; }
+.clothing-label { font-size:0.58rem; font-weight:800; color:var(–soft); text-align:center; line-height:1.2; }
+.spf-grid { display:flex; gap:8px; }
+.spf-btn { flex:1; border-radius:14px; border:2.5px solid #DDE6F5; padding:12px 6px; cursor:pointer; text-align:center; background:white; transition:border-color 0.15s,background 0.15s; }
+.spf-btn.selected { border-color:var(–sky); background:#EEF6FF; }
+.spf-icon { font-size:1.3rem; display:block; margin-bottom:3px; }
+.spf-label { font-size:0.65rem; font-weight:800; color:var(–ink); }
+
+/* –– ACTIVE SESSION –– */
+#screen-session { background:linear-gradient(160deg,#0A4A7A 0%,#1A7AC4 40%,#2D9ED8 100%); color:white; }
+.session-top { padding:24px 24px 16px; text-align:center; }
+.session-children { display:flex; justify-content:center; margin-bottom:12px; }
+.session-avatar { width:56px; height:56px; border-radius:50%; border:3px solid rgba(255,255,255,0.5); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:linear-gradient(135deg,#FFE0A0,#FFB800); margin:0 -4px; }
+.session-avatar img { width:100%; height:100%; object-fit:cover; }
+.session-label { font-size:0.82rem; opacity:0.8; font-weight:600; margin-bottom:2px; }
+.session-timer { font-family:‘Baloo 2’,cursive; font-size:3rem; font-weight:800; letter-spacing:2px; text-shadow:0 2px 12px rgba(0,0,0,0.2); }
+.bg-notice { background:rgba(255,255,255,0.12); border-radius:12px; padding:8px 16px; font-size:0.72rem; font-weight:700; opacity:0.85; margin:0 24px 8px; text-align:center; }
+.progress-ring-wrap { display:flex; justify-content:center; padding:8px 0 16px; position:relative; }
+.progress-ring-wrap svg { transform:rotate(-90deg); }
+.progress-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.progress-pct { font-family:‘Baloo 2’,cursive; font-size:2.2rem; font-weight:800; color:white; }
+.progress-sub { font-size:0.72rem; opacity:0.75; font-weight:600; }
+.live-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding:0 20px 16px; }
+.live-stat { background:rgba(255,255,255,0.12); border-radius:16px; padding:12px 8px; text-align:center; backdrop-filter:blur(4px); }
+.live-stat-icon { font-size:1.3rem; display:block; margin-bottom:4px; }
+.live-stat-val { font-family:‘Baloo 2’,cursive; font-size:1.1rem; font-weight:800; }
+.live-stat-label { font-size:0.6rem; opacity:0.7; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+.burn-section { margin:0 20px 16px; background:rgba(255,255,255,0.1); border-radius:16px; padding:14px 16px; }
+.burn-title { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; opacity:0.7; margin-bottom:8px; }
+.burn-bar-bg { background:rgba(255,255,255,0.2); border-radius:50px; height:10px; overflow:hidden; }
+.burn-bar { height:100%; border-radius:50px; transition:width 1s; }
+.burn-safe { background:linear-gradient(90deg,#4DC87A,#7BE89A); }
+.burn-warn { background:linear-gradient(90deg,#FFB800,#FF8C00); }
+.burn-danger { background:linear-gradient(90deg,#FF6060,#FF3030); }
+.burn-labels { display:flex; justify-content:space-between; margin-top:4px; }
+.burn-labels span { font-size:0.6rem; opacity:0.6; font-weight:700; }
+.btn-end { margin:0 20px 24px; background:rgba(255,255,255,0.15); color:white; border:2px solid rgba(255,255,255,0.3); border-radius:50px; padding:14px; font-family:‘Nunito’,sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer; width:calc(100% - 40px); }
+
+/* –– CELEBRATION –– */
+#screen-celebrate { background:linear-gradient(160deg,#FF8C00 0%,var(–sun) 50%,#FFE566 100%); justify-content:center; align-items:center; text-align:center; padding:40px 32px; }
+.confetti-wrap { position:relative; margin-bottom:20px; }
+.celebrate-emoji { font-size:5rem; display:block; animation:cel-bounce 0.8s ease-in-out infinite alternate; }
+@keyframes cel-bounce { from{transform:scale(1) rotate(-5deg)} to{transform:scale(1.1) rotate(5deg)} }
+.confetti { position:absolute; width:8px; height:8px; border-radius:2px; animation:confetti-fall 2s ease-in-out infinite; }
+@keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(60px) rotate(360deg);opacity:0} }
+.celebrate-title { font-family:‘Baloo 2’,cursive; font-size:1.9rem; font-weight:800; color:white; text-shadow:0 2px 8px rgba(0,0,0,0.15); margin-bottom:8px; }
+.celebrate-sub { color:rgba(255,255,255,0.85); font-size:0.88rem; font-weight:600; margin-bottom:28px; line-height:1.5; }
+.celebrate-stats { display:flex; gap:12px; width:100%; margin-bottom:24px; }
+.cel-stat { flex:1; background:rgba(255,255,255,0.25); border-radius:16px; padding:14px 8px; backdrop-filter:blur(4px); }
+.cel-stat-val { font-family:‘Baloo 2’,cursive; font-size:1.4rem; font-weight:800; color:white; }
+.cel-stat-label { font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.8); text-transform:uppercase; }
+.btn-extend { background:white; color:var(–sun-deep); border:none; border-radius:50px; padding:16px 32px; font-family:‘Nunito’,sans-serif; font-size:1rem; font-weight:800; cursor:pointer; width:100%; margin-bottom:12px; box-shadow:0 6px 20px rgba(0,0,0,0.15); transition:transform 0.15s; }
+.btn-extend:active { transform:scale(0.97); }
+.btn-done { background:rgba(255,255,255,0.2); color:white; border:2px solid rgba(255,255,255,0.4); border-radius:50px; padding:14px 32px; font-family:‘Nunito’,sans-serif; font-size:0.95rem; font-weight:800; cursor:pointer; width:100%; }
+
+/* –– DASHBOARD –– */
+.dash-header { background:linear-gradient(135deg,var(–ink),#2A3A60); padding:24px 24px 36px; color:white; }
+.dash-header h2 { font-family:‘Baloo 2’,cursive; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
+.dash-header p { font-size:0.82rem; opacity:0.7; font-weight:600; }
+.dash-body { padding:12px 20px 32px; display:flex; flex-direction:column; gap:16px; }
+.dash-section-title { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(–soft); margin-bottom:10px; }
+.week-chart { background:white; border-radius:20px; padding:18px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+.week-bars { display:flex; align-items:flex-end; gap:8px; height:80px; margin-bottom:8px; }
+.week-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end; }
+.week-bar { width:100%; border-radius:6px 6px 0 0; min-height:4px; }
+.week-bar.goal { background:linear-gradient(180deg,var(–grass),#38A85C); }
+.week-bar.partial { background:linear-gradient(180deg,var(–sky),var(–sky-dark)); }
+.week-bar.none { background:#EEF3FF; min-height:4px; height:4px !important; }
+.week-day { font-size:0.62rem; font-weight:800; color:var(–soft); flex:1; text-align:center; }
+.week-day.today { color:var(–sky-dark); }
+.trend-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.trend-card { background:white; border-radius:18px; padding:16px 14px; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
+.trend-icon { font-size:1.5rem; display:block; margin-bottom:6px; }
+.trend-val { font-family:‘Baloo 2’,cursive; font-size:1.4rem; font-weight:800; color:var(–ink); }
+.trend-label { font-size:0.7rem; font-weight:700; color:var(–soft); }
+.trend-change { font-size:0.72rem; font-weight:800; margin-top:4px; }
+.trend-up { color:var(–grass); } .trend-down { color:var(–coral); }
+
+/* –– SESSION HISTORY –– */
+.history-item {
+background: white; border-radius:16px; padding:14px 16px;
+box-shadow:0 3px 12px rgba(0,0,0,0.05); margin-bottom:10px;
+display:flex; align-items:center; gap:12px;
+}
+.history-icon { font-size:1.8rem; flex-shrink:0; }
+.history-info { flex:1; }
+.history-title { font-weight:800; font-size:0.88rem; color:var(–ink); }
+.history-meta { font-size:0.75rem; color:var(–soft); font-weight:600; margin-top:2px; }
+.history-badge { background:linear-gradient(135deg,var(–sun),var(–sun-deep)); color:white; border-radius:50px; padding:4px 10px; font-size:0.7rem; font-weight:800; flex-shrink:0; }
+.history-badge.partial { background:linear-gradient(135deg,var(–sky),var(–sky-dark)); }
+
+/* –– CHILD SUMMARY –– */
+.child-summary { background:white; border-radius:20px; padding:16px; box-shadow:0 3px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; margin-bottom:10px; }
+.cs-avatar { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; overflow:hidden; }
+.cs-avatar img { width:100%; height:100%; object-fit:cover; }
+.cs-info { flex:1; }
+.cs-name { font-weight:800; font-size:0.9rem; color:var(–ink); }
+.cs-stats { font-size:0.75rem; color:var(–soft); font-weight:600; margin-top:2px; }
+.cs-streak { background:linear-gradient(135deg,var(–sun),var(–sun-deep)); color:white; border-radius:50px; padding:4px 10px; font-size:0.72rem; font-weight:800; }
+
+/* –– BOTTOM NAV –– */
+.bottom-nav { display:flex; background:white; border-top:1.5px solid #EEF3FF; padding:10px 0 16px; flex-shrink:0; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px; }
+.nav-icon { font-size:1.3rem; }
+.nav-label { font-size:0.6rem; font-weight:800; color:var(–soft); text-transform:uppercase; letter-spacing:0.5px; }
+.nav-item.active .nav-label { color:var(–sky-dark); }
+.nav-item.active .nav-icon { filter: drop-shadow(0 0 4px rgba(26,122,196,0.4)); }
+
+/* –– NOTIF PERMISSION BANNER –– */
+.notif-banner {
+background:#F0FFF5; border:1.5px solid var(–grass); border-radius:14px;
+padding:12px 14px; font-size:0.78rem; font-weight:700; color:#2A7A40;
+display:flex; align-items:center; justify-content:space-between; gap:8px;
+}
+.notif-banner button { background:var(–grass); color:white; border:none; border-radius:50px; padding:6px 14px; font-family:‘Nunito’,sans-serif; font-size:0.75rem; font-weight:800; cursor:pointer; flex-shrink:0; }
+</style>
+
+</head>
+<body>
+<div class="phone">
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span id="clock">9:41</span>
+    <span id="status-loc">📍 Locating…</span>
+    <span>●●●●</span>
+  </div>
+
+  <!-- ===== WELCOME ===== -->
+
+  <div class="screen active" id="screen-welcome">
+    <div class="welcome-sun">☀️</div>
+    <h1 class="welcome-title">Sun<span>Time</span><br>Kids</h1>
+    <p class="welcome-sub">Track healthy sunlight for your<br>children — simply and smartly.</p>
+    <div class="welcome-badge">📍 Uses your real location · Live UV data</div>
+    <button class="btn-primary" style="max-width:280px;" onclick="goTo('screen-onboard')">Get Started →</button>
+  </div>
+
+  <!-- ===== ONBOARDING ===== -->
+
+  <div class="screen" id="screen-onboard">
+    <div class="onboard-header">
+      <h2>👶 Add Your Children</h2>
+      <p>Set up profiles — takes under a minute</p>
+    </div>
+    <div class="onboard-body">
+
+```
+  <!-- Child 1 -->
+  <div style="background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;">
+    <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Child 1</div>
+    <div style="display:flex;gap:12px;margin-bottom:12px;">
+      <div style="flex:1;">
+        <div class="field-label">Name</div>
+        <input class="field-input" id="name-0" type="text" placeholder="e.g. Emma" value="Emma">
+      </div>
+      <div style="width:80px;">
+        <div class="field-label">Age</div>
+        <input class="field-input" id="age-0" type="number" placeholder="5" value="5" min="0" max="17">
+      </div>
+    </div>
+    <div class="field-label">Skin Tone</div>
+    <div class="fitz-grid" id="fitz-0">
+      <button class="fitz-btn" onclick="selectFitz(0,this,1)"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
+      <button class="fitz-btn" onclick="selectFitz(0,this,2)"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
+      <button class="fitz-btn selected" onclick="selectFitz(0,this,3)"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
+      <button class="fitz-btn" onclick="selectFitz(0,this,4)"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
+      <button class="fitz-btn" onclick="selectFitz(0,this,5)"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
+      <button class="fitz-btn" onclick="selectFitz(0,this,6)"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
+    </div>
+    <div style="margin-top:12px;">
+      <div class="field-label">Photo (optional)</div>
+      <div class="photo-row">
+        <div class="photo-circle" id="photo-0" onclick="document.getElementById('file-0').click()">📷</div>
+        <input type="file" id="file-0" accept="image/*" style="display:none" onchange="handlePhoto(0,event)">
+        <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Child 2 -->
+  <div style="background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;">
+    <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Child 2</div>
+    <div style="display:flex;gap:12px;margin-bottom:12px;">
+      <div style="flex:1;">
+        <div class="field-label">Name</div>
+        <input class="field-input" id="name-1" type="text" placeholder="e.g. Alex" value="Alex">
+      </div>
+      <div style="width:80px;">
+        <div class="field-label">Age</div>
+        <input class="field-input" id="age-1" type="number" placeholder="2" value="2" min="0" max="17">
+      </div>
+    </div>
+    <div class="field-label">Skin Tone</div>
+    <div class="fitz-grid" id="fitz-1">
+      <button class="fitz-btn" onclick="selectFitz(1,this,1)"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
+      <button class="fitz-btn" onclick="selectFitz(1,this,2)"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
+      <button class="fitz-btn selected" onclick="selectFitz(1,this,3)"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
+      <button class="fitz-btn" onclick="selectFitz(1,this,4)"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
+      <button class="fitz-btn" onclick="selectFitz(1,this,5)"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
+      <button class="fitz-btn" onclick="selectFitz(1,this,6)"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
+    </div>
+    <div style="margin-top:12px;">
+      <div class="field-label">Photo (optional)</div>
+      <div class="photo-row">
+        <div class="photo-circle" id="photo-1" onclick="document.getElementById('file-1').click()">📷</div>
+        <input type="file" id="file-1" accept="image/*" style="display:none" onchange="handlePhoto(1,event)">
+        <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="privacy-note">🔒 All data stored on your device only. No account required. COPPA compliant.</div>
+  <button class="btn-primary" onclick="saveProfiles()">Save Profiles & Continue →</button>
+</div>
+```
+
+  </div>
+
+  <!-- ===== HOME ===== -->
+
+  <div class="screen" id="screen-home">
+    <div class="home-header">
+      <div class="home-greeting" id="home-greeting">Good morning ☀️</div>
+      <div class="home-title">Ready to head outside?</div>
+      <div class="uv-pill">
+        <div class="uv-dot"></div>
+        <span id="uv-display">Fetching UV Index…</span>
+      </div>
+    </div>
+    <div class="home-body">
+      <div id="notif-banner-wrap"></div>
+      <div id="loc-row" style="background:#FFF8E8;border:1.5px solid #FFB800;border-radius:14px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:0.78rem;font-weight:700;color:#7A5500;" id="loc-label">📍 Detecting location…</span>
+        <button id="loc-change-btn" style="background:#4DC87A;color:white;border:none;border-radius:50px;padding:6px 14px;font-family:Nunito,sans-serif;font-size:0.75rem;font-weight:800;cursor:pointer;">Change</button>
+      </div>
+      <div id="child-cards"></div>
+      <button class="btn-headout" onclick="goTo('screen-whosout')">
+        <span style="font-size:1.8rem;">🌤️</span> We're Heading Out!
+      </button>
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-icon">🔥</span>
+          <div class="stat-val" id="stat-streak">0</div>
+          <div class="stat-label">Day streak</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">⏱️</span>
+          <div class="stat-val" id="stat-weektime">0m</div>
+          <div class="stat-label">This week</div>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🎯</span>
+          <div class="stat-val" id="stat-goals">0/0</div>
+          <div class="stat-label">Goals hit</div>
+        </div>
+      </div>
+      <button class="btn-nav" onclick="goTo('screen-dash')">📊 View Dashboard & History</button>
+    </div>
+  </div>
+
+  <!-- ===== WHO'S GOING OUT ===== -->
+
+  <div class="screen" id="screen-whosout">
+    <div class="modal-bg" onclick="goTo('screen-home')"></div>
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">Who's heading out? 🌤️</div>
+      <div class="sheet-sub">Select the children joining this session</div>
+      <div id="who-list"></div>
+      <button class="btn-primary" style="margin-top:8px;" onclick="goTo('screen-setup')">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ===== SESSION SETUP ===== -->
+
+  <div class="screen" id="screen-setup">
+    <div class="setup-header">
+      <h2>⚙️ Quick Setup</h2>
+      <p>How are the kids dressed today?</p>
+    </div>
+    <div class="setup-body">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">☀️ Live UV Index</span>
+          <span style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:var(--ink);" id="uv-setup">–</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">📍 Location</span>
+          <span style="font-size:0.8rem;font-weight:700;color:var(--ink);" id="setup-loc">Detecting…</span>
+        </div>
+      </div>
+
+```
+  <div>
+    <div class="section-title">👕 Clothing Coverage</div>
+    <div class="clothing-grid">
+      <button class="clothing-btn selected" onclick="selectClothing(this,1.0)"><span class="clothing-icon">🩱</span><span class="clothing-label">Swimsuit</span></button>
+      <button class="clothing-btn" onclick="selectClothing(this,0.7)"><span class="clothing-icon">🩳</span><span class="clothing-label">Tank + Shorts</span></button>
+      <button class="clothing-btn" onclick="selectClothing(this,0.55)"><span class="clothing-icon">👕</span><span class="clothing-label">Tee + Shorts</span></button>
+      <button class="clothing-btn" onclick="selectClothing(this,0.35)"><span class="clothing-icon">👖</span><span class="clothing-label">Tee + Pants</span></button>
+      <button class="clothing-btn" onclick="selectClothing(this,0.2)"><span class="clothing-icon">🧥</span><span class="clothing-label">Full Cover</span></button>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-title">🧴 Sunscreen</div>
+    <div class="spf-grid">
+      <button class="spf-btn selected" onclick="selectSPF(this,1.0)"><span class="spf-icon">🚫</span><span class="spf-label">None</span></button>
+      <button class="spf-btn" onclick="selectSPF(this,0.45)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 15</span></button>
+      <button class="spf-btn" onclick="selectSPF(this,0.28)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 30</span></button>
+      <button class="spf-btn" onclick="selectSPF(this,0.2)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 50+</span></button>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="startSession()">▶ Start Session</button>
+  <button class="btn-secondary" onclick="goTo('screen-home')">← Back</button>
+</div>
+```
+
+  </div>
+
+  <!-- ===== ACTIVE SESSION ===== -->
+
+  <div class="screen" id="screen-session">
+    <div class="session-top">
+      <div class="session-children" id="session-avatars"></div>
+      <div class="session-label">Time Outdoors</div>
+      <div class="session-timer" id="session-timer">00:00</div>
+    </div>
+    <div class="bg-notice">⏸ App tracks time even when you switch away — come back to check progress</div>
+    <div class="progress-ring-wrap">
+      <svg width="170" height="170" viewBox="0 0 170 170">
+        <circle cx="85" cy="85" r="72" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="12"/>
+        <circle cx="85" cy="85" r="72" fill="none" stroke="#FFB800" stroke-width="12"
+          stroke-linecap="round" stroke-dasharray="452" stroke-dashoffset="452" id="progress-arc"/>
+      </svg>
+      <div class="progress-center">
+        <div class="progress-pct" id="progress-pct">0%</div>
+        <div class="progress-sub">Vitamin D Goal</div>
+      </div>
+    </div>
+    <div class="live-stats">
+      <div class="live-stat"><span class="live-stat-icon">🌡️</span><div class="live-stat-val" id="live-uv">–</div><div class="live-stat-label">UV Index</div></div>
+      <div class="live-stat"><span class="live-stat-icon">💊</span><div class="live-stat-val" id="live-vitd">0 IU</div><div class="live-stat-label">Est. Vit D</div></div>
+      <div class="live-stat"><span class="live-stat-icon">🎯</span><div class="live-stat-val" id="live-goal">–</div><div class="live-stat-label">Daily Goal</div></div>
+    </div>
+    <div class="burn-section">
+      <div class="burn-title">🔴 Burn Risk Meter</div>
+      <div class="burn-bar-bg"><div class="burn-bar burn-safe" id="burn-bar" style="width:3%"></div></div>
+      <div class="burn-labels"><span>Safe</span><span>Caution</span><span>High Risk</span></div>
+    </div>
+    <button class="btn-end" onclick="endSessionManual()">⏹ End Session</button>
+  </div>
+
+  <!-- ===== CELEBRATION ===== -->
+
+  <div class="screen" id="screen-celebrate">
+    <div class="confetti-wrap">
+      <span class="celebrate-emoji">🌟</span>
+      <div class="confetti" style="left:20%;top:10%;background:#FFB800;animation-delay:0s;animation-duration:1.8s;"></div>
+      <div class="confetti" style="left:70%;top:5%;background:#FF6060;animation-delay:0.3s;animation-duration:2.1s;"></div>
+      <div class="confetti" style="left:45%;top:15%;background:#4DC87A;animation-delay:0.6s;animation-duration:1.6s;"></div>
+      <div class="confetti" style="left:85%;top:20%;background:#5BC8F5;animation-delay:0.9s;animation-duration:2.3s;"></div>
+      <div class="confetti" style="left:10%;top:25%;background:#7C5CBF;animation-delay:1.2s;animation-duration:1.9s;"></div>
+    </div>
+    <h2 class="celebrate-title" id="cel-title">Goal Reached! ☀️</h2>
+    <p class="celebrate-sub" id="cel-sub">Daily vitamin D goal achieved</p>
+    <div class="celebrate-stats">
+      <div class="cel-stat"><div class="cel-stat-val" id="cel-vitd">400 IU</div><div class="cel-stat-label">Vit D Today</div></div>
+      <div class="cel-stat"><div class="cel-stat-val" id="cel-duration">–</div><div class="cel-stat-label">Time Outside</div></div>
+      <div class="cel-stat"><div class="cel-stat-val" id="cel-streak">🔥 1</div><div class="cel-stat-label">Day Streak</div></div>
+    </div>
+    <button class="btn-extend" onclick="extendSession()">▶ Keep Playing Outside</button>
+    <button class="btn-done" onclick="finishSession()">✓ We're Done for Today</button>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+
+  <div class="screen" id="screen-dash">
+    <div class="dash-header">
+      <h2>📊 Dashboard</h2>
+      <p id="dash-subtitle">Your sunlight tracking summary</p>
+    </div>
+    <div class="dash-body">
+      <div>
+        <div class="dash-section-title">This Week's Outdoor Time</div>
+        <div class="week-chart">
+          <div class="week-bars" id="week-bars"></div>
+          <div style="display:flex;gap:8px;" id="week-day-labels"></div>
+        </div>
+      </div>
+      <div>
+        <div class="dash-section-title">Monthly Summary</div>
+        <div class="trend-grid" id="trend-grid"></div>
+      </div>
+      <div>
+        <div class="dash-section-title">Children</div>
+        <div id="dash-child-list"></div>
+      </div>
+      <div>
+        <div class="dash-section-title">Recent Sessions</div>
+        <div id="session-history-list"></div>
+      </div>
+      <button class="btn-nav" onclick="goTo('screen-home')">← Back to Home</button>
+    </div>
+  </div>
+
+  <!-- Location modal (replaces prompt() which iOS blocks) -->
+
+  <div id="loc-modal" style="display:none;position:absolute;inset:0;background:rgba(26,35,64,0.7);z-index:200;align-items:center;justify-content:center;padding:32px;">
+    <div style="background:white;border-radius:24px;padding:28px 24px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#1A2340;margin-bottom:6px;">📍 Change Location</div>
+      <div style="font-size:0.82rem;color:#7A8AAF;font-weight:600;margin-bottom:16px;">Enter a city name or tap the GPS button to use your current location</div>
+      <input id="loc-input" type="text" placeholder="e.g. Nashville, TN" style="width:100%;border:2px solid #DDE6F5;border-radius:14px;padding:13px 16px;font-family:Nunito,sans-serif;font-size:0.95rem;font-weight:700;color:#1A2340;outline:none;margin-bottom:12px;">
+      <button id="loc-gps-btn" style="width:100%;background:#1A7AC4;color:white;border:none;border-radius:14px;padding:13px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;margin-bottom:8px;">📡 Use My Current GPS Location</button>
+      <button id="loc-search-btn" style="width:100%;background:#FFB800;color:#1A2340;border:none;border-radius:14px;padding:13px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;margin-bottom:8px;">🔍 Search City</button>
+      <button id="loc-cancel-btn" style="width:100%;background:white;color:#7A8AAF;border:2px solid #DDE6F5;border-radius:14px;padding:12px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+
+  <div class="bottom-nav" id="bottom-nav" style="display:none;">
+    <div class="nav-item" id="nav-home" onclick="goTo('screen-home')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
+    <div class="nav-item" onclick="goTo('screen-whosout')"><span class="nav-icon">🌤️</span><span class="nav-label">Session</span></div>
+    <div class="nav-item" id="nav-dash" onclick="goTo('screen-dash')"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></div>
+    <div class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const APP = {
+  children: [
+    { name:'Emma', age:5, fitz:3, photo:null, goal:400 },
+    { name:'Alex',  age:2, fitz:3, photo:null, goal:300 }
+  ],
+  selectedChildren: [0,1],
+  uvIndex: null,
+  locationName: 'Essex County, NJ',
+  lat: 40.79, lng: -74.21,          // default Essex County
+  clothingFactor: 1.0,
+  spfFactor: 1.0,
+  session: null,                     // active session object
+  sessions: [],                      // persisted completed sessions
+  goalReached: false,
+  tickInterval: null,
+  visibilityHandler: null
+};
+
+// Fitzpatrick: minutes to 400 IU at UV 5, outdoors, no SPF
+const FITZ_BASE_MIN = [8, 12, 16, 22, 32, 45];
+// Fitzpatrick: minutes to burn at UV 5
+const FITZ_BURN_MIN = [15, 20, 30, 45, 60, 90];
+
+// ============================================================
+// CLOCK
+// ============================================================
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2,'0');
+  const m = now.getMinutes().toString().padStart(2,'0');
+  document.getElementById('clock').textContent = h + ':' + m;
+  const greet = now.getHours() < 12 ? 'Good morning' : now.getHours() < 17 ? 'Good afternoon' : 'Good evening';
+  const greetEl = document.getElementById('home-greeting');
+  if (greetEl) greetEl.textContent = greet + ' ☀️';
+}
+updateClock();
+setInterval(updateClock, 15000);
+
+// ============================================================
+// GEOLOCATION + UV
+// ============================================================
+function initLocation() {
+  setLocLabel('Detecting…');
+  if (!navigator.geolocation) {
+    setLocLabel('Essex Co, NJ (default)');
+    fetchUV(APP.lat, APP.lng);
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      APP.lat = pos.coords.latitude;
+      APP.lng = pos.coords.longitude;
+      APP.locationName = pos.coords.latitude.toFixed(2) + '°N, ' + Math.abs(pos.coords.longitude).toFixed(2) + '°W';
+      setLocLabel(APP.locationName);
+      fetchUV(APP.lat, APP.lng);
+    },
+    () => {
+      APP.locationName = 'Essex Co, NJ (default)';
+      setLocLabel(APP.locationName);
+      fetchUV(APP.lat, APP.lng);
+    },
+    { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
+  );
+}
+
+function setLocLabel(text) {
+  const el = document.getElementById('loc-label');
+  if (el) el.textContent = '📍 ' + text;
+  document.getElementById('status-loc').textContent = '📍 ' + text;
+}
+
+function promptManualLocation() {
+  const modal = document.getElementById('loc-modal');
+  modal.style.display = 'flex';
+  document.getElementById('loc-input').value = '';
+  document.getElementById('loc-input').focus();
+}
+
+function closeLocModal() {
+  document.getElementById('loc-modal').style.display = 'none';
+}
+
+function applyManualLocation() {
+  const input = document.getElementById('loc-input').value.trim();
+  if (!input) return;
+  closeLocModal();
+  const coords = input.match(/(-?[0-9]+\.?[0-9]*)\s*,\s*(-?[0-9]+\.?[0-9]*)/);
+  if (coords) {
+    APP.lat = parseFloat(coords[1]);
+    APP.lng = parseFloat(coords[2]);
+    APP.locationName = input;
+    setLocLabel(APP.locationName);
+    fetchUV(APP.lat, APP.lng);
+  } else {
+    fetchCityCoords(input);
+  }
+}
+
+function applyGPSLocation() {
+  closeLocModal();
+  setLocLabel('Detecting GPS…');
+  if (!navigator.geolocation) {
+    setLocLabel('GPS unavailable');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      APP.lat = pos.coords.latitude;
+      APP.lng = pos.coords.longitude;
+      APP.locationName = pos.coords.latitude.toFixed(2) + '°N, ' + Math.abs(pos.coords.longitude).toFixed(2) + '°W';
+      setLocLabel(APP.locationName);
+      fetchUV(APP.lat, APP.lng);
+    },
+    () => setLocLabel('GPS unavailable — enter city manually'),
+    { enableHighAccuracy: true, timeout: 12000 }
+  );
+}
+
+async function fetchCityCoords(cityName) {
+  setLocLabel('Searching ' + cityName + '…');
+  try {
+    const url = 'https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(cityName) + '&count=1';
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.results && data.results.length > 0) {
+      const r = data.results[0];
+      APP.lat = r.latitude;
+      APP.lng = r.longitude;
+      APP.locationName = r.name + (r.admin1 ? ', ' + r.admin1 : '');
+      setLocLabel(APP.locationName);
+      fetchUV(APP.lat, APP.lng);
+    } else {
+      setLocLabel('Not found — try again');
+    }
+  } catch(e) {
+    setLocLabel('Search failed — check connection');
+  }
+}
+
+async function fetchUV(lat, lng) {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=uv_index&timezone=auto`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const uv = data.current?.uv_index;
+    if (uv != null) {
+      APP.uvIndex = parseFloat(uv.toFixed(1));
+      updateAllUVDisplays();
+    }
+  } catch(e) {
+    APP.uvIndex = 4.5;
+    updateAllUVDisplays();
+  }
+}
+
+function uvLabel(uv) {
+  if (uv <= 2) return 'Low';
+  if (uv <= 5) return 'Moderate';
+  if (uv <= 7) return 'High';
+  if (uv <= 10) return 'Very High';
+  return 'Extreme';
+}
+
+function updateAllUVDisplays() {
+  const uv = APP.uvIndex;
+  const lbl = uvLabel(uv);
+  const disp = document.getElementById('uv-display');
+  if (disp) { disp.textContent = `UV ${uv} · ${lbl}`; }
+  const setup = document.getElementById('uv-setup');
+  if (setup) setup.textContent = `${uv} — ${lbl}`;
+  const live = document.getElementById('live-uv');
+  if (live) live.textContent = uv;
+  const setupLoc = document.getElementById('setup-loc');
+  if (setupLoc) setupLoc.textContent = APP.locationName;
+}
+
+// Refresh UV every 5 min
+setInterval(() => fetchUV(APP.lat, APP.lng), 300000);
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+function requestNotifications() {
+  try {
+    if (typeof Notification === 'undefined') return;
+    if (typeof Notification.requestPermission !== 'function') return;
+    Notification.requestPermission().then(p => {
+      document.getElementById('notif-banner-wrap').innerHTML = '';
+      if (p === 'granted') showNotification('SunTimeKids', 'Notifications enabled! You\'ll be alerted when goals are reached 🌟');
+    }).catch(() => {});
+  } catch(e) {}
+}
+
+function showNotification(title, body) {
+  try {
+    if (typeof Notification === 'undefined') return;
+    if (Notification.permission === 'granted') {
+      new Notification(title, { body });
+    }
+  } catch(e) {
+    // iOS Safari does not support Web Notifications - fail silently
+  }
+}
+
+function maybeShowNotifBanner() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    document.getElementById('notif-banner-wrap').innerHTML = `
+      <div class="notif-banner" style="margin-bottom:10px;">
+        🔔 Get goal alerts even when app is backgrounded
+        <button onclick="requestNotifications()">Enable</button>
+      </div>`;
+  }
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+const NAV_SCREENS = ['screen-home', 'screen-dash'];
+
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const nav = document.getElementById('bottom-nav');
+  nav.style.display = NAV_SCREENS.includes(id) ? 'flex' : 'none';
+
+  // Nav active state
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (id === 'screen-home') document.getElementById('nav-home')?.classList.add('active');
+  if (id === 'screen-dash') document.getElementById('nav-dash')?.classList.add('active');
+
+  if (id === 'screen-home') renderHome();
+  if (id === 'screen-whosout') renderWhosList();
+  if (id === 'screen-setup') updateAllUVDisplays();
+  if (id === 'screen-dash') renderDash();
+  if (id === 'screen-session') resumeSessionUI();
+}
+
+// ============================================================
+// ONBOARDING
+// ============================================================
+function selectFitz(childIdx, btn, val) {
+  document.querySelectorAll(`#fitz-${childIdx} .fitz-btn`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  APP.children[childIdx].fitz = val;
+}
+
+function handlePhoto(idx, event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    APP.children[idx].photo = e.target.result;
+    const circle = document.getElementById(`photo-${idx}`);
+    circle.innerHTML = `<img src="${e.target.result}" alt="photo">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveProfiles() {
+  for (let i = 0; i < 2; i++) {
+    const name = document.getElementById(`name-${i}`).value.trim();
+    const age = parseInt(document.getElementById(`age-${i}`).value) || (i === 0 ? 5 : 2);
+    if (name) APP.children[i].name = name;
+    APP.children[i].age = age;
+  }
+  saveProfilesToStorage();
+  goTo('screen-home');
+}
+
+// ============================================================
+// HOME
+// ============================================================
+function renderHome() {
+  maybeShowNotifBanner();
+  renderChildCards();
+  renderHomeStats();
+}
+
+function renderChildCards() {
+  const container = document.getElementById('child-cards');
+  const todaySessions = getTodaySessions();
+  container.innerHTML = APP.children.map((c, i) => {
+    const todayVitD = todaySessions
+      .filter(s => s.childIndices.includes(i))
+      .reduce((sum, s) => sum + (s.vitdAccumulated || 0), 0);
+    const pct = Math.min(100, Math.round((todayVitD / c.goal) * 100));
+    const avatarBg = i === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+    const avatarContent = c.photo ? `<img src="${c.photo}" alt="${c.name}">` : (i===0?'👧':'👦');
+    return `
+      <div class="child-card" style="margin-bottom:10px;">
+        <div class="child-avatar" style="background:${avatarBg};">${avatarContent}</div>
+        <div class="child-info">
+          <div class="child-name">${c.name}, age ${c.age}</div>
+          <div class="child-meta">Vitamin D: ${Math.round(todayVitD)} / ${c.goal} IU today</div>
+          <div class="vit-bar-wrap"><div class="vit-bar" style="width:${pct}%"></div></div>
+        </div>
+        <div style="font-size:1.2rem;">${pct >= 100 ? '✅' : '☀️'}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderHomeStats() {
+  const streak = calcStreak();
+  const weekMin = getWeekTotalMinutes();
+  const weekGoals = getWeekGoalCount();
+  const weekDays = getWeekDayCount();
+  document.getElementById('stat-streak').textContent = streak;
+  document.getElementById('stat-weektime').textContent = weekMin >= 60 ? (weekMin/60).toFixed(1)+'h' : weekMin+'m';
+  document.getElementById('stat-goals').textContent = `${weekGoals}/${weekDays}`;
+}
+
+// ============================================================
+// WHO'S GOING OUT
+// ============================================================
+function renderWhosList() {
+  const list = document.getElementById('who-list');
+  list.innerHTML = APP.children.map((c, i) => {
+    const sel = APP.selectedChildren.includes(i) ? 'selected' : '';
+    const avatarBg = i === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+    const avatarContent = c.photo ? `<img src="${c.photo}" alt="${c.name}">` : (i===0?'👧':'👦');
+    return `
+      <div class="who-child ${sel}" onclick="toggleChild(${i}, this)">
+        <div class="child-avatar" style="width:44px;height:44px;font-size:1.3rem;background:${avatarBg};">${avatarContent}</div>
+        <div>
+          <div style="font-weight:800;font-size:0.9rem;color:var(--ink);">${c.name}</div>
+          <div style="font-size:0.75rem;color:var(--soft);font-weight:600;">Age ${c.age} · Fitzpatrick Type ${c.fitz}</div>
+        </div>
+        <div class="who-check">${sel ? '✓' : ''}</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleChild(i, el) {
+  const idx = APP.selectedChildren.indexOf(i);
+  if (idx > -1) {
+    if (APP.selectedChildren.length > 1) {
+      APP.selectedChildren.splice(idx, 1);
+      el.classList.remove('selected');
+      el.querySelector('.who-check').textContent = '';
+    }
+  } else {
+    APP.selectedChildren.push(i);
+    el.classList.add('selected');
+    el.querySelector('.who-check').textContent = '✓';
+  }
+}
+
+// ============================================================
+// SESSION SETUP
+// ============================================================
+function selectClothing(btn, factor) {
+  document.querySelectorAll('.clothing-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  APP.clothingFactor = factor;
+}
+function selectSPF(btn, factor) {
+  document.querySelectorAll('.spf-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  APP.spfFactor = factor;
+}
+
+// ============================================================
+// SESSION CORE — TIMESTAMP BASED
+// ============================================================
+function calcVitDPerSecond(fitzType) {
+  const uv = APP.uvIndex || 4;
+  const baseMin = FITZ_BASE_MIN[fitzType - 1];
+  const iuPerMin = (400 / baseMin) * (uv / 5) * APP.clothingFactor * APP.spfFactor;
+  return iuPerMin / 60;
+}
+
+function calcBurnPercentPerSecond(fitzType) {
+  const uv = APP.uvIndex || 4;
+  const burnMin = FITZ_BURN_MIN[fitzType - 1];
+  const adjustedBurnSec = (burnMin * 60) / (uv / 5) / Math.max(APP.clothingFactor, 0.1) / Math.max(APP.spfFactor, 0.1);
+  return 100 / adjustedBurnSec;
+}
+
+function startSession() {
+  // Use the primary (first selected) child's fitz for calculations
+  const primaryChild = APP.children[APP.selectedChildren[0]];
+  APP.session = {
+    startTime: Date.now(),
+    childIndices: [...APP.selectedChildren],
+    clothingFactor: APP.clothingFactor,
+    spfFactor: APP.spfFactor,
+    uvAtStart: APP.uvIndex || 4,
+    fitzType: primaryChild.fitz,
+    vitdPerSec: calcVitDPerSecond(primaryChild.fitz),
+    burnPerSec: calcBurnPercentPerSecond(primaryChild.fitz),
+    goal: primaryChild.goal,
+    goalReached: false,
+    pausedElapsed: 0   // seconds accumulated before any pause
+  };
+  APP.goalReached = false;
+
+  // Render session avatars
+  const avatarsEl = document.getElementById('session-avatars');
+  avatarsEl.innerHTML = APP.selectedChildren.map(i => {
+    const c = APP.children[i];
+    const bg = i === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+    const content = c.photo ? `<img src="${c.photo}" alt="${c.name}">` : (i===0?'👧':'👦');
+    return `<div class="session-avatar" style="background:${bg};">${content}</div>`;
+  }).join('');
+
+  document.getElementById('live-goal').textContent = primaryChild.goal + ' IU';
+
+  goTo('screen-session');
+  startTick();
+  setupVisibilityHandler();
+}
+
+function getElapsedSeconds() {
+  if (!APP.session) return 0;
+  return APP.session.pausedElapsed + Math.floor((Date.now() - APP.session.startTime) / 1000);
+}
+
+function startTick() {
+  if (APP.tickInterval) clearInterval(APP.tickInterval);
+  APP.tickInterval = setInterval(tickSession, 1000);
+}
+
+function stopTick() {
+  if (APP.tickInterval) { clearInterval(APP.tickInterval); APP.tickInterval = null; }
+}
+
+// Page visibility — catch background/foreground transitions
+function setupVisibilityHandler() {
+  if (APP.visibilityHandler) document.removeEventListener('visibilitychange', APP.visibilityHandler);
+  APP.visibilityHandler = () => {
+    if (document.hidden) {
+      // Going to background: store elapsed, stop tick
+      APP.session.pausedElapsed = getElapsedSeconds();
+      APP.session.startTime = Date.now(); // reset reference for when we come back
+      stopTick();
+    } else {
+      // Coming back: restart tick, catchup UI immediately
+      startTick();
+      tickSession();
+    }
+  };
+  document.addEventListener('visibilitychange', APP.visibilityHandler);
+}
+
+function resumeSessionUI() {
+  if (!APP.session) return;
+  tickSession();
+  startTick();
+}
+
+function tickSession() {
+  if (!APP.session) return;
+  const elapsed = getElapsedSeconds();
+  const vitd = elapsed * APP.session.vitdPerSec;
+  const burn = Math.min(100, elapsed * APP.session.burnPerSec);
+  const pct = Math.min(100, (vitd / APP.session.goal) * 100);
+
+  // Timer display
+  const m = Math.floor(elapsed / 60).toString().padStart(2,'0');
+  const s = (elapsed % 60).toString().padStart(2,'0');
+  document.getElementById('session-timer').textContent = `${m}:${s}`;
+
+  // Progress ring
+  const arc = document.getElementById('progress-arc');
+  const circumference = 452;
+  arc.style.strokeDashoffset = circumference - (circumference * pct / 100);
+  document.getElementById('progress-pct').textContent = Math.round(pct) + '%';
+  document.getElementById('live-vitd').textContent = Math.round(vitd) + ' IU';
+  document.getElementById('live-uv').textContent = APP.session.uvAtStart;
+
+  // Burn bar
+  const burnBar = document.getElementById('burn-bar');
+  burnBar.style.width = burn + '%';
+  burnBar.className = 'burn-bar ' + (burn < 40 ? 'burn-safe' : burn < 70 ? 'burn-warn' : 'burn-danger');
+
+  // Burn alert
+  if (burn >= 80 && !APP.session.burnAlerted) {
+    APP.session.burnAlerted = true;
+    showNotification('⚠️ SunTimeKids — Burn Risk', `${APP.children[APP.session.childIndices[0]].name} is approaching sun overexposure. Consider shade or sunscreen.`);
+  }
+
+  // Goal reached
+  if (pct >= 100 && !APP.session.goalReached) {
+    APP.session.goalReached = true;
+    APP.session.vitdAccumulated = vitd;
+    APP.session.elapsedAtGoal = elapsed;
+    stopTick();
+    setTimeout(() => triggerCelebration(elapsed, vitd), 500);
+  }
+}
+
+function triggerCelebration(elapsed, vitd) {
+  const names = APP.session.childIndices.map(i => APP.children[i].name);
+  const nameStr = names.length > 1 ? names.join(' & ') : names[0];
+  const min = Math.floor(elapsed / 60);
+  const sec = elapsed % 60;
+  const timeStr = min > 0 ? `${min}m ${sec}s` : `${sec}s`;
+
+  document.getElementById('cel-title').innerHTML = `${nameStr}<br>hit their goal! ☀️`;
+  document.getElementById('cel-sub').textContent = `Daily vitamin D reached after ${timeStr} outdoors`;
+  document.getElementById('cel-vitd').textContent = Math.round(vitd) + ' IU';
+  document.getElementById('cel-duration').textContent = timeStr;
+  document.getElementById('cel-streak').textContent = '🔥 ' + calcStreak();
+
+  showNotification('🌟 SunTimeKids', `${nameStr} reached their daily vitamin D goal!`);
+  goTo('screen-celebrate');
+}
+
+function extendSession() {
+  APP.session.goalReached = false;
+  APP.session.pausedElapsed = getElapsedSeconds();
+  APP.session.startTime = Date.now();
+  goTo('screen-session');
+  startTick();
+  setupVisibilityHandler();
+}
+
+function endSessionManual() {
+  const elapsed = getElapsedSeconds();
+  const vitd = elapsed * APP.session.vitdPerSec;
+  APP.session.vitdAccumulated = vitd;
+  APP.session.elapsedSeconds = elapsed;
+  saveSession();
+  stopTick();
+  goTo('screen-home');
+}
+
+function finishSession() {
+  APP.session.elapsedSeconds = APP.session.elapsedAtGoal || getElapsedSeconds();
+  saveSession();
+  stopTick();
+  if (APP.visibilityHandler) {
+    document.removeEventListener('visibilitychange', APP.visibilityHandler);
+    APP.visibilityHandler = null;
+  }
+  APP.session = null;
+  goTo('screen-home');
+}
+
+// ============================================================
+// SESSION PERSISTENCE
+// ============================================================
+function saveSession() {
+  if (!APP.session) return;
+  const elapsed = APP.session.elapsedSeconds || getElapsedSeconds();
+  const vitd = APP.session.vitdAccumulated || elapsed * APP.session.vitdPerSec;
+  const record = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    childIndices: APP.session.childIndices,
+    elapsedSeconds: elapsed,
+    vitdAccumulated: vitd,
+    goalReached: vitd >= APP.session.goal,
+    goal: APP.session.goal,
+    uvIndex: APP.session.uvAtStart,
+    location: APP.locationName
+  };
+  APP.sessions.push(record);
+  // Persist to localStorage so data survives closing and reopening the app
+  storeSet('stk_sessions', APP.sessions);
+  saveProfilesToStorage();
+}
+
+async function loadSessions() {
+  const saved = await storeLoad('stk_sessions');
+  if (saved && Array.isArray(saved)) APP.sessions = saved;
+}
+
+function saveProfilesToStorage() {
+  const profiles = APP.children.map(c => ({
+    name: c.name, age: c.age, fitz: c.fitz, goal: c.goal, photo: c.photo
+  }));
+  storeSet('stk_profiles', profiles);
+}
+
+async function loadProfiles() {
+  const profiles = await storeLoad('stk_profiles');
+  if (profiles && Array.isArray(profiles)) {
+    profiles.forEach((p, i) => {
+      if (APP.children[i]) Object.assign(APP.children[i], p);
+    });
+  }
+}
+
+// ============================================================
+// STORAGE — IndexedDB primary, localStorage + cookie fallbacks
+// All three mechanisms tried to maximise iOS PWA compatibility
+// ============================================================
+const _mem = {};
+let _db = null;
+
+function storeInit() {
+  return new Promise(resolve => {
+    try {
+      const req = indexedDB.open('SunTimeKids', 2);
+      req.onupgradeneeded = e => {
+        try { e.target.result.createObjectStore('kv'); } catch(ex) {}
+      };
+      req.onsuccess = e => { _db = e.target.result; resolve(); };
+      req.onerror = () => resolve();
+      req.onblocked = () => resolve();
+    } catch(e) { resolve(); }
+  });
+}
+
+function cookieSet(key, val) {
+  try {
+    // Encode as base64 to avoid cookie character issues
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(val))));
+    // Set with 1-year expiry
+    const exp = new Date(Date.now() + 365*24*60*60*1000).toUTCString();
+    document.cookie = key + '=' + encoded + '; expires=' + exp + '; path=/; SameSite=Lax';
+  } catch(e) {}
+}
+
+function cookieGet(key) {
+  try {
+    const match = document.cookie.match('(^|;)\s*' + key + '\s*=\s*([^;]+)');
+    if (match) return JSON.parse(decodeURIComponent(escape(atob(match[2]))));
+  } catch(e) {}
+  return null;
+}
+
+function storeSet(key, val) {
+  _mem[key] = val;
+  // IndexedDB
+  if (_db) {
+    try {
+      const tx = _db.transaction('kv', 'readwrite');
+      tx.objectStore('kv').put(JSON.stringify(val), key);
+    } catch(e) {}
+  }
+  // localStorage
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
+  // Cookie (most reliable in iOS PWA)
+  cookieSet(key, val);
+}
+
+async function storeLoad(key) {
+  // 1. Try IndexedDB
+  if (_db) {
+    try {
+      const val = await new Promise(res => {
+        const tx = _db.transaction('kv', 'readonly');
+        const req = tx.objectStore('kv').get(key);
+        req.onsuccess = () => res(req.result || null);
+        req.onerror = () => res(null);
+      });
+      if (val) { const p = JSON.parse(val); _mem[key] = p; return p; }
+    } catch(e) {}
+  }
+  // 2. Try localStorage
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) { const p = JSON.parse(raw); _mem[key] = p; return p; }
+  } catch(e) {}
+  // 3. Try cookie
+  const fromCookie = cookieGet(key);
+  if (fromCookie) { _mem[key] = fromCookie; return fromCookie; }
+  // 4. In-memory fallback
+  return _mem[key] || null;
+}
+
+function getTodaySessions() {
+  const today = new Date().toDateString();
+  return APP.sessions.filter(s => new Date(s.date).toDateString() === today);
+}
+
+function getWeekSessions() {
+  const now = new Date();
+  const weekAgo = new Date(now - 7 * 86400000);
+  return APP.sessions.filter(s => new Date(s.date) >= weekAgo);
+}
+
+function getWeekTotalMinutes() {
+  return Math.round(getWeekSessions().reduce((sum, s) => sum + s.elapsedSeconds, 0) / 60);
+}
+
+function getWeekGoalCount() {
+  return getWeekSessions().filter(s => s.goalReached).length;
+}
+
+function getWeekDayCount() {
+  const days = new Set(getWeekSessions().map(s => new Date(s.date).toDateString()));
+  return days.size || 1;
+}
+
+function calcStreak() {
+  if (!APP.sessions.length) return 0;
+  const days = [...new Set(APP.sessions.filter(s=>s.goalReached).map(s => new Date(s.date).toDateString()))];
+  if (!days.length) return 0;
+  days.sort((a,b) => new Date(b) - new Date(a));
+  let streak = 0;
+  let check = new Date(); check.setHours(0,0,0,0);
+  for (let d of days) {
+    const day = new Date(d); day.setHours(0,0,0,0);
+    const diff = Math.round((check - day) / 86400000);
+    if (diff <= 1) { streak++; check = day; }
+    else break;
+  }
+  return streak;
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDash() {
+  document.getElementById('dash-subtitle').textContent = APP.locationName;
+  renderWeekChart();
+  renderTrendGrid();
+  renderDashChildren();
+  renderSessionHistory();
+}
+
+function renderWeekChart() {
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = new Date().getDay();
+  const barsEl = document.getElementById('week-bars');
+  const labelsEl = document.getElementById('week-day-labels');
+
+  // Build per-day minute totals from real sessions
+  const dayTotals = Array(7).fill(0);
+  const dayGoals = Array(7).fill(false);
+  APP.sessions.forEach(s => {
+    const d = new Date(s.date).getDay();
+    dayTotals[d] += s.elapsedSeconds / 60;
+    if (s.goalReached) dayGoals[d] = true;
+  });
+
+  // Add some demo data if no real sessions yet so chart looks useful
+  if (!APP.sessions.length) {
+    const demo = [35, 0, 65, 48, 70, 55, 0];
+    demo.forEach((v,i) => { if (i !== today) { dayTotals[i] = v; if (v >= 60) dayGoals[i] = true; } });
+  }
+
+  const maxVal = Math.max(...dayTotals, 1);
+  barsEl.innerHTML = days.map((d,i) => {
+    const v = dayTotals[i];
+    const cls = v === 0 ? 'none' : dayGoals[i] ? 'goal' : 'partial';
+    const h = v === 0 ? 4 : Math.max(8, Math.round((v / maxVal) * 72));
+    return `<div class="week-bar-wrap"><div class="week-bar ${cls}" style="height:${h}px;"></div></div>`;
+  }).join('');
+
+  labelsEl.innerHTML = days.map((d,i) => {
+    const isToday = i === today;
+    return `<div class="week-day ${isToday?'today':''}" style="flex:1;text-align:center;">${d}</div>`;
+  }).join('');
+}
+
+function renderTrendGrid() {
+  const weekMin = getWeekTotalMinutes();
+  const weekGoals = getWeekGoalCount();
+  const weekDays = getWeekDayCount();
+  const streak = calcStreak();
+  const uv = APP.uvIndex ? `${APP.uvIndex}` : '–';
+
+  document.getElementById('trend-grid').innerHTML = `
+    <div class="trend-card"><span class="trend-icon">⏱️</span><div class="trend-val">${weekMin >= 60 ? (weekMin/60).toFixed(1)+'h' : weekMin+'m'}</div><div class="trend-label">Outdoor time (7 days)</div></div>
+    <div class="trend-card"><span class="trend-icon">🎯</span><div class="trend-val">${weekGoals}/${weekDays}</div><div class="trend-label">Goals hit this week</div></div>
+    <div class="trend-card"><span class="trend-icon">🔥</span><div class="trend-val">${streak} day${streak!==1?'s':''}</div><div class="trend-label">Current streak</div></div>
+    <div class="trend-card"><span class="trend-icon">🌡️</span><div class="trend-val">${uv}</div><div class="trend-label">Live UV · ${APP.locationName.split(',')[0]}</div></div>`;
+}
+
+function renderDashChildren() {
+  const list = document.getElementById('dash-child-list');
+  list.innerHTML = APP.children.map((c, i) => {
+    const sessions = APP.sessions.filter(s => s.childIndices.includes(i));
+    const totalMin = Math.round(sessions.reduce((sum,s) => sum + s.elapsedSeconds, 0) / 60);
+    const goals = sessions.filter(s => s.goalReached).length;
+    const avatarBg = i === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+    const avatarContent = c.photo ? `<img src="${c.photo}" alt="${c.name}">` : (i===0?'👧':'👦');
+    return `
+      <div class="child-summary">
+        <div class="cs-avatar" style="background:${avatarBg};">${avatarContent}</div>
+        <div class="cs-info">
+          <div class="cs-name">${c.name}</div>
+          <div class="cs-stats">${totalMin}m outdoors total · ${goals} goal${goals!==1?'s':''} hit</div>
+        </div>
+        <div class="cs-streak">🔥 ${calcStreak()}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderSessionHistory() {
+  const list = document.getElementById('session-history-list');
+  if (!APP.sessions.length) {
+    list.innerHTML = `<div style="text-align:center;color:var(--soft);font-size:0.85rem;font-weight:600;padding:20px;">No sessions yet — head outside to get started! ☀️</div>`;
+    return;
+  }
+  const sorted = [...APP.sessions].reverse().slice(0, 10);
+  list.innerHTML = sorted.map(s => {
+    const date = new Date(s.date);
+    const dateStr = date.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+    const timeStr = date.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+    const dur = Math.floor(s.elapsedSeconds / 60);
+    const names = s.childIndices.map(i => APP.children[i]?.name || '?').join(' & ');
+    const badgeCls = s.goalReached ? '' : 'partial';
+    const badgeTxt = s.goalReached ? '✅ Goal Hit' : `${Math.round(s.vitdAccumulated)} IU`;
+    return `
+      <div class="history-item">
+        <div class="history-icon">☀️</div>
+        <div class="history-info">
+          <div class="history-title">${names} · ${dur}m outdoors</div>
+          <div class="history-meta">${dateStr} at ${timeStr} · UV ${s.uvIndex} · ${s.location}</div>
+        </div>
+        <div class="history-badge ${badgeCls}">${badgeTxt}</div>
+      </div>`;
+  }).join('');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+async function appInit() {
+  // Init IndexedDB first, then load data
+  await storeInit();
+  await loadSessions();
+  await loadProfiles();
+  initLocation();
+
+  // Wire buttons via addEventListener — never use inline onclick for iOS Safari
+  const locChangeBtn = document.getElementById('loc-change-btn');
+  if (locChangeBtn) locChangeBtn.addEventListener('click', promptManualLocation);
+
+  const locGpsBtn = document.getElementById('loc-gps-btn');
+  if (locGpsBtn) locGpsBtn.addEventListener('click', applyGPSLocation);
+
+  const locSearchBtn = document.getElementById('loc-search-btn');
+  if (locSearchBtn) locSearchBtn.addEventListener('click', applyManualLocation);
+
+  const locCancelBtn = document.getElementById('loc-cancel-btn');
+  if (locCancelBtn) locCancelBtn.addEventListener('click', closeLocModal);
+
+  // Allow Enter key in location input
+  const locInput = document.getElementById('loc-input');
+  if (locInput) locInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyManualLocation(); });
+
+  // Skip welcome screen if profiles already saved
+  const savedProfiles = await storeLoad('stk_profiles');
+  if (savedProfiles) {
+    goTo('screen-home');
+  }
+}
+
+appInit();
+</script>
+
+</body>
+</html>
