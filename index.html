@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SunTimeKids">
 <meta name="mobile-web-app-capable" content="yes">
-<title>SunTimeKids v2.2</title>
+<title>SunTimeKids v2.3</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -49,266 +48,265 @@
   .screen::-webkit-scrollbar { display: none; }
   .screen.active { display: flex; animation: screen-in 0.25s ease-out; }
   @keyframes screen-in { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
-
-/* –– SHARED COMPONENTS –– */
-.btn-primary {
-background: var(–sun); color: var(–ink); border: none; border-radius: 50px;
-padding: 16px 40px; font-family: ‘Nunito’,sans-serif; font-size: 1.05rem;
-font-weight: 800; cursor: pointer; box-shadow: 0 6px 24px rgba(255,184,0,0.45);
-transition: transform 0.15s; width: 100%; max-width: 100%;
-}
-.btn-primary:active { transform: scale(0.97); }
-.btn-secondary {
-background: white; color: var(–sky-dark); border: 2.5px solid var(–sky);
-border-radius: 50px; padding: 14px 32px; font-family: ‘Nunito’,sans-serif;
-font-size: 0.95rem; font-weight: 800; cursor: pointer; width: 100%;
-transition: transform 0.15s;
-}
-.btn-secondary:active { transform: scale(0.97); }
-.btn-nav {
-background: white; color: var(–sky-dark); border: 2px solid #DDE6F5;
-border-radius: 50px; padding: 14px; font-family: ‘Nunito’,sans-serif;
-font-size: 0.9rem; font-weight: 800; cursor: pointer; width: 100%;
-}
-.section-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(–soft); margin-bottom: 10px; }
-.field-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(–soft); margin-bottom: 8px; }
-.field-input {
-width: 100%; border: 2px solid #DDE6F5; border-radius: 14px; padding: 13px 16px;
-font-family: ‘Nunito’,sans-serif; font-size: 0.95rem; font-weight: 700;
-color: var(–ink); background: white; outline: none; transition: border-color 0.2s;
-}
-.field-input:focus { border-color: var(–sky); }
-.card {
-background: white; border-radius: 20px; padding: 16px;
-box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-}
-
-/* –– WELCOME –– */
-#screen-welcome {
-background: linear-gradient(160deg, var(–sky-dark) 0%, #2D9ED8 50%, #5BC8F5 100%);
-justify-content: center; align-items: center; text-align: center; padding: 40px 32px; gap: 0;
-}
-.welcome-sun {
-width: 110px; height: 110px; background: radial-gradient(circle at 40% 35%, #FFE566, var(–sun) 60%, var(–sun-deep));
-border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;
-font-size: 3rem; box-shadow: 0 0 0 16px rgba(255,184,0,0.15), 0 0 0 32px rgba(255,184,0,0.07);
-animation: pulse-sun 3s ease-in-out infinite;
-}
-@keyframes pulse-sun { 0%,100%{box-shadow:0 0 0 16px rgba(255,184,0,0.15),0 0 0 32px rgba(255,184,0,0.07)} 50%{box-shadow:0 0 0 22px rgba(255,184,0,0.2),0 0 0 40px rgba(255,184,0,0.05)} }
-.welcome-title { font-family:‘Baloo 2’,cursive; font-size:2.8rem; font-weight:800; color:white; line-height:1; margin-bottom:8px; text-shadow:0 2px 12px rgba(0,0,0,0.2); }
-.welcome-title span { color: var(–sun); }
-.welcome-sub { color: rgba(255,255,255,0.85); font-size:0.95rem; font-weight:600; margin-bottom:48px; line-height:1.5; }
-.welcome-badge {
-background: rgba(255,255,255,0.15); border-radius: 50px; padding: 8px 16px;
-font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 24px;
-display: inline-block; backdrop-filter: blur(4px);
-}
-
-/* –– ONBOARDING –– */
-.onboard-header { background: linear-gradient(135deg, var(–sky-dark), #2D9ED8); padding: 28px 24px 32px; color: white; }
-.onboard-header h2 { font-family:‘Baloo 2’,cursive; font-size:1.6rem; font-weight:800; margin-bottom:4px; }
-.onboard-header p { font-size:0.85rem; opacity:0.85; font-weight:600; }
-.onboard-body { padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; }
-.photo-row { display: flex; align-items: center; gap: 16px; }
-.photo-circle {
-width: 72px; height: 72px; border-radius: 50%;
-background: linear-gradient(135deg, #E8F4FF, #D0E8FF);
-border: 2.5px dashed var(–sky); display: flex; align-items: center; justify-content: center;
-font-size: 1.8rem; cursor: pointer; flex-shrink: 0; overflow: hidden;
-}
-.photo-circle img { width:100%; height:100%; object-fit:cover; }
-.photo-hint { font-size:0.8rem; font-weight:600; color:var(–soft); line-height:1.5; }
-.photo-hint strong { color:var(–sky-dark); display:block; font-size:0.85rem; }
-.fitz-grid { display:flex; gap:8px; justify-content:space-between; }
-.fitz-btn {
-flex:1; border-radius:12px; border:2.5px solid transparent; padding:10px 4px;
-cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;
-background:white; transition:border-color 0.15s,transform 0.15s;
-}
-.fitz-btn:active { transform:scale(0.95); }
-.fitz-btn.selected { border-color:var(–sky-dark); box-shadow:0 2px 10px rgba(26,122,196,0.2); }
-.fitz-swatch { width:36px; height:36px; border-radius:50%; border:2px solid rgba(0,0,0,0.08); }
-.fitz-btn span { font-size:0.6rem; font-weight:800; color:var(–soft); }
-.privacy-note { display:flex; align-items:center; gap:8px; background:#F0FFF5; border:1.5px solid var(–grass); border-radius:12px; padding:10px 14px; font-size:0.75rem; font-weight:600; color:#2A7A40; }
-
-/* –– HOME –– */
-.home-header { background:linear-gradient(135deg,var(–sky-dark) 0%,#2D9ED8 100%); padding:24px 24px 48px; color:white; position:relative; overflow:hidden; }
-.home-header::after { content:’’; position:absolute; bottom:-20px; left:0; right:0; height:40px; background:var(–bg); border-radius:50% 50% 0 0/100% 100% 0 0; }
-.home-greeting { font-size:0.85rem; opacity:0.8; font-weight:600; }
-.home-title { font-family:‘Baloo 2’,cursive; font-size:1.5rem; font-weight:800; margin-bottom:16px; }
-.uv-pill { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.2); border-radius:50px; padding:8px 16px; font-size:0.82rem; font-weight:700; backdrop-filter:blur(4px); }
-.uv-dot { width:10px; height:10px; border-radius:50%; background:var(–sun); animation:pulse-uv 2s infinite; }
-@keyframes pulse-uv { 0%,100%{opacity:1} 50%{opacity:0.4} }
-.home-body { padding:8px 20px 24px; display:flex; flex-direction:column; gap:14px; }
-.child-card { background:white; border-radius:20px; padding:16px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
-.child-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; border:3px solid white; box-shadow:0 2px 8px rgba(255,184,0,0.3); overflow:hidden; }
-.child-avatar img { width:100%; height:100%; object-fit:cover; }
-.child-info { flex:1; }
-.child-name { font-weight:800; font-size:0.95rem; color:var(–ink); }
-.child-meta { font-size:0.75rem; color:var(–soft); font-weight:600; }
-.vit-bar-wrap { margin-top:6px; background:#EEF3FF; border-radius:50px; height:8px; overflow:hidden; }
-.vit-bar { height:100%; border-radius:50px; background:linear-gradient(90deg,var(–grass),#7BE89A); transition:width 0.5s; }
-.btn-headout {
-background:linear-gradient(135deg,var(–sun),var(–sun-deep)); color:white; border:none;
-border-radius:24px; padding:20px; font-family:‘Baloo 2’,cursive; font-size:1.3rem; font-weight:800;
-cursor:pointer; box-shadow:0 8px 28px rgba(255,140,0,0.45); transition:transform 0.15s;
-display:flex; align-items:center; justify-content:center; gap:10px;
-text-shadow:0 1px 4px rgba(0,0,0,0.15); width:100%;
-}
-.btn-headout:active { transform:scale(0.97); }
-.stats-row { display:flex; gap:12px; }
-.stat-card { flex:1; background:white; border-radius:16px; padding:14px 12px; text-align:center; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
-.stat-icon { font-size:1.4rem; display:block; margin-bottom:4px; }
-.stat-val { font-family:‘Baloo 2’,cursive; font-size:1.2rem; font-weight:800; color:var(–ink); }
-.stat-label { font-size:0.67rem; font-weight:700; color:var(–soft); text-transform:uppercase; letter-spacing:0.5px; }
-
-/* –– LOCATION BANNER –– */
-.loc-banner {
-background: #FFF8E8; border: 1.5px solid var(–sun); border-radius: 14px;
-padding: 10px 14px; font-size: 0.78rem; font-weight: 700; color: #7A5500;
-display: flex; align-items: center; gap: 8px;
-}
-
-/* –– WHO’S GOING OUT –– */
-#screen-whosout { justify-content: flex-end; }
-.modal-bg { flex:1; background:rgba(26,35,64,0.3); backdrop-filter:blur(2px); }
-.modal-sheet { background:white; border-radius:28px 28px 0 0; padding:24px 24px 40px; box-shadow:0 -8px 32px rgba(0,0,0,0.12); }
-.sheet-handle { width:40px; height:4px; background:#DDE6F5; border-radius:2px; margin:0 auto 20px; }
-.sheet-title { font-family:‘Baloo 2’,cursive; font-size:1.4rem; font-weight:800; color:var(–ink); margin-bottom:4px; }
-.sheet-sub { font-size:0.82rem; color:var(–soft); font-weight:600; margin-bottom:20px; }
-.who-child { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:16px; border:2.5px solid #EEF3FF; margin-bottom:10px; cursor:pointer; transition:border-color 0.15s,background 0.15s; background:#FAFCFF; }
-.who-child.selected { border-color:var(–sky-dark); background:#EEF6FF; }
-.who-check { width:26px; height:26px; border-radius:50%; border:2.5px solid #DDE6F5; display:flex; align-items:center; justify-content:center; margin-left:auto; font-size:0.9rem; transition:background 0.15s,border-color 0.15s; flex-shrink:0; }
-.who-child.selected .who-check { background:var(–sky-dark); border-color:var(–sky-dark); color:white; }
-
-/* –– SESSION SETUP –– */
-.setup-header { background:linear-gradient(135deg,var(–grass),#38A85C); padding:24px 24px 32px; color:white; }
-.setup-header h2 { font-family:‘Baloo 2’,cursive; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
-.setup-header p { font-size:0.82rem; opacity:0.85; font-weight:600; }
-.setup-body { padding:20px; display:flex; flex-direction:column; gap:20px; }
-.clothing-grid { display:flex; gap:8px; justify-content:space-between; }
-.clothing-btn { flex:1; border-radius:14px; border:2.5px solid #DDE6F5; padding:10px 4px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; background:white; transition:border-color 0.15s,background 0.15s; }
-.clothing-btn:active { transform:scale(0.95); }
-.clothing-btn.selected { border-color:var(–grass); background:#D4F7E0; box-shadow:0 0 0 2px var(–grass); }
-.clothing-btn.selected .clothing-label { color:var(–grass); }
-.clothing-icon { font-size:1.6rem; }
-.clothing-label { font-size:0.58rem; font-weight:800; color:var(–soft); text-align:center; line-height:1.2; }
-.spf-grid { display:flex; gap:8px; }
-.spf-btn { flex:1; border-radius:14px; border:2.5px solid #DDE6F5; padding:12px 6px; cursor:pointer; text-align:center; background:white; transition:border-color 0.15s,background 0.15s; }
-.spf-btn.selected { border-color:var(–sky-dark); background:#D0EEFF; box-shadow:0 0 0 2px var(–sky-dark); }
-.spf-btn.selected .spf-label { color:var(–sky-dark); font-weight:900; }
-.spf-icon { font-size:1.3rem; display:block; margin-bottom:3px; }
-.spf-label { font-size:0.65rem; font-weight:800; color:var(–ink); }
-
-/* –– ACTIVE SESSION –– */
-#screen-session { background:linear-gradient(160deg,#0A4A7A 0%,#1A7AC4 40%,#2D9ED8 100%); color:white; }
-.session-top { padding:24px 24px 16px; text-align:center; }
-.session-children { display:flex; justify-content:center; margin-bottom:12px; }
-.session-avatar { width:56px; height:56px; border-radius:50%; border:3px solid rgba(255,255,255,0.5); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:linear-gradient(135deg,#FFE0A0,#FFB800); margin:0 -4px; }
-.session-avatar img { width:100%; height:100%; object-fit:cover; }
-.session-label { font-size:0.82rem; opacity:0.8; font-weight:600; margin-bottom:2px; }
-.session-timer { font-family:‘Baloo 2’,cursive; font-size:3rem; font-weight:800; letter-spacing:2px; text-shadow:0 2px 12px rgba(0,0,0,0.2); }
-.bg-notice { background:rgba(255,255,255,0.12); border-radius:12px; padding:8px 16px; font-size:0.72rem; font-weight:700; opacity:0.85; margin:0 24px 8px; text-align:center; }
-.progress-ring-wrap { display:flex; justify-content:center; padding:8px 0 16px; position:relative; }
-.progress-ring-wrap svg { transform:rotate(-90deg); }
-.progress-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.progress-pct { font-family:‘Baloo 2’,cursive; font-size:2.2rem; font-weight:800; color:white; }
-.progress-sub { font-size:0.72rem; opacity:0.75; font-weight:600; }
-.live-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding:0 20px 16px; }
-.live-stat { background:rgba(255,255,255,0.12); border-radius:16px; padding:12px 8px; text-align:center; backdrop-filter:blur(4px); }
-.live-stat-icon { font-size:1.3rem; display:block; margin-bottom:4px; }
-.live-stat-val { font-family:‘Baloo 2’,cursive; font-size:1.1rem; font-weight:800; }
-.live-stat-label { font-size:0.6rem; opacity:0.7; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
-.burn-section { margin:0 20px 16px; background:rgba(255,255,255,0.1); border-radius:16px; padding:14px 16px; }
-.burn-title { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; opacity:0.7; margin-bottom:8px; }
-.burn-bar-bg { background:rgba(255,255,255,0.2); border-radius:50px; height:10px; overflow:hidden; }
-.burn-bar { height:100%; border-radius:50px; transition:width 1s; }
-.burn-safe { background:linear-gradient(90deg,#4DC87A,#7BE89A); }
-.burn-warn { background:linear-gradient(90deg,#FFB800,#FF8C00); }
-.burn-danger { background:linear-gradient(90deg,#FF6060,#FF3030); }
-.burn-labels { display:flex; justify-content:space-between; margin-top:4px; }
-.burn-labels span { font-size:0.6rem; opacity:0.6; font-weight:700; }
-.btn-end { margin:0 20px 24px; background:rgba(255,255,255,0.15); color:white; border:2px solid rgba(255,255,255,0.3); border-radius:50px; padding:14px; font-family:‘Nunito’,sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer; width:calc(100% - 40px); }
-
-/* –– CELEBRATION –– */
-#screen-celebrate { background:linear-gradient(160deg,#FF5500 0%,#FF8C00 30%,#FFB800 70%,#FFD700 100%); justify-content:center; align-items:center; text-align:center; padding:40px 32px; }
-.confetti-wrap { position:relative; margin-bottom:20px; }
-.celebrate-emoji { font-size:5rem; display:block; animation:cel-bounce 0.8s ease-in-out infinite alternate; }
-@keyframes cel-bounce { from{transform:scale(1) rotate(-5deg)} to{transform:scale(1.1) rotate(5deg)} }
-.confetti { position:absolute; width:12px; height:12px; border-radius:3px; animation:confetti-fall 1.6s ease-in-out infinite; }
-@keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(60px) rotate(360deg);opacity:0} }
-.celebrate-title { font-family:‘Baloo 2’,cursive; font-size:1.9rem; font-weight:800; color:white; text-shadow:0 2px 8px rgba(0,0,0,0.15); margin-bottom:8px; }
-.celebrate-sub { color:rgba(255,255,255,0.85); font-size:0.88rem; font-weight:600; margin-bottom:28px; line-height:1.5; }
-.celebrate-stats { display:flex; gap:12px; width:100%; margin-bottom:24px; }
-.cel-stat { flex:1; background:rgba(255,255,255,0.35); border-radius:16px; padding:14px 8px; backdrop-filter:blur(4px); border:2px solid rgba(255,255,255,0.5); }
-.cel-stat-val { font-family:‘Baloo 2’,cursive; font-size:1.4rem; font-weight:800; color:white; }
-.cel-stat-label { font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.8); text-transform:uppercase; }
-.btn-extend { background:white; color:var(–sun-deep); border:none; border-radius:50px; padding:16px 32px; font-family:‘Nunito’,sans-serif; font-size:1rem; font-weight:800; cursor:pointer; width:100%; margin-bottom:12px; box-shadow:0 6px 20px rgba(0,0,0,0.15); transition:transform 0.15s; }
-.btn-extend:active { transform:scale(0.97); }
-.btn-done { background:rgba(255,255,255,0.2); color:white; border:2px solid rgba(255,255,255,0.4); border-radius:50px; padding:14px 32px; font-family:‘Nunito’,sans-serif; font-size:0.95rem; font-weight:800; cursor:pointer; width:100%; }
-
-/* –– DASHBOARD –– */
-.dash-header { background:linear-gradient(135deg,var(–ink),#2A3A60); padding:24px 24px 36px; color:white; }
-.dash-header h2 { font-family:‘Baloo 2’,cursive; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
-.dash-header p { font-size:0.82rem; opacity:0.7; font-weight:600; }
-.dash-body { padding:12px 20px 32px; display:flex; flex-direction:column; gap:16px; }
-.dash-section-title { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(–soft); margin-bottom:10px; }
-.week-chart { background:white; border-radius:20px; padding:18px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
-.week-bars { display:flex; align-items:flex-end; gap:8px; height:80px; margin-bottom:8px; }
-.week-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end; }
-.week-bar { width:100%; border-radius:6px 6px 0 0; min-height:4px; }
-.week-bar.goal { background:linear-gradient(180deg,var(–grass),#38A85C); }
-.week-bar.partial { background:linear-gradient(180deg,var(–sky),var(–sky-dark)); }
-.week-bar.none { background:#EEF3FF; min-height:4px; height:4px !important; }
-.week-day { font-size:0.62rem; font-weight:800; color:var(–soft); flex:1; text-align:center; }
-.week-day.today { color:var(–sky-dark); }
-.trend-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.trend-card { background:white; border-radius:18px; padding:16px 14px; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
-.trend-icon { font-size:1.5rem; display:block; margin-bottom:6px; }
-.trend-val { font-family:‘Baloo 2’,cursive; font-size:1.4rem; font-weight:800; color:var(–ink); }
-.trend-label { font-size:0.7rem; font-weight:700; color:var(–soft); }
-.trend-change { font-size:0.72rem; font-weight:800; margin-top:4px; }
-.trend-up { color:var(–grass); } .trend-down { color:var(–coral); }
-
-/* –– SESSION HISTORY –– */
-.history-item {
-background: white; border-radius:16px; padding:14px 16px;
-box-shadow:0 3px 12px rgba(0,0,0,0.05); margin-bottom:10px;
-display:flex; align-items:center; gap:12px;
-}
-.history-icon { font-size:1.8rem; flex-shrink:0; }
-.history-info { flex:1; }
-.history-title { font-weight:800; font-size:0.88rem; color:var(–ink); }
-.history-meta { font-size:0.75rem; color:var(–soft); font-weight:600; margin-top:2px; }
-.history-badge { background:linear-gradient(135deg,var(–sun),var(–sun-deep)); color:white; border-radius:50px; padding:4px 10px; font-size:0.7rem; font-weight:800; flex-shrink:0; }
-.history-badge.partial { background:linear-gradient(135deg,var(–sky),var(–sky-dark)); }
-
-/* –– CHILD SUMMARY –– */
-.child-summary { background:white; border-radius:20px; padding:16px; box-shadow:0 3px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; margin-bottom:10px; }
-.cs-avatar { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; overflow:hidden; }
-.cs-avatar img { width:100%; height:100%; object-fit:cover; }
-.cs-info { flex:1; }
-.cs-name { font-weight:800; font-size:0.9rem; color:var(–ink); }
-.cs-stats { font-size:0.75rem; color:var(–soft); font-weight:600; margin-top:2px; }
-.cs-streak { background:linear-gradient(135deg,var(–sun),var(–sun-deep)); color:white; border-radius:50px; padding:4px 10px; font-size:0.72rem; font-weight:800; }
-
-/* –– BOTTOM NAV –– */
-.bottom-nav { display:flex; background:white; border-top:1.5px solid #EEF3FF; padding:10px 0 16px; flex-shrink:0; }
-.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px; }
-.nav-icon { font-size:1.3rem; }
-.nav-label { font-size:0.6rem; font-weight:800; color:var(–soft); text-transform:uppercase; letter-spacing:0.5px; }
-.nav-item.active .nav-label { color:var(–sky-dark); }
-.nav-item.active .nav-icon { filter: drop-shadow(0 0 4px rgba(26,122,196,0.4)); }
-
-/* –– NOTIF PERMISSION BANNER –– */
-.notif-banner {
-background:#F0FFF5; border:1.5px solid var(–grass); border-radius:14px;
-padding:12px 14px; font-size:0.78rem; font-weight:700; color:#2A7A40;
-display:flex; align-items:center; justify-content:space-between; gap:8px;
-}
-.notif-banner button { background:var(–grass); color:white; border:none; border-radius:50px; padding:6px 14px; font-family:‘Nunito’,sans-serif; font-size:0.75rem; font-weight:800; cursor:pointer; flex-shrink:0; }
+ 
+  /* ---- SHARED COMPONENTS ---- */
+  .btn-primary {
+    background: var(--sun); color: var(--ink); border: none; border-radius: 50px;
+    padding: 16px 40px; font-family: 'Nunito',sans-serif; font-size: 1.05rem;
+    font-weight: 800; cursor: pointer; box-shadow: 0 6px 24px rgba(255,184,0,0.45);
+    transition: transform 0.15s; width: 100%; max-width: 100%;
+  }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-secondary {
+    background: white; color: var(--sky-dark); border: 2.5px solid var(--sky);
+    border-radius: 50px; padding: 14px 32px; font-family: 'Nunito',sans-serif;
+    font-size: 0.95rem; font-weight: 800; cursor: pointer; width: 100%;
+    transition: transform 0.15s;
+  }
+  .btn-secondary:active { transform: scale(0.97); }
+  .btn-nav {
+    background: white; color: var(--sky-dark); border: 2px solid #DDE6F5;
+    border-radius: 50px; padding: 14px; font-family: 'Nunito',sans-serif;
+    font-size: 0.9rem; font-weight: 800; cursor: pointer; width: 100%;
+  }
+  .section-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink); margin-bottom: 10px; }
+  .field-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--soft); margin-bottom: 8px; }
+  .field-input {
+    width: 100%; border: 2px solid #DDE6F5; border-radius: 14px; padding: 13px 16px;
+    font-family: 'Nunito',sans-serif; font-size: 0.95rem; font-weight: 700;
+    color: var(--ink); background: white; outline: none; transition: border-color 0.2s;
+  }
+  .field-input:focus { border-color: var(--sky); }
+  .card {
+    background: white; border-radius: 20px; padding: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+ 
+  /* ---- WELCOME ---- */
+  #screen-welcome {
+    background: linear-gradient(160deg, var(--sky-dark) 0%, #2D9ED8 50%, #5BC8F5 100%);
+    justify-content: center; align-items: center; text-align: center; padding: 40px 32px; gap: 0;
+  }
+  .welcome-sun {
+    width: 110px; height: 110px; background: radial-gradient(circle at 40% 35%, #FFE566, var(--sun) 60%, var(--sun-deep));
+    border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; box-shadow: 0 0 0 16px rgba(255,184,0,0.15), 0 0 0 32px rgba(255,184,0,0.07);
+    animation: pulse-sun 3s ease-in-out infinite;
+  }
+  @keyframes pulse-sun { 0%,100%{box-shadow:0 0 0 16px rgba(255,184,0,0.15),0 0 0 32px rgba(255,184,0,0.07)} 50%{box-shadow:0 0 0 22px rgba(255,184,0,0.2),0 0 0 40px rgba(255,184,0,0.05)} }
+  .welcome-title { font-family:'Baloo 2',cursive; font-size:2.8rem; font-weight:800; color:white; line-height:1; margin-bottom:8px; text-shadow:0 2px 12px rgba(0,0,0,0.2); }
+  .welcome-title span { color: var(--sun); }
+  .welcome-sub { color: rgba(255,255,255,0.85); font-size:0.95rem; font-weight:600; margin-bottom:48px; line-height:1.5; }
+  .welcome-badge {
+    background: rgba(255,255,255,0.15); border-radius: 50px; padding: 8px 16px;
+    font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 24px;
+    display: inline-block; backdrop-filter: blur(4px);
+  }
+ 
+  /* ---- ONBOARDING ---- */
+  .onboard-header { background: linear-gradient(135deg, var(--sky-dark), #2D9ED8); padding: 28px 24px 32px; color: white; }
+  .onboard-header h2 { font-family:'Baloo 2',cursive; font-size:1.6rem; font-weight:800; margin-bottom:4px; }
+  .onboard-header p { font-size:0.85rem; opacity:0.85; font-weight:600; }
+  .onboard-body { padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; }
+  .photo-row { display: flex; align-items: center; gap: 16px; }
+  .photo-circle {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, #E8F4FF, #D0E8FF);
+    border: 2.5px dashed var(--sky); display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; cursor: pointer; flex-shrink: 0; overflow: hidden;
+  }
+  .photo-circle img { width:100%; height:100%; object-fit:cover; }
+  .photo-hint { font-size:0.8rem; font-weight:600; color:var(--soft); line-height:1.5; }
+  .photo-hint strong { color:var(--sky-dark); display:block; font-size:0.85rem; }
+  .fitz-grid { display:flex; gap:8px; justify-content:space-between; }
+  .fitz-btn {
+    flex:1; border-radius:12px; border:2.5px solid transparent; padding:10px 4px;
+    cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:white; transition:border-color 0.15s,transform 0.15s;
+  }
+  .fitz-btn:active { transform:scale(0.95); }
+  .fitz-btn.selected { border-color:var(--sky-dark); box-shadow:0 2px 10px rgba(26,122,196,0.2); }
+  .fitz-swatch { width:36px; height:36px; border-radius:50%; border:2px solid rgba(0,0,0,0.08); }
+  .fitz-btn span { font-size:0.6rem; font-weight:800; color:var(--soft); }
+  .privacy-note { display:flex; align-items:center; gap:8px; background:#F0FFF5; border:1.5px solid var(--grass); border-radius:12px; padding:10px 14px; font-size:0.75rem; font-weight:600; color:#2A7A40; }
+ 
+  /* ---- HOME ---- */
+  .home-header { background:linear-gradient(135deg,var(--sky-dark) 0%,#2D9ED8 100%); padding:24px 24px 48px; color:white; position:relative; overflow:hidden; }
+  .home-header::after { content:''; position:absolute; bottom:-20px; left:0; right:0; height:40px; background:var(--bg); border-radius:50% 50% 0 0/100% 100% 0 0; }
+  .home-greeting { font-size:0.85rem; opacity:0.8; font-weight:600; }
+  .home-title { font-family:'Baloo 2',cursive; font-size:1.5rem; font-weight:800; margin-bottom:16px; }
+  .uv-pill { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.2); border-radius:50px; padding:8px 16px; font-size:0.82rem; font-weight:700; backdrop-filter:blur(4px); }
+  .uv-dot { width:10px; height:10px; border-radius:50%; background:var(--sun); animation:pulse-uv 2s infinite; }
+  @keyframes pulse-uv { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .home-body { padding:8px 20px 24px; display:flex; flex-direction:column; gap:14px; }
+  .child-card { background:white; border-radius:20px; padding:16px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+  .child-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; border:3px solid white; box-shadow:0 2px 8px rgba(255,184,0,0.3); overflow:hidden; }
+  .child-avatar img { width:100%; height:100%; object-fit:cover; }
+  .child-info { flex:1; }
+  .child-name { font-weight:800; font-size:0.95rem; color:var(--ink); }
+  .child-meta { font-size:0.75rem; color:var(--soft); font-weight:600; }
+  .vit-bar-wrap { margin-top:6px; background:#EEF3FF; border-radius:50px; height:8px; overflow:hidden; }
+  .vit-bar { height:100%; border-radius:50px; background:linear-gradient(90deg,var(--grass),#7BE89A); transition:width 0.5s; }
+  .btn-headout {
+    background:linear-gradient(135deg,var(--sun),var(--sun-deep)); color:white; border:none;
+    border-radius:24px; padding:20px; font-family:'Baloo 2',cursive; font-size:1.3rem; font-weight:800;
+    cursor:pointer; box-shadow:0 8px 28px rgba(255,140,0,0.45); transition:transform 0.15s;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    text-shadow:0 1px 4px rgba(0,0,0,0.15); width:100%;
+  }
+  .btn-headout:active { transform:scale(0.97); }
+  .stats-row { display:flex; gap:12px; }
+  .stat-card { flex:1; background:white; border-radius:16px; padding:14px 12px; text-align:center; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
+  .stat-icon { font-size:1.4rem; display:block; margin-bottom:4px; }
+  .stat-val { font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:800; color:var(--ink); }
+  .stat-label { font-size:0.67rem; font-weight:700; color:var(--soft); text-transform:uppercase; letter-spacing:0.5px; }
+ 
+  /* ---- LOCATION BANNER ---- */
+  .loc-banner {
+    background: #FFF8E8; border: 1.5px solid var(--sun); border-radius: 14px;
+    padding: 10px 14px; font-size: 0.78rem; font-weight: 700; color: #7A5500;
+    display: flex; align-items: center; gap: 8px;
+  }
+ 
+  /* ---- WHO'S GOING OUT ---- */
+  #screen-whosout { justify-content: flex-end; }
+  .modal-bg { flex:1; background:rgba(26,35,64,0.3); backdrop-filter:blur(2px); }
+  .modal-sheet { background:white; border-radius:28px 28px 0 0; padding:24px 24px 40px; box-shadow:0 -8px 32px rgba(0,0,0,0.12); }
+  .sheet-handle { width:40px; height:4px; background:#DDE6F5; border-radius:2px; margin:0 auto 20px; }
+  .sheet-title { font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:800; color:var(--ink); margin-bottom:4px; }
+  .sheet-sub { font-size:0.82rem; color:var(--soft); font-weight:600; margin-bottom:20px; }
+  .who-child { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:16px; border:2.5px solid #EEF3FF; margin-bottom:10px; cursor:pointer; transition:border-color 0.15s,background 0.15s; background:#FAFCFF; }
+  .who-child.selected { border-color:var(--sky-dark); background:#EEF6FF; }
+  .who-check { width:26px; height:26px; border-radius:50%; border:2.5px solid #DDE6F5; display:flex; align-items:center; justify-content:center; margin-left:auto; font-size:0.9rem; transition:background 0.15s,border-color 0.15s; flex-shrink:0; }
+  .who-child.selected .who-check { background:var(--sky-dark); border-color:var(--sky-dark); color:white; }
+ 
+  /* ---- SESSION SETUP ---- */
+  .setup-header { background:linear-gradient(135deg,#1A2340,#2A3A60); padding:24px 24px 32px; color:white; }
+  .setup-header h2 { font-family:'Baloo 2',cursive; font-size:1.5rem; font-weight:800; margin-bottom:4px; color:white; }
+  .setup-header p { font-size:0.82rem; font-weight:600; color:rgba(255,255,255,0.85); }
+  .setup-body { padding:20px; display:flex; flex-direction:column; gap:20px; }
+  .clothing-grid { display:flex; gap:8px; justify-content:space-between; }
+  .clothing-btn { flex:1; border-radius:14px; border:2.5px solid #DDE6F5; padding:10px 4px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; background:white; transition:border-color 0.15s,background 0.15s; }
+  .clothing-btn:active { transform:scale(0.95); }
+  .clothing-btn.selected { border-color:var(--grass); background:#D4F7E0; box-shadow:0 0 0 2px var(--grass); }
+  .clothing-btn.selected .clothing-label { color:var(--grass); }
+  .clothing-icon { font-size:1.6rem; }
+  .clothing-label { font-size:0.58rem; font-weight:800; color:var(--soft); text-align:center; line-height:1.2; }
+  .spf-grid { display:flex; gap:8px; }
+  .spf-btn { flex:1; border-radius:14px; border:2.5px solid #DDE6F5; padding:12px 6px; cursor:pointer; text-align:center; background:white; transition:border-color 0.15s,background 0.15s; }
+  .spf-btn.selected { border-color:var(--sky-dark); background:#D0EEFF; box-shadow:0 0 0 2px var(--sky-dark); }
+  .spf-btn.selected .spf-label { color:var(--sky-dark); font-weight:900; }
+  .spf-icon { font-size:1.3rem; display:block; margin-bottom:3px; }
+  .spf-label { font-size:0.65rem; font-weight:800; color:var(--ink); }
+ 
+  /* ---- ACTIVE SESSION ---- */
+  #screen-session { background:linear-gradient(160deg,#0A4A7A 0%,#1A7AC4 40%,#2D9ED8 100%); color:white; }
+  .session-top { padding:24px 24px 16px; text-align:center; }
+  .session-children { display:flex; justify-content:center; margin-bottom:12px; }
+  .session-avatar { width:56px; height:56px; border-radius:50%; border:3px solid rgba(255,255,255,0.5); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:linear-gradient(135deg,#FFE0A0,#FFB800); margin:0 -4px; }
+  .session-avatar img { width:100%; height:100%; object-fit:cover; }
+  .session-label { font-size:0.82rem; opacity:0.8; font-weight:600; margin-bottom:2px; }
+  .session-timer { font-family:'Baloo 2',cursive; font-size:3rem; font-weight:800; letter-spacing:2px; text-shadow:0 2px 12px rgba(0,0,0,0.2); }
+  .bg-notice { background:rgba(255,255,255,0.12); border-radius:12px; padding:8px 16px; font-size:0.72rem; font-weight:700; opacity:0.85; margin:0 24px 8px; text-align:center; }
+  .progress-ring-wrap { display:flex; justify-content:center; padding:8px 0 16px; position:relative; }
+  .progress-ring-wrap svg { transform:rotate(-90deg); }
+  .progress-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .progress-pct { font-family:'Baloo 2',cursive; font-size:2.2rem; font-weight:800; color:white; }
+  .progress-sub { font-size:0.72rem; opacity:0.75; font-weight:600; }
+  .live-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding:0 20px 16px; }
+  .live-stat { background:rgba(255,255,255,0.12); border-radius:16px; padding:12px 8px; text-align:center; backdrop-filter:blur(4px); }
+  .live-stat-icon { font-size:1.3rem; display:block; margin-bottom:4px; }
+  .live-stat-val { font-family:'Baloo 2',cursive; font-size:1.1rem; font-weight:800; }
+  .live-stat-label { font-size:0.6rem; opacity:0.7; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  .burn-section { margin:0 20px 16px; background:rgba(255,255,255,0.1); border-radius:16px; padding:14px 16px; }
+  .burn-title { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; opacity:0.7; margin-bottom:8px; }
+  .burn-bar-bg { background:rgba(255,255,255,0.2); border-radius:50px; height:10px; overflow:hidden; }
+  .burn-bar { height:100%; border-radius:50px; transition:width 1s; }
+  .burn-safe { background:linear-gradient(90deg,#4DC87A,#7BE89A); }
+  .burn-warn { background:linear-gradient(90deg,#FFB800,#FF8C00); }
+  .burn-danger { background:linear-gradient(90deg,#FF6060,#FF3030); }
+  .burn-labels { display:flex; justify-content:space-between; margin-top:4px; }
+  .burn-labels span { font-size:0.6rem; opacity:0.6; font-weight:700; }
+  .btn-end { margin:0 20px 24px; background:rgba(255,255,255,0.15); color:white; border:2px solid rgba(255,255,255,0.3); border-radius:50px; padding:14px; font-family:'Nunito',sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer; width:calc(100% - 40px); }
+ 
+  /* ---- CELEBRATION ---- */
+  #screen-celebrate { background:linear-gradient(160deg,#FF5500 0%,#FF8C00 30%,#FFB800 70%,#FFD700 100%); justify-content:center; align-items:center; text-align:center; padding:40px 32px; }
+  .confetti-wrap { position:relative; margin-bottom:20px; }
+  .celebrate-emoji { font-size:5rem; display:block; animation:cel-bounce 0.8s ease-in-out infinite alternate; }
+  @keyframes cel-bounce { from{transform:scale(1) rotate(-5deg)} to{transform:scale(1.1) rotate(5deg)} }
+  .confetti { position:absolute; width:12px; height:12px; border-radius:3px; animation:confetti-fall 1.6s ease-in-out infinite; }
+  @keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(60px) rotate(360deg);opacity:0} }
+  .celebrate-title { font-family:'Baloo 2',cursive; font-size:1.9rem; font-weight:800; color:white; text-shadow:0 2px 8px rgba(0,0,0,0.15); margin-bottom:8px; }
+  .celebrate-sub { color:rgba(255,255,255,0.85); font-size:0.88rem; font-weight:600; margin-bottom:28px; line-height:1.5; }
+  .celebrate-stats { display:flex; gap:12px; width:100%; margin-bottom:24px; }
+  .cel-stat { flex:1; background:rgba(255,255,255,0.35); border-radius:16px; padding:14px 8px; backdrop-filter:blur(4px); border:2px solid rgba(255,255,255,0.5); }
+  .cel-stat-val { font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:800; color:white; }
+  .cel-stat-label { font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.8); text-transform:uppercase; }
+  .btn-extend { background:white; color:var(--sun-deep); border:none; border-radius:50px; padding:16px 32px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; width:100%; margin-bottom:12px; box-shadow:0 6px 20px rgba(0,0,0,0.15); transition:transform 0.15s; }
+  .btn-extend:active { transform:scale(0.97); }
+  .btn-done { background:rgba(255,255,255,0.2); color:white; border:2px solid rgba(255,255,255,0.4); border-radius:50px; padding:14px 32px; font-family:'Nunito',sans-serif; font-size:0.95rem; font-weight:800; cursor:pointer; width:100%; }
+ 
+  /* ---- DASHBOARD ---- */
+  .dash-header { background:linear-gradient(135deg,var(--ink),#2A3A60); padding:24px 24px 36px; color:white; }
+  .dash-header h2 { font-family:'Baloo 2',cursive; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
+  .dash-header p { font-size:0.82rem; opacity:0.7; font-weight:600; }
+  .dash-body { padding:12px 20px 32px; display:flex; flex-direction:column; gap:16px; }
+  .dash-section-title { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--soft); margin-bottom:10px; }
+  .week-chart { background:white; border-radius:20px; padding:18px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+  .week-bars { display:flex; align-items:flex-end; gap:8px; height:80px; margin-bottom:8px; }
+  .week-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end; }
+  .week-bar { width:100%; border-radius:6px 6px 0 0; min-height:4px; }
+  .week-bar.goal { background:linear-gradient(180deg,var(--grass),#38A85C); }
+  .week-bar.partial { background:linear-gradient(180deg,var(--sky),var(--sky-dark)); }
+  .week-bar.none { background:#EEF3FF; min-height:4px; height:4px !important; }
+  .week-day { font-size:0.62rem; font-weight:800; color:var(--soft); flex:1; text-align:center; }
+  .week-day.today { color:var(--sky-dark); }
+  .trend-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .trend-card { background:white; border-radius:18px; padding:16px 14px; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
+  .trend-icon { font-size:1.5rem; display:block; margin-bottom:6px; }
+  .trend-val { font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:800; color:var(--ink); }
+  .trend-label { font-size:0.7rem; font-weight:700; color:var(--soft); }
+  .trend-change { font-size:0.72rem; font-weight:800; margin-top:4px; }
+  .trend-up { color:var(--grass); } .trend-down { color:var(--coral); }
+ 
+  /* ---- SESSION HISTORY ---- */
+  .history-item {
+    background: white; border-radius:16px; padding:14px 16px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.05); margin-bottom:10px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .history-icon { font-size:1.8rem; flex-shrink:0; }
+  .history-info { flex:1; }
+  .history-title { font-weight:800; font-size:0.88rem; color:var(--ink); }
+  .history-meta { font-size:0.75rem; color:var(--soft); font-weight:600; margin-top:2px; }
+  .history-badge { background:linear-gradient(135deg,var(--sun),var(--sun-deep)); color:white; border-radius:50px; padding:4px 10px; font-size:0.7rem; font-weight:800; flex-shrink:0; }
+  .history-badge.partial { background:linear-gradient(135deg,var(--sky),var(--sky-dark)); }
+ 
+  /* ---- CHILD SUMMARY ---- */
+  .child-summary { background:white; border-radius:20px; padding:16px; box-shadow:0 3px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; margin-bottom:10px; }
+  .cs-avatar { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; overflow:hidden; }
+  .cs-avatar img { width:100%; height:100%; object-fit:cover; }
+  .cs-info { flex:1; }
+  .cs-name { font-weight:800; font-size:0.9rem; color:var(--ink); }
+  .cs-stats { font-size:0.75rem; color:var(--soft); font-weight:600; margin-top:2px; }
+  .cs-streak { background:linear-gradient(135deg,var(--sun),var(--sun-deep)); color:white; border-radius:50px; padding:4px 10px; font-size:0.72rem; font-weight:800; }
+ 
+  /* ---- BOTTOM NAV ---- */
+  .bottom-nav { display:flex; background:white; border-top:1.5px solid #EEF3FF; padding:10px 0 16px; flex-shrink:0; }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px; }
+  .nav-icon { font-size:1.3rem; }
+  .nav-label { font-size:0.6rem; font-weight:800; color:var(--soft); text-transform:uppercase; letter-spacing:0.5px; }
+  .nav-item.active .nav-label { color:var(--sky-dark); }
+  .nav-item.active .nav-icon { filter: drop-shadow(0 0 4px rgba(26,122,196,0.4)); }
+ 
+  /* ---- NOTIF PERMISSION BANNER ---- */
+  .notif-banner {
+    background:#F0FFF5; border:1.5px solid var(--grass); border-radius:14px;
+    padding:12px 14px; font-size:0.78rem; font-weight:700; color:#2A7A40;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  .notif-banner button { background:var(--grass); color:white; border:none; border-radius:50px; padding:6px 14px; font-family:'Nunito',sans-serif; font-size:0.75rem; font-weight:800; cursor:pointer; flex-shrink:0; }
 </style>
-
 </head>
 <body>
 <div class="phone">
@@ -318,9 +316,8 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
     <span id="status-loc">📍 Locating…</span>
     <span>●●●●</span>
   </div>
-
+ 
   <!-- ===== WELCOME ===== -->
-
   <div class="screen active" id="screen-welcome">
     <div class="welcome-sun">☀️</div>
     <h1 class="welcome-title">Sun<span>Time</span><br>Kids</h1>
@@ -328,90 +325,97 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
     <div class="welcome-badge">📍 Uses your real location · Live UV data</div>
     <button class="btn-primary" style="max-width:280px;" onclick="goTo('screen-onboard')">Get Started →</button>
   </div>
-
+ 
   <!-- ===== ONBOARDING ===== -->
-
   <div class="screen" id="screen-onboard">
     <div class="onboard-header">
       <h2>👶 Add Your Children</h2>
       <p>Set up profiles — takes under a minute</p>
     </div>
     <div class="onboard-body">
-
-```
-  <!-- Child 1 -->
-  <div style="background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;">
-    <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Child 1</div>
-    <div style="display:flex;gap:12px;margin-bottom:12px;">
-      <div style="flex:1;">
-        <div class="field-label">Name</div>
-        <input class="field-input" id="name-0" type="text" placeholder="e.g. Emma" value="Emma">
+ 
+      <!-- Profile 1 -->
+      <div style="background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;">Profile 1</div>
+          <div id="type-toggle-0" style="display:flex;background:#EEF3FF;border-radius:50px;padding:3px;gap:2px;">
+            <button id="type-child-0" onclick="setProfileType(0,'child')" style="background:var(--sky-dark);color:white;border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">👦 Child</button>
+            <button id="type-adult-0" onclick="setProfileType(0,'adult')" style="background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">🧑 Adult</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:12px;">
+          <div style="flex:1;">
+            <div class="field-label">Name</div>
+            <input class="field-input" id="name-0" type="text" placeholder="e.g. Alex" value="Alex">
+          </div>
+          <div style="width:80px;">
+            <div class="field-label" id="age-label-0">Age</div>
+            <input class="field-input" id="age-0" type="number" placeholder="5" value="5" min="0" max="99">
+          </div>
+        </div>
+        <div class="field-label">Skin Tone</div>
+        <div class="fitz-grid" id="fitz-0">
+          <button class="fitz-btn" onclick="selectFitz(0,this,1)"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
+          <button class="fitz-btn" onclick="selectFitz(0,this,2)"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
+          <button class="fitz-btn selected" onclick="selectFitz(0,this,3)"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
+          <button class="fitz-btn" onclick="selectFitz(0,this,4)"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
+          <button class="fitz-btn" onclick="selectFitz(0,this,5)"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
+          <button class="fitz-btn" onclick="selectFitz(0,this,6)"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
+        </div>
+        <div style="margin-top:12px;">
+          <div class="field-label">Photo (optional)</div>
+          <div class="photo-row">
+            <div class="photo-circle" id="photo-0" onclick="document.getElementById('file-0').click()">📷</div>
+            <input type="file" id="file-0" accept="image/*" style="display:none" onchange="handlePhoto(0,event)">
+            <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
+          </div>
+        </div>
       </div>
-      <div style="width:80px;">
-        <div class="field-label">Age</div>
-        <input class="field-input" id="age-0" type="number" placeholder="5" value="5" min="0" max="17">
+ 
+      <!-- Profile 2 -->
+      <div style="background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;">Profile 2</div>
+          <div id="type-toggle-1" style="display:flex;background:#EEF3FF;border-radius:50px;padding:3px;gap:2px;">
+            <button id="type-child-1" onclick="setProfileType(1,'child')" style="background:var(--sky-dark);color:white;border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">👦 Child</button>
+            <button id="type-adult-1" onclick="setProfileType(1,'adult')" style="background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">🧑 Adult</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:12px;">
+          <div style="flex:1;">
+            <div class="field-label">Name</div>
+            <input class="field-input" id="name-1" type="text" placeholder="e.g. Archie" value="Archie">
+          </div>
+          <div style="width:80px;">
+            <div class="field-label" id="age-label-1">Age</div>
+            <input class="field-input" id="age-1" type="number" placeholder="2" value="2" min="0" max="99">
+          </div>
+        </div>
+        <div class="field-label">Skin Tone</div>
+        <div class="fitz-grid" id="fitz-1">
+          <button class="fitz-btn" onclick="selectFitz(1,this,1)"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
+          <button class="fitz-btn" onclick="selectFitz(1,this,2)"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
+          <button class="fitz-btn selected" onclick="selectFitz(1,this,3)"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
+          <button class="fitz-btn" onclick="selectFitz(1,this,4)"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
+          <button class="fitz-btn" onclick="selectFitz(1,this,5)"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
+          <button class="fitz-btn" onclick="selectFitz(1,this,6)"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
+        </div>
+        <div style="margin-top:12px;">
+          <div class="field-label">Photo (optional)</div>
+          <div class="photo-row">
+            <div class="photo-circle" id="photo-1" onclick="document.getElementById('file-1').click()">📷</div>
+            <input type="file" id="file-1" accept="image/*" style="display:none" onchange="handlePhoto(1,event)">
+            <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="field-label">Skin Tone</div>
-    <div class="fitz-grid" id="fitz-0">
-      <button class="fitz-btn" onclick="selectFitz(0,this,1)"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
-      <button class="fitz-btn" onclick="selectFitz(0,this,2)"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
-      <button class="fitz-btn selected" onclick="selectFitz(0,this,3)"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
-      <button class="fitz-btn" onclick="selectFitz(0,this,4)"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
-      <button class="fitz-btn" onclick="selectFitz(0,this,5)"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
-      <button class="fitz-btn" onclick="selectFitz(0,this,6)"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
-    </div>
-    <div style="margin-top:12px;">
-      <div class="field-label">Photo (optional)</div>
-      <div class="photo-row">
-        <div class="photo-circle" id="photo-0" onclick="document.getElementById('file-0').click()">📷</div>
-        <input type="file" id="file-0" accept="image/*" style="display:none" onchange="handlePhoto(0,event)">
-        <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
-      </div>
+ 
+      <div class="privacy-note">🔒 All data stored on your device only. No account required. COPPA compliant.</div>
+      <button class="btn-primary" onclick="saveProfiles()">Save Profiles & Continue →</button>
     </div>
   </div>
-
-  <!-- Child 2 -->
-  <div style="background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;">
-    <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Child 2</div>
-    <div style="display:flex;gap:12px;margin-bottom:12px;">
-      <div style="flex:1;">
-        <div class="field-label">Name</div>
-        <input class="field-input" id="name-1" type="text" placeholder="e.g. Alex" value="Alex">
-      </div>
-      <div style="width:80px;">
-        <div class="field-label">Age</div>
-        <input class="field-input" id="age-1" type="number" placeholder="2" value="2" min="0" max="17">
-      </div>
-    </div>
-    <div class="field-label">Skin Tone</div>
-    <div class="fitz-grid" id="fitz-1">
-      <button class="fitz-btn" onclick="selectFitz(1,this,1)"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
-      <button class="fitz-btn" onclick="selectFitz(1,this,2)"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
-      <button class="fitz-btn selected" onclick="selectFitz(1,this,3)"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
-      <button class="fitz-btn" onclick="selectFitz(1,this,4)"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
-      <button class="fitz-btn" onclick="selectFitz(1,this,5)"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
-      <button class="fitz-btn" onclick="selectFitz(1,this,6)"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
-    </div>
-    <div style="margin-top:12px;">
-      <div class="field-label">Photo (optional)</div>
-      <div class="photo-row">
-        <div class="photo-circle" id="photo-1" onclick="document.getElementById('file-1').click()">📷</div>
-        <input type="file" id="file-1" accept="image/*" style="display:none" onchange="handlePhoto(1,event)">
-        <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="privacy-note">🔒 All data stored on your device only. No account required. COPPA compliant.</div>
-  <button class="btn-primary" onclick="saveProfiles()">Save Profiles & Continue →</button>
-</div>
-```
-
-  </div>
-
+ 
   <!-- ===== HOME ===== -->
-
   <div class="screen" id="screen-home">
     <div class="home-header">
       <div class="home-greeting" id="home-greeting">Good morning ☀️</div>
@@ -451,9 +455,8 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
       <button class="btn-nav" onclick="goTo('screen-dash')">📊 View Dashboard & History</button>
     </div>
   </div>
-
+ 
   <!-- ===== WHO'S GOING OUT ===== -->
-
   <div class="screen" id="screen-whosout">
     <div class="modal-bg" onclick="goTo('screen-home')"></div>
     <div class="modal-sheet">
@@ -464,12 +467,11 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
       <button class="btn-primary" style="margin-top:8px;" onclick="goTo('screen-setup')">Continue →</button>
     </div>
   </div>
-
+ 
   <!-- ===== SESSION SETUP ===== -->
-
   <div class="screen" id="screen-setup">
     <div class="setup-header">
-      <h2>⚙️ Quick Setup</h2>
+      <h2>☀️ Quick Setup</h2>
       <p>How are the kids dressed today?</p>
     </div>
     <div class="setup-body">
@@ -483,74 +485,61 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
           <span style="font-size:0.8rem;font-weight:700;color:var(--ink);" id="setup-loc">Detecting…</span>
         </div>
       </div>
-
-```
-  <div>
-    <div class="section-title">👕 Clothing Coverage</div>
-    <div class="clothing-grid">
-      <button class="clothing-btn selected" onclick="selectClothing(this,1.0)"><span class="clothing-icon">🩱</span><span class="clothing-label">Swimsuit</span></button>
-      <button class="clothing-btn" onclick="selectClothing(this,0.7)"><span class="clothing-icon">🩳</span><span class="clothing-label">Tank + Shorts</span></button>
-      <button class="clothing-btn" onclick="selectClothing(this,0.55)"><span class="clothing-icon">👕</span><span class="clothing-label">Tee + Shorts</span></button>
-      <button class="clothing-btn" onclick="selectClothing(this,0.35)"><span class="clothing-icon">👖</span><span class="clothing-label">Tee + Pants</span></button>
-      <button class="clothing-btn" onclick="selectClothing(this,0.2)"><span class="clothing-icon">🧥</span><span class="clothing-label">Full Cover</span></button>
-    </div>
-  </div>
-
-  <div>
-    <div class="section-title">🧴 Sunscreen</div>
-    <div class="spf-grid">
-      <button class="spf-btn selected" onclick="selectSPF(this,1.0)"><span class="spf-icon">🚫</span><span class="spf-label">None</span></button>
-      <button class="spf-btn" onclick="selectSPF(this,0.45)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 15</span></button>
-      <button class="spf-btn" onclick="selectSPF(this,0.28)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 30</span></button>
-      <button class="spf-btn" onclick="selectSPF(this,0.2)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 50+</span></button>
-    </div>
-  </div>
-
-  <button class="btn-primary" onclick="startSession()">▶ Start Session</button>
-  <button class="btn-secondary" onclick="goTo('screen-home')">← Back</button>
-</div>
-```
-
-  </div>
-
-  <!-- ===== ACTIVE SESSION ===== -->
-
-  <div class="screen" id="screen-session">
-    <div class="session-top">
-      <div class="session-children" id="session-avatars"></div>
-      <div class="session-label">Time Outdoors</div>
-      <div class="session-timer" id="session-timer">00:00</div>
-    </div>
-    <div class="bg-notice" id="bg-notice">⏸ App tracks time even when you switch away — come back to check progress</div>
-    <div class="progress-ring-wrap">
-      <svg width="170" height="170" viewBox="0 0 170 170">
-        <circle cx="85" cy="85" r="72" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="12"/>
-        <circle cx="85" cy="85" r="72" fill="none" stroke="#FFB800" stroke-width="12"
-          stroke-linecap="round" stroke-dasharray="452" stroke-dashoffset="452" id="progress-arc"/>
-      </svg>
-      <div class="progress-center">
-        <div class="progress-pct" id="progress-pct">0%</div>
-        <div class="progress-sub">Vitamin D Goal</div>
+ 
+      <div>
+        <div class="section-title">👕 Clothing Coverage</div>
+        <div class="clothing-grid">
+          <button class="clothing-btn selected" onclick="selectClothing(this,1.0)"><span class="clothing-icon">🩱</span><span class="clothing-label">Swimsuit</span></button>
+          <button class="clothing-btn" onclick="selectClothing(this,0.7)"><span class="clothing-icon">🩳</span><span class="clothing-label">Tank + Shorts</span></button>
+          <button class="clothing-btn" onclick="selectClothing(this,0.55)"><span class="clothing-icon">👕</span><span class="clothing-label">Tee + Shorts</span></button>
+          <button class="clothing-btn" onclick="selectClothing(this,0.35)"><span class="clothing-icon">👖</span><span class="clothing-label">Tee + Pants</span></button>
+          <button class="clothing-btn" onclick="selectClothing(this,0.2)"><span class="clothing-icon">🧥</span><span class="clothing-label">Full Cover</span></button>
+        </div>
       </div>
-    </div>
-    <div class="live-stats">
-      <div class="live-stat"><span class="live-stat-icon">🌡️</span><div class="live-stat-val" id="live-uv">–</div><div class="live-stat-label">UV Index</div></div>
-      <div class="live-stat"><span class="live-stat-icon">💊</span><div class="live-stat-val" id="live-vitd">0 IU</div><div class="live-stat-label">Est. Vit D</div></div>
-      <div class="live-stat"><span class="live-stat-icon">🎯</span><div class="live-stat-val" id="live-goal">–</div><div class="live-stat-label">Daily Goal</div></div>
-    </div>
-    <div class="burn-section">
-      <div class="burn-title">🔴 Burn Risk Meter</div>
-      <div class="burn-bar-bg"><div class="burn-bar burn-safe" id="burn-bar" style="width:3%"></div></div>
-      <div class="burn-labels"><span>Safe</span><span>Caution</span><span>High Risk</span></div>
-    </div>
-    <div style="display:flex;gap:10px;margin:0 20px 24px;">
-      <button id="btn-pause" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.3);border-radius:50px;padding:14px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⏸ Pause</button>
-      <button id="btn-end-session" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.3);border-radius:50px;padding:14px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⏹ End</button>
+ 
+      <div>
+        <div class="section-title">🧴 Sunscreen</div>
+        <div class="spf-grid">
+          <button class="spf-btn selected" onclick="selectSPF(this,1.0)"><span class="spf-icon">🚫</span><span class="spf-label">None</span></button>
+          <button class="spf-btn" onclick="selectSPF(this,0.45)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 15</span></button>
+          <button class="spf-btn" onclick="selectSPF(this,0.28)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 30</span></button>
+          <button class="spf-btn" onclick="selectSPF(this,0.2)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 50+</span></button>
+        </div>
+      </div>
+ 
+      <button class="btn-primary" style="background:linear-gradient(135deg,#FF8C00,#FFB800);color:white;font-size:1.1rem;padding:18px;box-shadow:0 8px 24px rgba(255,140,0,0.5);" onclick="startSession()">▶ Start Session</button>
+      <button class="btn-secondary" onclick="goTo('screen-home')">← Back</button>
     </div>
   </div>
-
+ 
+  <!-- ===== ACTIVE SESSION ===== -->
+  <div class="screen" id="screen-session">
+    <!-- Session header - shared across all children -->
+    <div style="background:linear-gradient(135deg,#0A4A7A,#1A7AC4);padding:16px 20px 12px;flex-shrink:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:0.75rem;font-weight:800;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px;">Time Outdoors</div>
+        <div style="font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.6);">UV <span id="session-uv-header">–</span></div>
+      </div>
+      <div class="session-timer" id="session-timer" style="font-family:'Baloo 2',cursive;font-size:2.6rem;font-weight:800;color:white;letter-spacing:2px;line-height:1;">00:00</div>
+      <div class="bg-notice" id="bg-notice" style="background:rgba(255,255,255,0.1);border-radius:10px;padding:6px 12px;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.8);margin-top:8px;text-align:center;">⏸ Tracks time when you switch away — tap to check progress</div>
+    </div>
+ 
+    <!-- Swipeable child cards -->
+    <div id="child-cards-wrapper" style="flex:1;overflow:hidden;position:relative;">
+      <div id="child-cards-slider" style="display:flex;height:100%;transition:transform 0.3s ease;"></div>
+    </div>
+ 
+    <!-- Dot indicators (shown when 2+ children) -->
+    <div id="session-dots" style="display:flex;justify-content:center;gap:8px;padding:8px 0;background:linear-gradient(135deg,#0A4A7A,#1A7AC4);flex-shrink:0;"></div>
+ 
+    <!-- Controls -->
+    <div style="display:flex;gap:10px;padding:12px 20px 16px;background:linear-gradient(135deg,#0A4A7A,#1A7AC4);flex-shrink:0;">
+      <button id="btn-pause" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.4);border-radius:50px;padding:14px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⏸ Pause</button>
+      <button id="btn-end-session" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.4);border-radius:50px;padding:14px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⏹ End</button>
+    </div>
+  </div>
+ 
   <!-- ===== CELEBRATION ===== -->
-
   <div class="screen" id="screen-celebrate">
     <div class="confetti-wrap">
       <span class="celebrate-emoji">🌟</span>
@@ -570,9 +559,8 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
     <button class="btn-extend" onclick="extendSession()">▶ Keep Playing Outside</button>
     <button class="btn-done" onclick="finishSession()">✓ We're Done for Today</button>
   </div>
-
+ 
   <!-- ===== DASHBOARD ===== -->
-
   <div class="screen" id="screen-dash">
     <div class="dash-header">
       <h2>📊 Dashboard</h2>
@@ -601,54 +589,49 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
       <button class="btn-nav" onclick="goTo('screen-home')">← Back to Home</button>
     </div>
   </div>
-
+ 
   <!-- ===== SETTINGS ===== -->
-
   <div class="screen" id="screen-settings">
     <div style="background:linear-gradient(135deg,var(--ink),#2A3A60);padding:24px 24px 36px;color:white;flex-shrink:0;">
       <h2 style="font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;margin-bottom:4px;">⚙️ Settings</h2>
       <p style="font-size:0.82rem;opacity:0.7;font-weight:600;">App preferences</p>
     </div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
-
-```
-  <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">Session Behaviour</div>
-  <div class="card" style="padding:20px;">
-    <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:6px;">When daily vitamin D goal is reached</div>
-    <div style="font-size:0.8rem;color:var(--soft);font-weight:600;margin-bottom:14px;">Choose what happens automatically when your child hits their goal</div>
-    <div id="session-end-opt-auto" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:2.5px solid var(--sky-dark);background:#EEF6FF;margin-bottom:8px;cursor:pointer;">
-      <div style="width:20px;height:20px;border-radius:50%;background:var(--sky-dark);display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:800;flex-shrink:0;">✓</div>
-      <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Show 60-second prompt</div><div style="font-size:0.72rem;color:var(--soft);font-weight:600;">Ask whether to keep going or end session</div></div>
+ 
+      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">Session Behaviour</div>
+      <div class="card" style="padding:20px;">
+        <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:6px;">When daily vitamin D goal is reached</div>
+        <div style="font-size:0.8rem;color:var(--soft);font-weight:600;margin-bottom:14px;">Choose what happens automatically when your child hits their goal</div>
+        <div id="session-end-opt-auto" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:2.5px solid var(--sky-dark);background:#EEF6FF;margin-bottom:8px;cursor:pointer;">
+          <div style="width:20px;height:20px;border-radius:50%;background:var(--sky-dark);display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:800;flex-shrink:0;">✓</div>
+          <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Show 60-second prompt</div><div style="font-size:0.72rem;color:var(--soft);font-weight:600;">Ask whether to keep going or end session</div></div>
+        </div>
+        <div id="session-end-opt-keep" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:2.5px solid #DDE6F5;background:white;cursor:pointer;">
+          <div style="width:20px;height:20px;border-radius:50%;border:2px solid #DDE6F5;flex-shrink:0;"></div>
+          <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Keep tracking automatically</div><div style="font-size:0.72rem;color:var(--soft);font-weight:600;">Continue session without prompting</div></div>
+        </div>
+      </div>
+ 
+      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">About</div>
+      <div class="card" style="padding:20px;">
+        <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:4px;">SunTimeKids v2.2</div>
+        <div style="font-size:0.78rem;color:var(--soft);font-weight:600;margin-bottom:16px;">UV exposure tracker for children</div>
+        <div style="background:#FFF8E8;border:1.5px solid #FFB800;border-radius:12px;padding:14px;font-size:0.75rem;font-weight:600;color:#7A5500;line-height:1.6;">
+          <strong style="display:block;margin-bottom:4px;">⚕️ Medical Disclaimer</strong>
+          SunTimeKids provides general guidance only. Vitamin D synthesis estimates are based on published research models and are not a substitute for personalised medical advice. Individual results vary based on genetics, health status, and environmental conditions. Consult your paediatrician regarding your child's specific vitamin D and sun exposure needs. The app does not diagnose, treat, or prevent any medical condition.
+        </div>
+      </div>
+ 
+      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">Privacy</div>
+      <div class="card" style="padding:20px;">
+        <div style="font-size:0.82rem;font-weight:600;color:var(--ink);line-height:1.6;">🔒 All data including child profiles, photos, and session history is stored locally on your device only. No data is ever sent to any server. No account is required. SunTimeKids is designed to be fully COPPA compliant.</div>
+      </div>
+ 
+      <button class="btn-nav" style="margin-top:8px;" id="btn-settings-back">← Back to Home</button>
     </div>
-    <div id="session-end-opt-keep" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:2.5px solid #DDE6F5;background:white;cursor:pointer;">
-      <div style="width:20px;height:20px;border-radius:50%;border:2px solid #DDE6F5;flex-shrink:0;"></div>
-      <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Keep tracking automatically</div><div style="font-size:0.72rem;color:var(--soft);font-weight:600;">Continue session without prompting</div></div>
-    </div>
   </div>
-
-  <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">About</div>
-  <div class="card" style="padding:20px;">
-    <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:4px;">SunTimeKids v2.2</div>
-    <div style="font-size:0.78rem;color:var(--soft);font-weight:600;margin-bottom:16px;">UV exposure tracker for children</div>
-    <div style="background:#FFF8E8;border:1.5px solid #FFB800;border-radius:12px;padding:14px;font-size:0.75rem;font-weight:600;color:#7A5500;line-height:1.6;">
-      <strong style="display:block;margin-bottom:4px;">⚕️ Medical Disclaimer</strong>
-      SunTimeKids provides general guidance only. Vitamin D synthesis estimates are based on published research models and are not a substitute for personalised medical advice. Individual results vary based on genetics, health status, and environmental conditions. Consult your paediatrician regarding your child's specific vitamin D and sun exposure needs. The app does not diagnose, treat, or prevent any medical condition.
-    </div>
-  </div>
-
-  <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">Privacy</div>
-  <div class="card" style="padding:20px;">
-    <div style="font-size:0.82rem;font-weight:600;color:var(--ink);line-height:1.6;">🔒 All data including child profiles, photos, and session history is stored locally on your device only. No data is ever sent to any server. No account is required. SunTimeKids is designed to be fully COPPA compliant.</div>
-  </div>
-
-  <button class="btn-nav" style="margin-top:8px;" id="btn-settings-back">← Back to Home</button>
-</div>
-```
-
-  </div>
-
+ 
   <!-- Location modal (replaces prompt() which iOS blocks) -->
-
   <div id="loc-modal" style="display:none;position:absolute;inset:0;background:rgba(26,35,64,0.7);z-index:200;align-items:center;justify-content:center;padding:32px;">
     <div style="background:white;border-radius:24px;padding:28px 24px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
       <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#1A2340;margin-bottom:6px;">📍 Change Location</div>
@@ -659,9 +642,8 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
       <button id="loc-cancel-btn" style="width:100%;background:white;color:#7A8AAF;border:2px solid #DDE6F5;border-radius:14px;padding:12px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">Cancel</button>
     </div>
   </div>
-
+ 
   <!-- Bottom nav -->
-
   <div class="bottom-nav" id="bottom-nav" style="display:none;">
     <div class="nav-item" id="nav-home" onclick="goTo('screen-home')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
     <div class="nav-item" onclick="goTo('screen-whosout')"><span class="nav-icon">🌤️</span><span class="nav-label">Session</span></div>
@@ -669,15 +651,15 @@ display:flex; align-items:center; justify-content:space-between; gap:8px;
     <div class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></div>
   </div>
 </div>
-
+ 
 <script>
 // ============================================================
 // STATE
 // ============================================================
 const APP = {
   children: [
-    { name:'Emma', age:5, fitz:3, photo:null, goal:400 },
-    { name:'Alex',  age:2, fitz:3, photo:null, goal:300 }
+    { name:'Emma', age:5, fitz:3, photo:null, goal:400, isAdult:false },
+    { name:'Alex',  age:2, fitz:3, photo:null, goal:300, isAdult:false }
   ],
   selectedChildren: [0,1],
   uvIndex: null,
@@ -692,12 +674,12 @@ const APP = {
   visibilityHandler: null,
   sessionEndMode: 'auto'
 };
-
+ 
 // Fitzpatrick: minutes to 400 IU at UV 5, outdoors, no SPF
 const FITZ_BASE_MIN = [8, 12, 16, 22, 32, 45];
 // Fitzpatrick: minutes to burn at UV 5
 const FITZ_BURN_MIN = [15, 20, 30, 45, 60, 90];
-
+ 
 // ============================================================
 // CLOCK
 // ============================================================
@@ -712,7 +694,7 @@ function updateClock() {
 }
 updateClock();
 setInterval(updateClock, 15000);
-
+ 
 // ============================================================
 // GEOLOCATION + UV
 // ============================================================
@@ -739,24 +721,24 @@ function initLocation() {
     { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 }
   );
 }
-
+ 
 function setLocLabel(text) {
   const el = document.getElementById('loc-label');
   if (el) el.textContent = '📍 ' + text;
   document.getElementById('status-loc').textContent = '📍 ' + text;
 }
-
+ 
 function promptManualLocation() {
   const modal = document.getElementById('loc-modal');
   modal.style.display = 'flex';
   document.getElementById('loc-input').value = '';
   document.getElementById('loc-input').focus();
 }
-
+ 
 function closeLocModal() {
   document.getElementById('loc-modal').style.display = 'none';
 }
-
+ 
 function applyManualLocation() {
   const input = document.getElementById('loc-input').value.trim();
   if (!input) return;
@@ -772,7 +754,7 @@ function applyManualLocation() {
     fetchCityCoords(input);
   }
 }
-
+ 
 function applyGPSLocation() {
   closeLocModal();
   setLocLabel('Detecting GPS…');
@@ -792,7 +774,7 @@ function applyGPSLocation() {
     { enableHighAccuracy: true, timeout: 12000 }
   );
 }
-
+ 
 async function fetchCityCoords(cityName) {
   setLocLabel('Searching ' + cityName + '…');
   try {
@@ -813,7 +795,7 @@ async function fetchCityCoords(cityName) {
     setLocLabel('Search failed — check connection');
   }
 }
-
+ 
 async function fetchUV(lat, lng) {
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=uv_index&timezone=auto`;
@@ -829,7 +811,7 @@ async function fetchUV(lat, lng) {
     updateAllUVDisplays();
   }
 }
-
+ 
 function uvLabel(uv) {
   if (uv <= 2) return 'Low';
   if (uv <= 5) return 'Moderate';
@@ -837,7 +819,7 @@ function uvLabel(uv) {
   if (uv <= 10) return 'Very High';
   return 'Extreme';
 }
-
+ 
 function updateAllUVDisplays() {
   const uv = APP.uvIndex;
   const lbl = uvLabel(uv);
@@ -850,10 +832,10 @@ function updateAllUVDisplays() {
   const setupLoc = document.getElementById('setup-loc');
   if (setupLoc) setupLoc.textContent = APP.locationName;
 }
-
+ 
 // Refresh UV every 5 min
 setInterval(() => fetchUV(APP.lat, APP.lng), 300000);
-
+ 
 // ============================================================
 // NOTIFICATIONS
 // ============================================================
@@ -867,7 +849,7 @@ function requestNotifications() {
     }).catch(() => {});
   } catch(e) {}
 }
-
+ 
 function showNotification(title, body) {
   try {
     if (typeof Notification === 'undefined') return;
@@ -878,7 +860,7 @@ function showNotification(title, body) {
     // iOS Safari does not support Web Notifications - fail silently
   }
 }
-
+ 
 function maybeShowNotifBanner() {
   if (!('Notification' in window)) return;
   if (Notification.permission === 'default') {
@@ -889,30 +871,30 @@ function maybeShowNotifBanner() {
       </div>`;
   }
 }
-
+ 
 // ============================================================
 // NAVIGATION
 // ============================================================
 const NAV_SCREENS = ['screen-home', 'screen-dash'];
-
+ 
 function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const nav = document.getElementById('bottom-nav');
   nav.style.display = NAV_SCREENS.includes(id) ? 'flex' : 'none';
-
+ 
   // Nav active state
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   if (id === 'screen-home') document.getElementById('nav-home')?.classList.add('active');
   if (id === 'screen-dash') document.getElementById('nav-dash')?.classList.add('active');
-
+ 
   if (id === 'screen-home') renderHome();
   if (id === 'screen-whosout') renderWhosList();
   if (id === 'screen-setup') updateAllUVDisplays();
   if (id === 'screen-dash') renderDash();
   if (id === 'screen-session') resumeSessionUI();
 }
-
+ 
 // ============================================================
 // ONBOARDING
 // ============================================================
@@ -921,7 +903,7 @@ function selectFitz(childIdx, btn, val) {
   btn.classList.add('selected');
   APP.children[childIdx].fitz = val;
 }
-
+ 
 function handlePhoto(idx, event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -933,18 +915,40 @@ function handlePhoto(idx, event) {
   };
   reader.readAsDataURL(file);
 }
-
+ 
+function setProfileType(idx, type) {
+  APP.children[idx].isAdult = (type === 'adult');
+  // Update toggle button styles
+  const childBtn = document.getElementById('type-child-' + idx);
+  const adultBtn = document.getElementById('type-adult-' + idx);
+  if (type === 'adult') {
+    if (childBtn) { childBtn.style.background = 'transparent'; childBtn.style.color = 'var(--soft)'; }
+    if (adultBtn) { adultBtn.style.background = 'var(--sky-dark)'; adultBtn.style.color = 'white'; }
+  } else {
+    if (childBtn) { childBtn.style.background = 'var(--sky-dark)'; childBtn.style.color = 'white'; }
+    if (adultBtn) { adultBtn.style.background = 'transparent'; adultBtn.style.color = 'var(--soft)'; }
+  }
+}
+ 
+function getVitDGoal(age, isAdult) {
+  if (isAdult) return 600;          // Adults 19-70: 600 IU
+  if (age >= 13) return 600;        // Teens 13-18: 600 IU
+  if (age >= 1) return 400;         // Children 1-12: 400 IU
+  return 400;                       // Infants: 400 IU
+}
+ 
 function saveProfiles() {
   for (let i = 0; i < 2; i++) {
-    const name = document.getElementById(`name-${i}`).value.trim();
-    const age = parseInt(document.getElementById(`age-${i}`).value) || (i === 0 ? 5 : 2);
+    const name = document.getElementById('name-' + i).value.trim();
+    const age = parseInt(document.getElementById('age-' + i).value) || (i === 0 ? 5 : 2);
     if (name) APP.children[i].name = name;
     APP.children[i].age = age;
+    APP.children[i].goal = getVitDGoal(age, APP.children[i].isAdult);
   }
   saveProfilesToStorage();
   goTo('screen-home');
 }
-
+ 
 // ============================================================
 // HOME
 // ============================================================
@@ -953,7 +957,7 @@ function renderHome() {
   renderChildCards();
   renderHomeStats();
 }
-
+ 
 function renderChildCards() {
   const container = document.getElementById('child-cards');
   const todaySessions = getTodaySessions();
@@ -976,7 +980,7 @@ function renderChildCards() {
       </div>`;
   }).join('');
 }
-
+ 
 function renderHomeStats() {
   const streak = calcStreak();
   const weekMin = getWeekTotalMinutes();
@@ -986,7 +990,7 @@ function renderHomeStats() {
   document.getElementById('stat-weektime').textContent = weekMin >= 60 ? (weekMin/60).toFixed(1)+'h' : weekMin+'m';
   document.getElementById('stat-goals').textContent = `${weekGoals}/${weekDays}`;
 }
-
+ 
 // ============================================================
 // WHO'S GOING OUT
 // ============================================================
@@ -1006,13 +1010,13 @@ function renderWhosList() {
         <div class="who-check">${sel ? '✓' : ''}</div>
       </div>`;
   }).join('');
-
+ 
   // Use event delegation — attach ONE listener to parent, not inline onclick per child
   // This is the only reliable approach on iOS Safari for dynamically rendered elements
   list.removeEventListener('click', whoListClickHandler);
   list.addEventListener('click', whoListClickHandler);
 }
-
+ 
 function whoListClickHandler(e) {
   const row = e.target.closest('[data-child-idx]');
   if (!row) return;
@@ -1030,7 +1034,7 @@ function whoListClickHandler(e) {
     row.querySelector('.who-check').textContent = '✓';
   }
 }
-
+ 
 // ============================================================
 // SESSION SETUP
 // ============================================================
@@ -1044,7 +1048,7 @@ function selectSPF(btn, factor) {
   btn.classList.add('selected');
   APP.spfFactor = factor;
 }
-
+ 
 // ============================================================
 // SESSION CORE — TIMESTAMP BASED
 // ============================================================
@@ -1054,62 +1058,142 @@ function calcVitDPerSecond(fitzType) {
   const iuPerMin = (400 / baseMin) * (uv / 5) * APP.clothingFactor * APP.spfFactor;
   return iuPerMin / 60;
 }
-
+ 
 function calcBurnPercentPerSecond(fitzType) {
   const uv = APP.uvIndex || 4;
   const burnMin = FITZ_BURN_MIN[fitzType - 1];
   const adjustedBurnSec = (burnMin * 60) / (uv / 5) / Math.max(APP.clothingFactor, 0.1) / Math.max(APP.spfFactor, 0.1);
   return 100 / adjustedBurnSec;
 }
-
+ 
+// Per-child session data
+APP.childSessions = []; // one entry per selected child
+APP.activeChildIdx = 0; // which child card is showing
+ 
+function buildChildSessions() {
+  APP.childSessions = APP.selectedChildren.map(ci => {
+    const c = APP.children[ci];
+    return {
+      childIndex: ci,
+      fitzType: c.fitz,
+      goal: c.goal,
+      vitdPerSec: calcVitDPerSecond(c.fitz),
+      burnPerSec: calcBurnPercentPerSecond(c.fitz),
+      vitdAccumulated: 0,
+      burnRisk: 0,
+      goalReached: false,
+      burnAlerted: false
+    };
+  });
+}
+ 
+function renderChildCards() {
+  const slider = document.getElementById('child-cards-slider');
+  const dotsEl = document.getElementById('session-dots');
+  if (!slider) return;
+ 
+  slider.innerHTML = APP.childSessions.map((cs, sliderIdx) => {
+    const c = APP.children[cs.childIndex];
+    const bg = cs.childIndex === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+    const avatarContent = c.photo ? '<img src="' + c.photo + '" alt="' + c.name + '" style="width:100%;height:100%;object-fit:cover;">' : (cs.childIndex===0?'👧':'👦');
+    return '<div class="child-session-card" data-slider-idx="' + sliderIdx + '" style="min-width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px;overflow-y:auto;">'
+      + '<div style="width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid rgba(255,255,255,0.5);margin-bottom:8px;">' + avatarContent + '</div>'
+      + '<div style="font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:white;margin-bottom:12px;">' + c.name + '</div>'
+      // Progress ring
+      + '<div style="position:relative;margin-bottom:12px;">'
+      + '<svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg);">'
+      + '<circle cx="75" cy="75" r="62" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="11"/>'
+      + '<circle cx="75" cy="75" r="62" fill="none" stroke="#FFB800" stroke-width="11" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390" id="arc-' + sliderIdx + '"/>'
+      + '</svg>'
+      + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">'
+      + '<div style="font-family:'Baloo 2',cursive;font-size:1.9rem;font-weight:800;color:white;" id="pct-' + sliderIdx + '">0%</div>'
+      + '<div style="font-size:0.65rem;color:rgba(255,255,255,0.7);font-weight:700;">Vitamin D Goal</div>'
+      + '</div></div>'
+      // Stats row
+      + '<div style="display:flex;gap:8px;width:100%;margin-bottom:10px;">'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;" id="vitd-' + sliderIdx + '">0 IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Est. Vit D</div></div>'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;">' + cs.goal + ' IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Daily Goal</div></div>'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;" id="fitz-label-' + sliderIdx + '">Type ' + c.fitz + '</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Skin Type</div></div>'
+      + '</div>'
+      // Burn risk
+      + '<div style="width:100%;background:rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;">'
+      + '<div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:6px;">🔴 Burn Risk</div>'
+      + '<div style="background:rgba(255,255,255,0.2);border-radius:50px;height:8px;overflow:hidden;">'
+      + '<div id="burn-' + sliderIdx + '" style="height:100%;border-radius:50px;width:3%;background:linear-gradient(90deg,#4DC87A,#7BE89A);transition:width 1s;"></div>'
+      + '</div>'
+      + '<div style="display:flex;justify-content:space-between;margin-top:3px;"><span style="font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:700;">Safe</span><span style="font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:700;">Caution</span><span style="font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:700;">High Risk</span></div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+ 
+  // Dot indicators
+  if (APP.childSessions.length > 1) {
+    dotsEl.style.display = 'flex';
+    dotsEl.innerHTML = APP.childSessions.map((_, i) =>
+      '<div id="dot-' + i + '" style="width:8px;height:8px;border-radius:50%;background:' + (i===0?'white':'rgba(255,255,255,0.35)') + ';transition:background 0.2s;"></div>'
+    ).join('');
+  } else {
+    dotsEl.style.display = 'none';
+  }
+ 
+  // Touch swipe support
+  let touchStartX = 0;
+  slider.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  slider.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && APP.activeChildIdx < APP.childSessions.length - 1) setActiveChild(APP.activeChildIdx + 1);
+      else if (diff < 0 && APP.activeChildIdx > 0) setActiveChild(APP.activeChildIdx - 1);
+    }
+  }, { passive: true });
+}
+ 
+function setActiveChild(idx) {
+  APP.activeChildIdx = idx;
+  const slider = document.getElementById('child-cards-slider');
+  if (slider) slider.style.transform = 'translateX(-' + (idx * 100) + '%)';
+  APP.childSessions.forEach((_, i) => {
+    const dot = document.getElementById('dot-' + i);
+    if (dot) dot.style.background = i === idx ? 'white' : 'rgba(255,255,255,0.35)';
+  });
+}
+ 
 function startSession() {
-  // Use the primary (first selected) child's fitz for calculations
-  const primaryChild = APP.children[APP.selectedChildren[0]];
+  buildChildSessions();
+  APP.activeChildIdx = 0;
   APP.session = {
     startTime: Date.now(),
     childIndices: [...APP.selectedChildren],
     clothingFactor: APP.clothingFactor,
     spfFactor: APP.spfFactor,
     uvAtStart: APP.uvIndex || 4,
-    fitzType: primaryChild.fitz,
-    vitdPerSec: calcVitDPerSecond(primaryChild.fitz),
-    burnPerSec: calcBurnPercentPerSecond(primaryChild.fitz),
-    goal: primaryChild.goal,
     goalReached: false,
-    pausedElapsed: 0   // seconds accumulated before any pause
+    pausedElapsed: 0,
+    paused: false
   };
   APP.goalReached = false;
-
-  // Render session avatars
-  const avatarsEl = document.getElementById('session-avatars');
-  avatarsEl.innerHTML = APP.selectedChildren.map(i => {
-    const c = APP.children[i];
-    const bg = i === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
-    const content = c.photo ? `<img src="${c.photo}" alt="${c.name}">` : (i===0?'👧':'👦');
-    return `<div class="session-avatar" style="background:${bg};">${content}</div>`;
-  }).join('');
-
-  document.getElementById('live-goal').textContent = primaryChild.goal + ' IU';
-
   goTo('screen-session');
+  renderChildCards();
+  const uvHeader = document.getElementById('session-uv-header');
+  if (uvHeader) uvHeader.textContent = APP.uvIndex || '–';
   startTick();
   setupVisibilityHandler();
 }
-
+ 
 function getElapsedSeconds() {
   if (!APP.session) return 0;
   return APP.session.pausedElapsed + Math.floor((Date.now() - APP.session.startTime) / 1000);
 }
-
+ 
 function startTick() {
   if (APP.tickInterval) clearInterval(APP.tickInterval);
   APP.tickInterval = setInterval(tickSession, 1000);
 }
-
+ 
 function stopTick() {
   if (APP.tickInterval) { clearInterval(APP.tickInterval); APP.tickInterval = null; }
 }
-
+ 
 function pauseSession() {
   if (!APP.session || APP.session.paused) return;
   APP.session.pausedElapsed = getElapsedSeconds();
@@ -1120,7 +1204,7 @@ function pauseSession() {
   document.getElementById('session-timer').style.opacity = '0.5';
   document.getElementById('bg-notice').textContent = '⏸ Session paused — tap Resume when back outside';
 }
-
+ 
 function resumeSessionFromPause() {
   if (!APP.session || !APP.session.paused) return;
   APP.session.startTime = Date.now();
@@ -1131,7 +1215,7 @@ function resumeSessionFromPause() {
   document.getElementById('bg-notice').textContent = '⏸ App tracks time even when you switch away — come back to check progress';
   startTick();
 }
-
+ 
 // Page visibility — catch background/foreground transitions
 function setupVisibilityHandler() {
   if (APP.visibilityHandler) document.removeEventListener('visibilitychange', APP.visibilityHandler);
@@ -1149,90 +1233,155 @@ function setupVisibilityHandler() {
   };
   document.addEventListener('visibilitychange', APP.visibilityHandler);
 }
-
+ 
 function resumeSessionUI() {
   if (!APP.session) return;
   tickSession();
   startTick();
 }
-
+ 
 function tickSession() {
-  if (!APP.session) return;
+  if (!APP.session || APP.session.paused) return;
   const elapsed = getElapsedSeconds();
-  const vitd = elapsed * APP.session.vitdPerSec;
-  const burn = Math.min(100, elapsed * APP.session.burnPerSec);
-  const pct = Math.min(100, (vitd / APP.session.goal) * 100);
-
-  // Timer display
+ 
+  // Update shared timer
   const m = Math.floor(elapsed / 60).toString().padStart(2,'0');
   const s = (elapsed % 60).toString().padStart(2,'0');
-  document.getElementById('session-timer').textContent = `${m}:${s}`;
-
-  // Progress ring
-  const arc = document.getElementById('progress-arc');
-  const circumference = 452;
-  arc.style.strokeDashoffset = circumference - (circumference * pct / 100);
-  document.getElementById('progress-pct').textContent = Math.round(pct) + '%';
-  document.getElementById('live-vitd').textContent = Math.round(vitd) + ' IU';
-  document.getElementById('live-uv').textContent = APP.session.uvAtStart;
-
-  // Burn bar
-  const burnBar = document.getElementById('burn-bar');
-  burnBar.style.width = burn + '%';
-  burnBar.className = 'burn-bar ' + (burn < 40 ? 'burn-safe' : burn < 70 ? 'burn-warn' : 'burn-danger');
-
-  // Burn alert
-  if (burn >= 80 && !APP.session.burnAlerted) {
-    APP.session.burnAlerted = true;
-    showNotification('⚠️ SunTimeKids — Burn Risk', `${APP.children[APP.session.childIndices[0]].name} is approaching sun overexposure. Consider shade or sunscreen.`);
-  }
-
-  // Goal reached
-  if (pct >= 100 && !APP.session.goalReached) {
+  const timerEl = document.getElementById('session-timer');
+  if (timerEl) timerEl.textContent = m + ':' + s;
+ 
+  // Update each child's card independently
+  let allGoalsReached = true;
+  let firstGoalChild = null;
+ 
+  APP.childSessions.forEach((cs, sliderIdx) => {
+    if (cs.goalReached) return; // already done
+    allGoalsReached = false;
+ 
+    const vitd = elapsed * cs.vitdPerSec;
+    const burn = Math.min(100, elapsed * cs.burnPerSec);
+    const pct = Math.min(100, (vitd / cs.goal) * 100);
+ 
+    cs.vitdAccumulated = vitd;
+    cs.burnRisk = burn;
+ 
+    // Update progress ring
+    const arc = document.getElementById('arc-' + sliderIdx);
+    if (arc) arc.style.strokeDashoffset = 390 - (390 * pct / 100);
+    const pctEl = document.getElementById('pct-' + sliderIdx);
+    if (pctEl) pctEl.textContent = Math.round(pct) + '%';
+    const vitdEl = document.getElementById('vitd-' + sliderIdx);
+    if (vitdEl) vitdEl.textContent = Math.round(vitd) + ' IU';
+ 
+    // Update burn bar
+    const burnBar = document.getElementById('burn-' + sliderIdx);
+    if (burnBar) {
+      burnBar.style.width = burn + '%';
+      const burnColor = burn < 40 ? 'linear-gradient(90deg,#4DC87A,#7BE89A)' : burn < 70 ? 'linear-gradient(90deg,#FFB800,#FF8C00)' : 'linear-gradient(90deg,#FF6060,#FF3030)';
+      burnBar.style.background = burnColor;
+    }
+ 
+    // Burn alert per child
+    if (burn >= 80 && !cs.burnAlerted) {
+      cs.burnAlerted = true;
+      const c = APP.children[cs.childIndex];
+      showNotification('⚠️ SunTimeKids', c.name + ' is approaching sun overexposure. Consider shade or sunscreen.');
+    }
+ 
+    // Check if this child hit goal
+    if (pct >= 100) {
+      cs.goalReached = true;
+      cs.elapsedAtGoal = elapsed;
+      if (!firstGoalChild) firstGoalChild = { cs, sliderIdx, elapsed, vitd };
+    }
+  });
+ 
+  // Trigger celebration when first child (or all) hit goal
+  if (firstGoalChild && !APP.session.goalReached) {
     APP.session.goalReached = true;
-    APP.session.vitdAccumulated = vitd;
-    APP.session.elapsedAtGoal = elapsed;
+    APP.session.vitdAccumulated = firstGoalChild.vitd;
+    APP.session.elapsedAtGoal = firstGoalChild.elapsed;
     stopTick();
-    setTimeout(() => triggerCelebration(elapsed, vitd), 500);
+    setTimeout(() => triggerCelebration(firstGoalChild.elapsed, firstGoalChild.vitd), 500);
   }
 }
-
+ 
 function triggerCelebration(elapsed, vitd) {
-  const names = APP.session.childIndices.map(i => APP.children[i].name);
-  const nameStr = names.length > 1 ? names.join(' & ') : names[0];
+  // Find which children have hit their goal
+  const goalKids = APP.childSessions.filter(cs => cs.goalReached).map(cs => APP.children[cs.childIndex].name);
+  const pendingKids = APP.childSessions.filter(cs => !cs.goalReached).map(cs => APP.children[cs.childIndex].name);
+  const nameStr = goalKids.length > 0 ? goalKids.join(' & ') : APP.children[APP.session.childIndices[0]].name;
   const min = Math.floor(elapsed / 60);
   const sec = elapsed % 60;
-  const timeStr = min > 0 ? `${min}m ${sec}s` : `${sec}s`;
-
-  document.getElementById('cel-title').innerHTML = `${nameStr}<br>hit their goal! ☀️`;
-  document.getElementById('cel-sub').textContent = `Daily vitamin D reached after ${timeStr} outdoors`;
+  const timeStr = min > 0 ? min + 'm ' + sec + 's' : sec + 's';
+ 
+  document.getElementById('cel-title').innerHTML = nameStr + '<br>hit their goal! ☀️';
+  const subText = pendingKids.length > 0
+    ? 'Goal reached after ' + timeStr + ' · ' + pendingKids.join(' & ') + ' still tracking'
+    : 'Daily vitamin D reached after ' + timeStr + ' outdoors';
+  document.getElementById('cel-sub').textContent = subText;
   document.getElementById('cel-vitd').textContent = Math.round(vitd) + ' IU';
   document.getElementById('cel-duration').textContent = timeStr;
   document.getElementById('cel-streak').textContent = '🔥 ' + calcStreak();
-
-  showNotification('🌟 SunTimeKids', `${nameStr} reached their daily vitamin D goal!`);
+ 
+  showNotification('🌟 SunTimeKids', nameStr + ' reached their daily vitamin D goal!');
+  playGoalChime();
   goTo('screen-celebrate');
 }
-
+ 
 function extendSession() {
+  if (!APP.session) return;
+  const totalElapsed = getElapsedSeconds();
+  // Reset session state for continuation
   APP.session.goalReached = false;
-  APP.session.pausedElapsed = getElapsedSeconds();
+  APP.session.pausedElapsed = totalElapsed;
   APP.session.startTime = Date.now();
+  APP.session.paused = false;
+  // Reset child sessions so they keep accumulating (don't reset vitd, just goalReached flag)
+  APP.childSessions.forEach(cs => {
+    cs.goalReached = false;
+    cs.burnAlerted = false;
+  });
+  // Navigate and rebuild UI
   goTo('screen-session');
+  renderChildCards();
+  // Restore slider position
+  const slider = document.getElementById('child-cards-slider');
+  if (slider) slider.style.transform = 'translateX(0)';
+  APP.activeChildIdx = 0;
+  // Reset controls
+  const btnPause = document.getElementById('btn-pause');
+  if (btnPause) btnPause.textContent = '⏸ Pause';
+  const timerEl = document.getElementById('session-timer');
+  if (timerEl) { timerEl.style.opacity = '1'; }
+  const noticeEl = document.getElementById('bg-notice');
+  if (noticeEl) noticeEl.textContent = '⏸ Tracks time when you switch away — tap to check progress';
+  const uvHeader = document.getElementById('session-uv-header');
+  if (uvHeader) uvHeader.textContent = APP.session.uvAtStart || '–';
+  stopTick();
   startTick();
   setupVisibilityHandler();
+  tickSession();
 }
-
+ 
 function endSessionManual() {
   const elapsed = getElapsedSeconds();
-  const vitd = elapsed * APP.session.vitdPerSec;
-  APP.session.vitdAccumulated = vitd;
+  // Save accumulated vitd for each child
+  APP.childSessions.forEach(cs => {
+    cs.vitdAccumulated = elapsed * cs.vitdPerSec;
+  });
   APP.session.elapsedSeconds = elapsed;
+  APP.session.vitdAccumulated = APP.childSessions.reduce((sum, cs) => sum + cs.vitdAccumulated, 0) / APP.childSessions.length;
   saveSession();
   stopTick();
+  if (APP.visibilityHandler) {
+    document.removeEventListener('visibilitychange', APP.visibilityHandler);
+    APP.visibilityHandler = null;
+  }
+  APP.session = null;
   goTo('screen-home');
 }
-
+ 
 function finishSession() {
   APP.session.elapsedSeconds = APP.session.elapsedAtGoal || getElapsedSeconds();
   saveSession();
@@ -1244,7 +1393,7 @@ function finishSession() {
   APP.session = null;
   goTo('screen-home');
 }
-
+ 
 // ============================================================
 // SESSION PERSISTENCE
 // ============================================================
@@ -1268,19 +1417,19 @@ function saveSession() {
   storeSet('stk_sessions', APP.sessions);
   saveProfilesToStorage();
 }
-
+ 
 async function loadSessions() {
   const saved = await storeLoad('stk_sessions');
   if (saved && Array.isArray(saved)) APP.sessions = saved;
 }
-
+ 
 function saveProfilesToStorage() {
   const profiles = APP.children.map(c => ({
     name: c.name, age: c.age, fitz: c.fitz, goal: c.goal, photo: c.photo
   }));
   storeSet('stk_profiles', profiles);
 }
-
+ 
 async function loadProfiles() {
   const profiles = await storeLoad('stk_profiles');
   if (profiles && Array.isArray(profiles)) {
@@ -1289,14 +1438,63 @@ async function loadProfiles() {
     });
   }
 }
-
+ 
+function restoreProfileToggles() {
+  // After loading profiles, restore the adult/child toggle visual state in onboarding
+  APP.children.forEach((c, i) => {
+    if (c.isAdult) setProfileType(i, 'adult');
+  });
+}
+ 
+// ============================================================
+// AUDIO CHIME — Web Audio API, no external files needed
+// Four-note rising chime: C5 E5 G5 C6
+// ============================================================
+function playGoalChime() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    const noteDuration = 0.18;
+    const gap = 0.06;
+    notes.forEach((freq, i) => {
+      const t = ctx.currentTime + i * (noteDuration + gap);
+      // Primary tone
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.32, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + noteDuration + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + noteDuration + 0.35);
+      // Harmonic overtone for warmth
+      const osc2 = ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, t);
+      const gain2 = ctx.createGain();
+      gain2.gain.setValueAtTime(0, t);
+      gain2.gain.linearRampToValueAtTime(0.07, t + 0.02);
+      gain2.gain.exponentialRampToValueAtTime(0.001, t + noteDuration + 0.2);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start(t);
+      osc2.stop(t + noteDuration + 0.25);
+    });
+  } catch(e) { /* Audio unavailable — fail silently */ }
+}
+ 
 // ============================================================
 // STORAGE — IndexedDB primary, localStorage + cookie fallbacks
 // All three mechanisms tried to maximise iOS PWA compatibility
 // ============================================================
 const _mem = {};
 let _db = null;
-
+ 
 function storeInit() {
   return new Promise(resolve => {
     try {
@@ -1310,7 +1508,7 @@ function storeInit() {
     } catch(e) { resolve(); }
   });
 }
-
+ 
 function cookieSet(key, val) {
   try {
     // Encode as base64 to avoid cookie character issues
@@ -1320,7 +1518,7 @@ function cookieSet(key, val) {
     document.cookie = key + '=' + encoded + '; expires=' + exp + '; path=/; SameSite=Lax';
   } catch(e) {}
 }
-
+ 
 function cookieGet(key) {
   try {
     const match = document.cookie.match('(^|;)\s*' + key + '\s*=\s*([^;]+)');
@@ -1328,7 +1526,7 @@ function cookieGet(key) {
   } catch(e) {}
   return null;
 }
-
+ 
 function storeSet(key, val) {
   _mem[key] = val;
   // IndexedDB
@@ -1343,7 +1541,7 @@ function storeSet(key, val) {
   // Cookie (most reliable in iOS PWA)
   cookieSet(key, val);
 }
-
+ 
 async function storeLoad(key) {
   // 1. Try IndexedDB
   if (_db) {
@@ -1368,31 +1566,31 @@ async function storeLoad(key) {
   // 4. In-memory fallback
   return _mem[key] || null;
 }
-
+ 
 function getTodaySessions() {
   const today = new Date().toDateString();
   return APP.sessions.filter(s => new Date(s.date).toDateString() === today);
 }
-
+ 
 function getWeekSessions() {
   const now = new Date();
   const weekAgo = new Date(now - 7 * 86400000);
   return APP.sessions.filter(s => new Date(s.date) >= weekAgo);
 }
-
+ 
 function getWeekTotalMinutes() {
   return Math.round(getWeekSessions().reduce((sum, s) => sum + s.elapsedSeconds, 0) / 60);
 }
-
+ 
 function getWeekGoalCount() {
   return getWeekSessions().filter(s => s.goalReached).length;
 }
-
+ 
 function getWeekDayCount() {
   const days = new Set(getWeekSessions().map(s => new Date(s.date).toDateString()));
   return days.size || 1;
 }
-
+ 
 function calcStreak() {
   if (!APP.sessions.length) return 0;
   const days = [...new Set(APP.sessions.filter(s=>s.goalReached).map(s => new Date(s.date).toDateString()))];
@@ -1408,7 +1606,7 @@ function calcStreak() {
   }
   return streak;
 }
-
+ 
 // ============================================================
 // DASHBOARD
 // ============================================================
@@ -1419,13 +1617,13 @@ function renderDash() {
   renderDashChildren();
   renderSessionHistory();
 }
-
+ 
 function renderWeekChart() {
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const today = new Date().getDay();
   const barsEl = document.getElementById('week-bars');
   const labelsEl = document.getElementById('week-day-labels');
-
+ 
   // Build per-day minute totals from real sessions
   const dayTotals = Array(7).fill(0);
   const dayGoals = Array(7).fill(false);
@@ -1434,13 +1632,13 @@ function renderWeekChart() {
     dayTotals[d] += s.elapsedSeconds / 60;
     if (s.goalReached) dayGoals[d] = true;
   });
-
+ 
   // Add some demo data if no real sessions yet so chart looks useful
   if (!APP.sessions.length) {
     const demo = [35, 0, 65, 48, 70, 55, 0];
     demo.forEach((v,i) => { if (i !== today) { dayTotals[i] = v; if (v >= 60) dayGoals[i] = true; } });
   }
-
+ 
   const maxVal = Math.max(...dayTotals, 1);
   barsEl.innerHTML = days.map((d,i) => {
     const v = dayTotals[i];
@@ -1448,27 +1646,27 @@ function renderWeekChart() {
     const h = v === 0 ? 4 : Math.max(8, Math.round((v / maxVal) * 72));
     return `<div class="week-bar-wrap"><div class="week-bar ${cls}" style="height:${h}px;"></div></div>`;
   }).join('');
-
+ 
   labelsEl.innerHTML = days.map((d,i) => {
     const isToday = i === today;
     return `<div class="week-day ${isToday?'today':''}" style="flex:1;text-align:center;">${d}</div>`;
   }).join('');
 }
-
+ 
 function renderTrendGrid() {
   const weekMin = getWeekTotalMinutes();
   const weekGoals = getWeekGoalCount();
   const weekDays = getWeekDayCount();
   const streak = calcStreak();
   const uv = APP.uvIndex ? `${APP.uvIndex}` : '–';
-
+ 
   document.getElementById('trend-grid').innerHTML = `
     <div class="trend-card"><span class="trend-icon">⏱️</span><div class="trend-val">${weekMin >= 60 ? (weekMin/60).toFixed(1)+'h' : weekMin+'m'}</div><div class="trend-label">Outdoor time (7 days)</div></div>
     <div class="trend-card"><span class="trend-icon">🎯</span><div class="trend-val">${weekGoals}/${weekDays}</div><div class="trend-label">Goals hit this week</div></div>
     <div class="trend-card"><span class="trend-icon">🔥</span><div class="trend-val">${streak} day${streak!==1?'s':''}</div><div class="trend-label">Current streak</div></div>
     <div class="trend-card"><span class="trend-icon">🌡️</span><div class="trend-val">${uv}</div><div class="trend-label">Live UV · ${APP.locationName.split(',')[0]}</div></div>`;
 }
-
+ 
 function renderDashChildren() {
   const list = document.getElementById('dash-child-list');
   list.innerHTML = APP.children.map((c, i) => {
@@ -1488,7 +1686,7 @@ function renderDashChildren() {
       </div>`;
   }).join('');
 }
-
+ 
 function renderSessionHistory() {
   const list = document.getElementById('session-history-list');
   if (!APP.sessions.length) {
@@ -1515,7 +1713,7 @@ function renderSessionHistory() {
       </div>`;
   }).join('');
 }
-
+ 
 // ============================================================
 // INIT
 // ============================================================
@@ -1525,9 +1723,9 @@ async function appInit() {
   await loadSessions();
   await loadProfiles();
   initLocation();
-
+ 
   // Wire ALL buttons via addEventListener — never inline onclick on iOS Safari
-
+ 
   // Location modal
   const locChangeBtn = document.getElementById('loc-change-btn');
   if (locChangeBtn) locChangeBtn.addEventListener('click', promptManualLocation);
@@ -1539,7 +1737,7 @@ async function appInit() {
   if (locCancelBtn) locCancelBtn.addEventListener('click', closeLocModal);
   const locInput = document.getElementById('loc-input');
   if (locInput) locInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyManualLocation(); });
-
+ 
   // Session pause / end buttons
   const btnPause = document.getElementById('btn-pause');
   if (btnPause) btnPause.addEventListener('click', () => {
@@ -1548,11 +1746,11 @@ async function appInit() {
   });
   const btnEndSession = document.getElementById('btn-end-session');
   if (btnEndSession) btnEndSession.addEventListener('click', endSessionManual);
-
+ 
   // Settings screen back button
   const btnSettingsBack = document.getElementById('btn-settings-back');
   if (btnSettingsBack) btnSettingsBack.addEventListener('click', () => goTo('screen-home'));
-
+ 
   // Settings session end preference
   const optAuto = document.getElementById('session-end-opt-auto');
   const optKeep = document.getElementById('session-end-opt-keep');
@@ -1566,24 +1764,23 @@ async function appInit() {
   }
   if (optAuto) optAuto.addEventListener('click', () => setSessionEndMode('auto'));
   if (optKeep) optKeep.addEventListener('click', () => setSessionEndMode('keep'));
-
+ 
   // Load saved session end mode
   const savedMode = await storeLoad('stk_session_end_mode');
   if (savedMode) APP.sessionEndMode = savedMode;
-
+ 
   // Nav settings button (last nav item)
   const navItems = document.querySelectorAll('.nav-item');
   if (navItems.length >= 4) navItems[3].addEventListener('click', () => goTo('screen-settings'));
-
+ 
   // Skip welcome screen if profiles already saved
   const savedProfiles = await storeLoad('stk_profiles');
   if (savedProfiles) {
     goTo('screen-home');
   }
 }
-
+ 
 appInit();
 </script>
-
 </body>
 </html>
