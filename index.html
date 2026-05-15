@@ -323,7 +323,7 @@
     <h1 class="welcome-title">Sun<span>Time</span><br>Kids</h1>
     <p class="welcome-sub">Track healthy sunlight for your<br>children — simply and smartly.</p>
     <div class="welcome-badge">📍 Uses your real location · Live UV data</div>
-    <button class="btn-primary" style="max-width:280px;" onclick="goTo('screen-onboard')">Get Started →</button>
+    <button class="btn-primary" style="max-width:280px;" id="btn-get-started">Get Started →</button>
   </div>
  
   <!-- ===== ONBOARDING ===== -->
@@ -339,8 +339,8 @@
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;">Profile 1</div>
           <div id="type-toggle-0" style="display:flex;background:#EEF3FF;border-radius:50px;padding:3px;gap:2px;">
-            <button id="type-child-0" onclick="setProfileType(0,'child')" style="background:var(--sky-dark);color:white;border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">👦 Child</button>
-            <button id="type-adult-0" onclick="setProfileType(0,'adult')" style="background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">🧑 Adult</button>
+            <button id="type-child-0" data-profile-idx="0" data-profile-type="child" style="background:var(--sky-dark);color:white;border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">👦 Child</button>
+            <button id="type-adult-0" data-profile-idx="0" data-profile-type="adult" style="background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">🧑 Adult</button>
           </div>
         </div>
         <div style="display:flex;gap:12px;margin-bottom:12px;">
@@ -355,17 +355,17 @@
         </div>
         <div class="field-label">Skin Tone</div>
         <div class="fitz-grid" id="fitz-0">
-          <button class="fitz-btn" onclick="selectFitz(0,this,1)"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
-          <button class="fitz-btn" onclick="selectFitz(0,this,2)"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
-          <button class="fitz-btn selected" onclick="selectFitz(0,this,3)"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
-          <button class="fitz-btn" onclick="selectFitz(0,this,4)"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
-          <button class="fitz-btn" onclick="selectFitz(0,this,5)"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
-          <button class="fitz-btn" onclick="selectFitz(0,this,6)"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
+          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="1"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
+          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="2"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
+          <button class="fitz-btn selected" data-fitz-idx="0" data-fitz-val="3"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
+          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="4"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
+          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="5"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
+          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="6"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
         </div>
         <div style="margin-top:12px;">
           <div class="field-label">Photo (optional)</div>
           <div class="photo-row">
-            <div class="photo-circle" id="photo-0" onclick="document.getElementById('file-0').click()">📷</div>
+            <div class="photo-circle" id="photo-0" id="photo-circle-0">📷</div>
             <input type="file" id="file-0" accept="image/*" style="display:none" onchange="handlePhoto(0,event)">
             <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
           </div>
@@ -377,8 +377,8 @@
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;">Profile 2</div>
           <div id="type-toggle-1" style="display:flex;background:#EEF3FF;border-radius:50px;padding:3px;gap:2px;">
-            <button id="type-child-1" onclick="setProfileType(1,'child')" style="background:var(--sky-dark);color:white;border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">👦 Child</button>
-            <button id="type-adult-1" onclick="setProfileType(1,'adult')" style="background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">🧑 Adult</button>
+            <button id="type-child-1" data-profile-idx="1" data-profile-type="child" style="background:var(--sky-dark);color:white;border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">👦 Child</button>
+            <button id="type-adult-1" data-profile-idx="1" data-profile-type="adult" style="background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">🧑 Adult</button>
           </div>
         </div>
         <div style="display:flex;gap:12px;margin-bottom:12px;">
@@ -393,17 +393,17 @@
         </div>
         <div class="field-label">Skin Tone</div>
         <div class="fitz-grid" id="fitz-1">
-          <button class="fitz-btn" onclick="selectFitz(1,this,1)"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
-          <button class="fitz-btn" onclick="selectFitz(1,this,2)"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
-          <button class="fitz-btn selected" onclick="selectFitz(1,this,3)"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
-          <button class="fitz-btn" onclick="selectFitz(1,this,4)"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
-          <button class="fitz-btn" onclick="selectFitz(1,this,5)"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
-          <button class="fitz-btn" onclick="selectFitz(1,this,6)"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
+          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="1"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
+          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="2"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
+          <button class="fitz-btn selected" data-fitz-idx="1" data-fitz-val="3"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
+          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="4"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
+          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="5"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
+          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="6"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
         </div>
         <div style="margin-top:12px;">
           <div class="field-label">Photo (optional)</div>
           <div class="photo-row">
-            <div class="photo-circle" id="photo-1" onclick="document.getElementById('file-1').click()">📷</div>
+            <div class="photo-circle" id="photo-1" id="photo-circle-1">📷</div>
             <input type="file" id="file-1" accept="image/*" style="display:none" onchange="handlePhoto(1,event)">
             <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
           </div>
@@ -411,7 +411,7 @@
       </div>
  
       <div class="privacy-note">🔒 All data stored on your device only. No account required. COPPA compliant.</div>
-      <button class="btn-primary" onclick="saveProfiles()">Save Profiles & Continue →</button>
+      <button class="btn-primary" id="btn-save-profiles">Save Profiles & Continue →</button>
     </div>
   </div>
  
@@ -432,7 +432,7 @@
         <button id="loc-change-btn" style="background:#4DC87A;color:white;border:none;border-radius:50px;padding:6px 14px;font-family:Nunito,sans-serif;font-size:0.75rem;font-weight:800;cursor:pointer;">Change</button>
       </div>
       <div id="child-cards"></div>
-      <button class="btn-headout" onclick="goTo('screen-whosout')">
+      <button class="btn-headout" id="btn-headout">
         <span style="font-size:1.8rem;">🌤️</span> We're Heading Out!
       </button>
       <div class="stats-row">
@@ -452,19 +452,19 @@
           <div class="stat-label">Goals hit</div>
         </div>
       </div>
-      <button class="btn-nav" onclick="goTo('screen-dash')">📊 View Dashboard & History</button>
+      <button class="btn-nav" id="btn-view-dash">📊 View Dashboard & History</button>
     </div>
   </div>
  
   <!-- ===== WHO'S GOING OUT ===== -->
   <div class="screen" id="screen-whosout">
-    <div class="modal-bg" onclick="goTo('screen-home')"></div>
+    <div class="modal-bg" id="modal-bg"></div>
     <div class="modal-sheet">
       <div class="sheet-handle"></div>
       <div class="sheet-title">Who's heading out? 🌤️</div>
       <div class="sheet-sub">Select the children joining this session</div>
       <div id="who-list"></div>
-      <button class="btn-primary" style="margin-top:8px;" onclick="goTo('screen-setup')">Continue →</button>
+      <button class="btn-primary" style="margin-top:8px;" id="btn-whos-continue">Continue →</button>
     </div>
   </div>
  
@@ -489,26 +489,26 @@
       <div>
         <div class="section-title">👕 Clothing Coverage</div>
         <div class="clothing-grid">
-          <button class="clothing-btn selected" onclick="selectClothing(this,1.0)"><span class="clothing-icon">🩱</span><span class="clothing-label">Swimsuit</span></button>
-          <button class="clothing-btn" onclick="selectClothing(this,0.7)"><span class="clothing-icon">🩳</span><span class="clothing-label">Tank + Shorts</span></button>
-          <button class="clothing-btn" onclick="selectClothing(this,0.55)"><span class="clothing-icon">👕</span><span class="clothing-label">Tee + Shorts</span></button>
-          <button class="clothing-btn" onclick="selectClothing(this,0.35)"><span class="clothing-icon">👖</span><span class="clothing-label">Tee + Pants</span></button>
-          <button class="clothing-btn" onclick="selectClothing(this,0.2)"><span class="clothing-icon">🧥</span><span class="clothing-label">Full Cover</span></button>
+          <button class="clothing-btn selected" data-clothing-factor="1.0"><span class="clothing-icon">🩱</span><span class="clothing-label">Swimsuit</span></button>
+          <button class="clothing-btn" data-clothing-factor="0.7"><span class="clothing-icon">🩳</span><span class="clothing-label">Tank + Shorts</span></button>
+          <button class="clothing-btn" data-clothing-factor="0.55"><span class="clothing-icon">👕</span><span class="clothing-label">Tee + Shorts</span></button>
+          <button class="clothing-btn" data-clothing-factor="0.35"><span class="clothing-icon">👖</span><span class="clothing-label">Tee + Pants</span></button>
+          <button class="clothing-btn" data-clothing-factor="0.2"><span class="clothing-icon">🧥</span><span class="clothing-label">Full Cover</span></button>
         </div>
       </div>
  
       <div>
         <div class="section-title">🧴 Sunscreen</div>
         <div class="spf-grid">
-          <button class="spf-btn selected" onclick="selectSPF(this,1.0)"><span class="spf-icon">🚫</span><span class="spf-label">None</span></button>
-          <button class="spf-btn" onclick="selectSPF(this,0.45)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 15</span></button>
-          <button class="spf-btn" onclick="selectSPF(this,0.28)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 30</span></button>
-          <button class="spf-btn" onclick="selectSPF(this,0.2)"><span class="spf-icon">🧴</span><span class="spf-label">SPF 50+</span></button>
+          <button class="spf-btn selected" data-spf-factor="1.0"><span class="spf-icon">🚫</span><span class="spf-label">None</span></button>
+          <button class="spf-btn" data-spf-factor="0.45"><span class="spf-icon">🧴</span><span class="spf-label">SPF 15</span></button>
+          <button class="spf-btn" data-spf-factor="0.28"><span class="spf-icon">🧴</span><span class="spf-label">SPF 30</span></button>
+          <button class="spf-btn" data-spf-factor="0.2"><span class="spf-icon">🧴</span><span class="spf-label">SPF 50+</span></button>
         </div>
       </div>
  
-      <button class="btn-primary" style="background:linear-gradient(135deg,#FF8C00,#FFB800);color:white;font-size:1.1rem;padding:18px;box-shadow:0 8px 24px rgba(255,140,0,0.5);" onclick="startSession()">▶ Start Session</button>
-      <button class="btn-secondary" onclick="goTo('screen-home')">← Back</button>
+      <button class="btn-primary" style="background:linear-gradient(135deg,#FF8C00,#FFB800);color:white;font-size:1.1rem;padding:18px;box-shadow:0 8px 24px rgba(255,140,0,0.5);" id="btn-start-session">▶ Start Session</button>
+      <button class="btn-secondary" id="btn-setup-back">← Back</button>
     </div>
   </div>
  
@@ -556,8 +556,8 @@
       <div class="cel-stat"><div class="cel-stat-val" id="cel-duration">–</div><div class="cel-stat-label">Time Outside</div></div>
       <div class="cel-stat"><div class="cel-stat-val" id="cel-streak">🔥 1</div><div class="cel-stat-label">Day Streak</div></div>
     </div>
-    <button class="btn-extend" onclick="extendSession()">▶ Keep Playing Outside</button>
-    <button class="btn-done" onclick="finishSession()">✓ We're Done for Today</button>
+    <button class="btn-extend" id="btn-extend-session">▶ Keep Playing Outside</button>
+    <button class="btn-done" id="btn-finish-session">✓ We're Done for Today</button>
   </div>
  
   <!-- ===== DASHBOARD ===== -->
@@ -586,7 +586,7 @@
         <div class="dash-section-title">Recent Sessions</div>
         <div id="session-history-list"></div>
       </div>
-      <button class="btn-nav" onclick="goTo('screen-home')">← Back to Home</button>
+      <button class="btn-nav" id="btn-dash-back">← Back to Home</button>
     </div>
   </div>
  
@@ -645,9 +645,9 @@
  
   <!-- Bottom nav -->
   <div class="bottom-nav" id="bottom-nav" style="display:none;">
-    <div class="nav-item" id="nav-home" onclick="goTo('screen-home')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
-    <div class="nav-item" onclick="goTo('screen-whosout')"><span class="nav-icon">🌤️</span><span class="nav-label">Session</span></div>
-    <div class="nav-item" id="nav-dash" onclick="goTo('screen-dash')"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></div>
+    <div class="nav-item" id="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
+    <div class="nav-item" id="nav-session"><span class="nav-icon">🌤️</span><span class="nav-label">Session</span></div>
+    <div class="nav-item" id="nav-dash"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></div>
     <div class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></div>
   </div>
 </div>
@@ -867,7 +867,7 @@ function maybeShowNotifBanner() {
     document.getElementById('notif-banner-wrap').innerHTML = `
       <div class="notif-banner" style="margin-bottom:10px;">
         🔔 Get goal alerts even when app is backgrounded
-        <button onclick="requestNotifications()">Enable</button>
+        <button id="btn-notif-enable">Enable</button>
       </div>`;
   }
 }
@@ -1718,13 +1718,104 @@ function renderSessionHistory() {
 // INIT
 // ============================================================
 async function appInit() {
-  // Init IndexedDB first, then load data
-  await storeInit();
-  await loadSessions();
-  await loadProfiles();
-  initLocation();
+  // Wrap everything in try/catch so a single error never kills the whole app
+  try {
+    await storeInit();
+    await loadSessions();
+    await loadProfiles();
+    initLocation();
+  } catch(e) {
+    console.warn('Storage/location init error:', e);
+  }
  
-  // Wire ALL buttons via addEventListener — never inline onclick on iOS Safari
+  // ── Wire ALL buttons via addEventListener ──
+  // iOS Safari on GitHub Pages blocks ALL inline onclick handlers.
+  // Every interaction must be wired here.
+ 
+  // Welcome screen
+  const btnGetStarted = document.getElementById('btn-get-started');
+  if (btnGetStarted) btnGetStarted.addEventListener('click', () => goTo('screen-onboard'));
+ 
+  // Onboarding — save profiles
+  const btnSaveProfiles = document.getElementById('btn-save-profiles');
+  if (btnSaveProfiles) btnSaveProfiles.addEventListener('click', saveProfiles);
+ 
+  // Onboarding — profile type toggles (Child/Adult) via event delegation on whole document
+  document.addEventListener('click', e => {
+    const typeBtn = e.target.closest('[data-profile-type]');
+    if (typeBtn) {
+      const idx = parseInt(typeBtn.getAttribute('data-profile-idx'));
+      const type = typeBtn.getAttribute('data-profile-type');
+      setProfileType(idx, type);
+      return;
+    }
+ 
+    // Fitzpatrick buttons
+    const fitzBtn = e.target.closest('[data-fitz-val]');
+    if (fitzBtn) {
+      const idx = parseInt(fitzBtn.getAttribute('data-fitz-idx'));
+      const val = parseInt(fitzBtn.getAttribute('data-fitz-val'));
+      selectFitz(idx, fitzBtn, val);
+      return;
+    }
+ 
+    // Clothing buttons
+    const clothingBtn = e.target.closest('[data-clothing-factor]');
+    if (clothingBtn) {
+      selectClothing(clothingBtn, parseFloat(clothingBtn.getAttribute('data-clothing-factor')));
+      return;
+    }
+ 
+    // SPF buttons
+    const spfBtn = e.target.closest('[data-spf-factor]');
+    if (spfBtn) {
+      selectSPF(spfBtn, parseFloat(spfBtn.getAttribute('data-spf-factor')));
+      return;
+    }
+  });
+ 
+  // Photo circles
+  const photoCircle0 = document.getElementById('photo-circle-0');
+  if (photoCircle0) photoCircle0.addEventListener('click', () => document.getElementById('file-0').click());
+  const photoCircle1 = document.getElementById('photo-circle-1');
+  if (photoCircle1) photoCircle1.addEventListener('click', () => document.getElementById('file-1').click());
+ 
+  // Home screen
+  const btnHeadout = document.getElementById('btn-headout');
+  if (btnHeadout) btnHeadout.addEventListener('click', () => goTo('screen-whosout'));
+  const btnViewDash = document.getElementById('btn-view-dash');
+  if (btnViewDash) btnViewDash.addEventListener('click', () => goTo('screen-dash'));
+ 
+  // Who's out modal background tap to dismiss
+  const modalBg = document.getElementById('modal-bg');
+  if (modalBg) modalBg.addEventListener('click', () => goTo('screen-home'));
+  const btnWhosContinue = document.getElementById('btn-whos-continue');
+  if (btnWhosContinue) btnWhosContinue.addEventListener('click', () => goTo('screen-setup'));
+ 
+  // Session setup
+  const btnSetupBack = document.getElementById('btn-setup-back');
+  if (btnSetupBack) btnSetupBack.addEventListener('click', () => goTo('screen-home'));
+  const btnStartSession = document.getElementById('btn-start-session');
+  if (btnStartSession) btnStartSession.addEventListener('click', startSession);
+ 
+  // Session screen pause / end
+  const btnPause = document.getElementById('btn-pause');
+  if (btnPause) btnPause.addEventListener('click', () => {
+    if (APP.session && APP.session.paused) resumeSessionFromPause();
+    else pauseSession();
+  });
+  const btnEndSession = document.getElementById('btn-end-session');
+  if (btnEndSession) btnEndSession.addEventListener('click', endSessionManual);
+ 
+  // Celebration screen
+  const btnExtendSession = document.getElementById('btn-extend-session');
+  if (btnExtendSession) btnExtendSession.addEventListener('click', extendSession);
+  const btnFinishSession = document.getElementById('btn-finish-session');
+  if (btnFinishSession) btnFinishSession.addEventListener('click', finishSession);
+ 
+  // Dashboard
+  const btnDashBack = document.getElementById('btn-dash-back');
+  if (btnDashBack) btnDashBack.addEventListener('click', () => goTo('screen-home'));
  
   // Location modal
   const locChangeBtn = document.getElementById('loc-change-btn');
@@ -1738,20 +1829,9 @@ async function appInit() {
   const locInput = document.getElementById('loc-input');
   if (locInput) locInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyManualLocation(); });
  
-  // Session pause / end buttons
-  const btnPause = document.getElementById('btn-pause');
-  if (btnPause) btnPause.addEventListener('click', () => {
-    if (APP.session && APP.session.paused) resumeSessionFromPause();
-    else pauseSession();
-  });
-  const btnEndSession = document.getElementById('btn-end-session');
-  if (btnEndSession) btnEndSession.addEventListener('click', endSessionManual);
- 
-  // Settings screen back button
+  // Settings screen
   const btnSettingsBack = document.getElementById('btn-settings-back');
   if (btnSettingsBack) btnSettingsBack.addEventListener('click', () => goTo('screen-home'));
- 
-  // Settings session end preference
   const optAuto = document.getElementById('session-end-opt-auto');
   const optKeep = document.getElementById('session-end-opt-keep');
   function setSessionEndMode(mode) {
@@ -1765,22 +1845,32 @@ async function appInit() {
   if (optAuto) optAuto.addEventListener('click', () => setSessionEndMode('auto'));
   if (optKeep) optKeep.addEventListener('click', () => setSessionEndMode('keep'));
  
-  // Load saved session end mode
-  const savedMode = await storeLoad('stk_session_end_mode');
-  if (savedMode) APP.sessionEndMode = savedMode;
+  // Notification banner button
+  const btnNotifEnable = document.getElementById('btn-notif-enable');
+  if (btnNotifEnable) btnNotifEnable.addEventListener('click', requestNotifications);
  
-  // Nav settings button (last nav item)
+  // Bottom nav
+  const navHome = document.getElementById('nav-home');
+  if (navHome) navHome.addEventListener('click', () => goTo('screen-home'));
+  const navSession = document.getElementById('nav-session');
+  if (navSession) navSession.addEventListener('click', () => goTo('screen-whosout'));
+  const navDash = document.getElementById('nav-dash');
+  if (navDash) navDash.addEventListener('click', () => goTo('screen-dash'));
   const navItems = document.querySelectorAll('.nav-item');
   if (navItems.length >= 4) navItems[3].addEventListener('click', () => goTo('screen-settings'));
  
-  // Skip welcome screen if profiles already saved
-  const savedProfiles = await storeLoad('stk_profiles');
-  if (savedProfiles) {
-    goTo('screen-home');
+  // Load saved preferences
+  try {
+    const savedMode = await storeLoad('stk_session_end_mode');
+    if (savedMode) APP.sessionEndMode = savedMode;
+    const savedProfiles = await storeLoad('stk_profiles');
+    if (savedProfiles) goTo('screen-home');
+  } catch(e) {
+    console.warn('Preference load error:', e);
   }
 }
  
-appInit();
+appInit().catch(e => console.warn('appInit error:', e));
 </script>
 </body>
 </html>
