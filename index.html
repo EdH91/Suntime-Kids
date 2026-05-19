@@ -672,7 +672,9 @@ const APP = {
   goalReached: false,
   tickInterval: null,
   visibilityHandler: null,
-  sessionEndMode: 'auto'
+  sessionEndMode: 'auto',
+  childSessions: [],
+  activeChildIdx: 0
 };
  
 // Fitzpatrick: minutes to 400 IU at UV 5, outdoors, no SPF
@@ -1880,4 +1882,3 @@ appInit().catch(e => console.warn('appInit error:', e));
 </script>
 </body>
 </html>
- 
