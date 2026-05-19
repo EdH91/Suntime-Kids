@@ -10,6 +10,7 @@
 <title>SunTimeKids v2.3</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
 <style>
+  @font-face { font-family: Baloo2; src: local('Baloo 2'); }
   :root {
     --sun: #FFB800; --sun-deep: #FF8C00;
     --sky: #5BC8F5; --sky-dark: #1A7AC4;
@@ -319,6 +320,7 @@
  
   <!-- ===== WELCOME ===== -->
   <div class="screen active" id="screen-welcome">
+    <div id="debug-error" style="display:none;background:red;color:white;padding:10px;font-size:0.8rem;word-break:break-all;position:absolute;top:0;left:0;right:0;z-index:999;"></div>
     <div class="welcome-sun">☀️</div>
     <h1 class="welcome-title">Sun<span>Time</span><br>Kids</h1>
     <p class="welcome-sub">Track healthy sunlight for your<br>children — simply and smartly.</p>
@@ -1100,7 +1102,7 @@ function renderChildCards() {
     const avatarContent = c.photo ? '<img src="' + c.photo + '" alt="' + c.name + '" style="width:100%;height:100%;object-fit:cover;">' : (cs.childIndex===0?'👧':'👦');
     return '<div class="child-session-card" data-slider-idx="' + sliderIdx + '" style="min-width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px;overflow-y:auto;">'
       + '<div style="width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid rgba(255,255,255,0.5);margin-bottom:8px;">' + avatarContent + '</div>'
-      + '<div style="font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:white;margin-bottom:12px;">' + c.name + '</div>'
+      + '<div style="font-family:Baloo2,cursive;font-size:1.2rem;font-weight:800;color:white;margin-bottom:12px;">' + c.name + '</div>'
       // Progress ring
       + '<div style="position:relative;margin-bottom:12px;">'
       + '<svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg);">'
@@ -1108,14 +1110,14 @@ function renderChildCards() {
       + '<circle cx="75" cy="75" r="62" fill="none" stroke="#FFB800" stroke-width="11" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390" id="arc-' + sliderIdx + '"/>'
       + '</svg>'
       + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">'
-      + '<div style="font-family:'Baloo 2',cursive;font-size:1.9rem;font-weight:800;color:white;" id="pct-' + sliderIdx + '">0%</div>'
+      + '<div style="font-family:Baloo2,cursive;font-size:1.9rem;font-weight:800;color:white;" id="pct-' + sliderIdx + '">0%</div>'
       + '<div style="font-size:0.65rem;color:rgba(255,255,255,0.7);font-weight:700;">Vitamin D Goal</div>'
       + '</div></div>'
       // Stats row
       + '<div style="display:flex;gap:8px;width:100%;margin-bottom:10px;">'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;" id="vitd-' + sliderIdx + '">0 IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Est. Vit D</div></div>'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;">' + cs.goal + ' IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Daily Goal</div></div>'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;color:white;" id="fitz-label-' + sliderIdx + '">Type ' + c.fitz + '</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Skin Type</div></div>'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:Baloo2,cursive;font-size:1rem;font-weight:800;color:white;" id="vitd-' + sliderIdx + '">0 IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Est. Vit D</div></div>'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:Baloo2,cursive;font-size:1rem;font-weight:800;color:white;">' + cs.goal + ' IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Daily Goal</div></div>'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:Baloo2,cursive;font-size:1rem;font-weight:800;color:white;" id="fitz-label-' + sliderIdx + '">Type ' + c.fitz + '</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Skin Type</div></div>'
       + '</div>'
       // Burn risk
       + '<div style="width:100%;background:rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;">'
@@ -1878,7 +1880,22 @@ async function appInit() {
   }
 }
  
-appInit().catch(e => console.warn('appInit error:', e));
+appInit().catch(e => {
+  console.warn('appInit error:', e);
+  const dbg = document.getElementById('debug-error');
+  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'Init error: ' + e.message + ' | ' + e.stack; }
+});
+ 
+// Also catch any uncaught errors
+window.addEventListener('error', e => {
+  const dbg = document.getElementById('debug-error');
+  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'JS error: ' + e.message + ' at line ' + e.lineno; }
+});
+window.addEventListener('unhandledrejection', e => {
+  const dbg = document.getElementById('debug-error');
+  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'Promise error: ' + e.reason; }
+});
 </script>
 </body>
 </html>
+ 
