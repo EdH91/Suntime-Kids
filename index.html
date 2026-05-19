@@ -366,7 +366,7 @@
           <div class="field-label">Photo (optional)</div>
           <div class="photo-row">
             <div class="photo-circle" id="photo-0" id="photo-circle-0">📷</div>
-            <input type="file" id="file-0" accept="image/*" style="display:none" onchange="handlePhoto(0,event)">
+            <input type="file" id="file-0" accept="image/*" style="display:none">
             <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
           </div>
         </div>
@@ -404,7 +404,7 @@
           <div class="field-label">Photo (optional)</div>
           <div class="photo-row">
             <div class="photo-circle" id="photo-1" id="photo-circle-1">📷</div>
-            <input type="file" id="file-1" accept="image/*" style="display:none" onchange="handlePhoto(1,event)">
+            <input type="file" id="file-1" accept="image/*" style="display:none">
             <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
           </div>
         </div>
@@ -1774,6 +1774,12 @@ async function appInit() {
     }
   });
  
+  // Photo file inputs
+  const fileInput0 = document.getElementById('file-0');
+  if (fileInput0) fileInput0.addEventListener('change', e => handlePhoto(0, e));
+  const fileInput1 = document.getElementById('file-1');
+  if (fileInput1) fileInput1.addEventListener('change', e => handlePhoto(1, e));
+ 
   // Photo circles
   const photoCircle0 = document.getElementById('photo-circle-0');
   if (photoCircle0) photoCircle0.addEventListener('click', () => document.getElementById('file-0').click());
@@ -1874,3 +1880,4 @@ appInit().catch(e => console.warn('appInit error:', e));
 </script>
 </body>
 </html>
+ 
