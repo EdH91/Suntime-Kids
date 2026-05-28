@@ -7,11 +7,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SunTimeKids">
 <meta name="mobile-web-app-capable" content="yes">
-<title>SunTimeKids v2.3</title>
+<title>SunTimeKids v2.4</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  @font-face { font-family: Baloo2; src: local('Baloo 2'); }
   :root {
+    --font-display: 'Baloo 2', cursive;
     --sun: #FFB800; --sun-deep: #FF8C00;
     --sky: #5BC8F5; --sky-dark: #1A7AC4;
     --grass: #4DC87A; --coral: #FF6060;
@@ -488,26 +488,8 @@
         </div>
       </div>
  
-      <div>
-        <div class="section-title">👕 Clothing Coverage</div>
-        <div class="clothing-grid">
-          <button class="clothing-btn selected" data-clothing-factor="1.0"><span class="clothing-icon">🩱</span><span class="clothing-label">Swimsuit</span></button>
-          <button class="clothing-btn" data-clothing-factor="0.7"><span class="clothing-icon">🩳</span><span class="clothing-label">Tank + Shorts</span></button>
-          <button class="clothing-btn" data-clothing-factor="0.55"><span class="clothing-icon">👕</span><span class="clothing-label">Tee + Shorts</span></button>
-          <button class="clothing-btn" data-clothing-factor="0.35"><span class="clothing-icon">👖</span><span class="clothing-label">Tee + Pants</span></button>
-          <button class="clothing-btn" data-clothing-factor="0.2"><span class="clothing-icon">🧥</span><span class="clothing-label">Full Cover</span></button>
-        </div>
-      </div>
- 
-      <div>
-        <div class="section-title">🧴 Sunscreen</div>
-        <div class="spf-grid">
-          <button class="spf-btn selected" data-spf-factor="1.0"><span class="spf-icon">🚫</span><span class="spf-label">None</span></button>
-          <button class="spf-btn" data-spf-factor="0.45"><span class="spf-icon">🧴</span><span class="spf-label">SPF 15</span></button>
-          <button class="spf-btn" data-spf-factor="0.28"><span class="spf-icon">🧴</span><span class="spf-label">SPF 30</span></button>
-          <button class="spf-btn" data-spf-factor="0.2"><span class="spf-icon">🧴</span><span class="spf-label">SPF 50+</span></button>
-        </div>
-      </div>
+      <!-- Per-child clothing and SPF inputs populated by JS -->
+      <div id="per-child-setup"></div>
  
       <button class="btn-primary" style="background:linear-gradient(135deg,#FF8C00,#FFB800);color:white;font-size:1.1rem;padding:18px;box-shadow:0 8px 24px rgba(255,140,0,0.5);" id="btn-start-session">▶ Start Session</button>
       <button class="btn-secondary" id="btn-setup-back">← Back</button>
@@ -534,6 +516,8 @@
     <!-- Dot indicators (shown when 2+ children) -->
     <div id="session-dots" style="display:flex;justify-content:center;gap:8px;padding:8px 0;background:linear-gradient(135deg,#0A4A7A,#1A7AC4);flex-shrink:0;"></div>
  
+    <!-- Sunscreen reminder banner (hidden by default) -->
+    <div id="sunscreen-reminder" style="display:none;background:#FF8C00;color:white;padding:10px 16px;font-family:Nunito,sans-serif;font-size:0.82rem;font-weight:800;text-align:center;flex-shrink:0;">🧴 Time to reapply sunscreen! <button id="btn-dismiss-sunscreen" style="background:rgba(255,255,255,0.25);border:none;color:white;border-radius:50px;padding:3px 10px;font-family:Nunito,sans-serif;font-size:0.75rem;font-weight:800;cursor:pointer;margin-left:8px;">Got it</button></div>
     <!-- Controls -->
     <div style="display:flex;gap:10px;padding:12px 20px 16px;background:linear-gradient(135deg,#0A4A7A,#1A7AC4);flex-shrink:0;">
       <button id="btn-pause" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.4);border-radius:50px;padding:14px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⏸ Pause</button>
@@ -669,6 +653,7 @@ const APP = {
   lat: 40.79, lng: -74.21,          // default Essex County
   clothingFactor: 1.0,
   spfFactor: 1.0,
+  childSetups: [{clothingFactor:1.0, spfFactor:1.0}, {clothingFactor:1.0, spfFactor:1.0}],
   session: null,                     // active session object
   sessions: [],                      // persisted completed sessions
   goalReached: false,
@@ -676,7 +661,9 @@ const APP = {
   visibilityHandler: null,
   sessionEndMode: 'auto',
   childSessions: [],
-  activeChildIdx: 0
+  activeChildIdx: 0,
+  currentCelebrationChildIdx: null,
+  currentCelebrationSliderIdx: null
 };
  
 // Fitzpatrick: minutes to 400 IU at UV 5, outdoors, no SPF
@@ -894,7 +881,7 @@ function goTo(id) {
  
   if (id === 'screen-home') renderHome();
   if (id === 'screen-whosout') renderWhosList();
-  if (id === 'screen-setup') updateAllUVDisplays();
+  if (id === 'screen-setup') { updateAllUVDisplays(); renderPerChildSetup(); }
   if (id === 'screen-dash') renderDash();
   if (id === 'screen-session') resumeSessionUI();
 }
@@ -1042,15 +1029,57 @@ function whoListClickHandler(e) {
 // ============================================================
 // SESSION SETUP
 // ============================================================
-function selectClothing(btn, factor) {
-  document.querySelectorAll('.clothing-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  APP.clothingFactor = factor;
+function renderPerChildSetup() {
+  const container = document.getElementById('per-child-setup');
+  if (!container) return;
+  const selected = APP.selectedChildren;
+  container.innerHTML = '';
+  selected.forEach(ci => {
+    const c = APP.children[ci];
+    const bg = ci === 0 ? '#FFF8E8' : '#EEF6FF';
+    const borderColor = ci === 0 ? '#FFB800' : '#4AB8F5';
+    const div = document.createElement('div');
+    div.style.cssText = 'background:' + bg + ';border:2px solid ' + borderColor + ';border-radius:16px;padding:14px 16px;margin-bottom:12px;';
+    div.innerHTML = '<div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink);margin-bottom:10px;">'
+      + (c.photo ? '<img src="' + c.photo + '" style="width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;">' : (ci===0?'👧 ':'👦 '))
+      + c.name + '</div>'
+      + '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--soft);margin-bottom:8px;">👕 Clothing</div>'
+      + '<div class="clothing-grid" id="clothing-' + ci + '" style="margin-bottom:12px;">'
+      + ['🩱|Swimsuit|1.0','🩳|Tank+Shorts|0.7','👕|Tee+Shorts|0.55','👖|Tee+Pants|0.35','🧥|Full Cover|0.2'].map((s,i) => {
+          const parts = s.split('|');
+          const sel = i===0 ? ' selected' : '';
+          return '<button class="clothing-btn' + sel + '" data-child-idx="' + ci + '" data-clothing-factor="' + parts[2] + '"><span class="clothing-icon">' + parts[0] + '</span><span class="clothing-label">' + parts[1] + '</span></button>';
+        }).join('')
+      + '</div>'
+      + '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--soft);margin-bottom:8px;">🧴 Sunscreen</div>'
+      + '<div class="spf-grid" id="spf-' + ci + '">'
+      + [['🚫','None','1.0'],['🧴','SPF 15','0.45'],['🧴','SPF 30','0.28'],['🧴','SPF 50+','0.2']].map((s,i) => {
+          const sel = i===0 ? ' selected' : '';
+          return '<button class="spf-btn' + sel + '" data-child-idx="' + ci + '" data-spf-factor="' + s[2] + '"><span class="spf-icon">' + s[0] + '</span><span class="spf-label">' + s[1] + '</span></button>';
+        }).join('')
+      + '</div>';
+    container.appendChild(div);
+  });
 }
-function selectSPF(btn, factor) {
-  document.querySelectorAll('.spf-btn').forEach(b => b.classList.remove('selected'));
+ 
+function selectClothing(btn, factor) {
+  const ci = parseInt(btn.getAttribute('data-child-idx'));
+  const grid = document.getElementById('clothing-' + ci);
+  if (grid) grid.querySelectorAll('.clothing-btn').forEach(b => b.classList.remove('selected'));
+  else document.querySelectorAll('.clothing-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  APP.spfFactor = factor;
+  if (!isNaN(ci)) APP.childSetups[ci].clothingFactor = factor;
+  else APP.clothingFactor = factor;
+}
+ 
+function selectSPF(btn, factor) {
+  const ci = parseInt(btn.getAttribute('data-child-idx'));
+  const grid = document.getElementById('spf-' + ci);
+  if (grid) grid.querySelectorAll('.spf-btn').forEach(b => b.classList.remove('selected'));
+  else document.querySelectorAll('.spf-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  if (!isNaN(ci)) APP.childSetups[ci].spfFactor = factor;
+  else APP.spfFactor = factor;
 }
  
 // ============================================================
@@ -1070,6 +1099,20 @@ function calcBurnPercentPerSecond(fitzType) {
   return 100 / adjustedBurnSec;
 }
  
+function calcVitDPerSecondWithFactors(fitzType, clothingFactor, spfFactor) {
+  const uv = APP.uvIndex || 4;
+  const baseMin = FITZ_BASE_MIN[fitzType - 1];
+  const iuPerMin = (400 / baseMin) * (uv / 5) * clothingFactor * spfFactor;
+  return iuPerMin / 60;
+}
+ 
+function calcBurnPercentPerSecondWithFactors(fitzType, clothingFactor, spfFactor) {
+  const uv = APP.uvIndex || 4;
+  const burnMin = FITZ_BURN_MIN[fitzType - 1];
+  const adjustedBurnSec = (burnMin * 60) / (uv / 5) / Math.max(clothingFactor, 0.1) / Math.max(spfFactor, 0.1);
+  return 100 / adjustedBurnSec;
+}
+ 
 // Per-child session data
 APP.childSessions = []; // one entry per selected child
 APP.activeChildIdx = 0; // which child card is showing
@@ -1077,16 +1120,20 @@ APP.activeChildIdx = 0; // which child card is showing
 function buildChildSessions() {
   APP.childSessions = APP.selectedChildren.map(ci => {
     const c = APP.children[ci];
+    const setup = APP.childSetups[ci] || { clothingFactor: APP.clothingFactor, spfFactor: APP.spfFactor };
     return {
       childIndex: ci,
       fitzType: c.fitz,
       goal: c.goal,
-      vitdPerSec: calcVitDPerSecond(c.fitz),
-      burnPerSec: calcBurnPercentPerSecond(c.fitz),
+      clothingFactor: setup.clothingFactor,
+      spfFactor: setup.spfFactor,
+      vitdPerSec: calcVitDPerSecondWithFactors(c.fitz, setup.clothingFactor, setup.spfFactor),
+      burnPerSec: calcBurnPercentPerSecondWithFactors(c.fitz, setup.clothingFactor, setup.spfFactor),
       vitdAccumulated: 0,
       burnRisk: 0,
       goalReached: false,
-      burnAlerted: false
+      burnAlerted: false,
+      done: false
     };
   });
 }
@@ -1102,7 +1149,7 @@ function renderChildCards() {
     const avatarContent = c.photo ? '<img src="' + c.photo + '" alt="' + c.name + '" style="width:100%;height:100%;object-fit:cover;">' : (cs.childIndex===0?'👧':'👦');
     return '<div class="child-session-card" data-slider-idx="' + sliderIdx + '" style="min-width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px;overflow-y:auto;">'
       + '<div style="width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid rgba(255,255,255,0.5);margin-bottom:8px;">' + avatarContent + '</div>'
-      + '<div style="font-family:Baloo2,cursive;font-size:1.2rem;font-weight:800;color:white;margin-bottom:12px;">' + c.name + '</div>'
+      + '<div style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:white;margin-bottom:12px;">' + c.name + '</div>'
       // Progress ring
       + '<div style="position:relative;margin-bottom:12px;">'
       + '<svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg);">'
@@ -1110,14 +1157,14 @@ function renderChildCards() {
       + '<circle cx="75" cy="75" r="62" fill="none" stroke="#FFB800" stroke-width="11" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390" id="arc-' + sliderIdx + '"/>'
       + '</svg>'
       + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">'
-      + '<div style="font-family:Baloo2,cursive;font-size:1.9rem;font-weight:800;color:white;" id="pct-' + sliderIdx + '">0%</div>'
+      + '<div style="font-family:var(--font-display);font-size:1.9rem;font-weight:800;color:white;" id="pct-' + sliderIdx + '">0%</div>'
       + '<div style="font-size:0.65rem;color:rgba(255,255,255,0.7);font-weight:700;">Vitamin D Goal</div>'
       + '</div></div>'
       // Stats row
       + '<div style="display:flex;gap:8px;width:100%;margin-bottom:10px;">'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:Baloo2,cursive;font-size:1rem;font-weight:800;color:white;" id="vitd-' + sliderIdx + '">0 IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Est. Vit D</div></div>'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:Baloo2,cursive;font-size:1rem;font-weight:800;color:white;">' + cs.goal + ' IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Daily Goal</div></div>'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:Baloo2,cursive;font-size:1rem;font-weight:800;color:white;" id="fitz-label-' + sliderIdx + '">Type ' + c.fitz + '</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Skin Type</div></div>'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:white;" id="vitd-' + sliderIdx + '">0 IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Est. Vit D</div></div>'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:white;">' + cs.goal + ' IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Daily Goal</div></div>'
+      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:white;" id="fitz-label-' + sliderIdx + '">Type ' + c.fitz + '</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Skin Type</div></div>'
       + '</div>'
       // Burn risk
       + '<div style="width:100%;background:rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;">'
@@ -1244,6 +1291,11 @@ function resumeSessionUI() {
   startTick();
 }
  
+function showInAppSunscreenReminder() {
+  const banner = document.getElementById('sunscreen-reminder');
+  if (banner) banner.style.display = 'block';
+}
+ 
 function tickSession() {
   if (!APP.session || APP.session.paused) return;
   const elapsed = getElapsedSeconds();
@@ -1300,35 +1352,64 @@ function tickSession() {
     }
   });
  
-  // Trigger celebration when first child (or all) hit goal
-  if (firstGoalChild && !APP.session.goalReached) {
-    APP.session.goalReached = true;
-    APP.session.vitdAccumulated = firstGoalChild.vitd;
-    APP.session.elapsedAtGoal = firstGoalChild.elapsed;
-    stopTick();
-    setTimeout(() => triggerCelebration(firstGoalChild.elapsed, firstGoalChild.vitd), 500);
+  // Sunscreen reapplication reminder (90 min after session start, only if sunscreen was applied)
+  const anyHasSunscreen = APP.childSessions.some(cs => cs.spfFactor < 1.0);
+  if (anyHasSunscreen && !APP.session.sunscreenReminderShown) {
+    const sessionStart = APP.session.startTime - (APP.session.pausedElapsed * 1000);
+    const minutesElapsed = (Date.now() - sessionStart) / 60000;
+    if (minutesElapsed >= 90) {
+      APP.session.sunscreenReminderShown = true;
+      showNotification('🧴 SunTimeKids — Sunscreen Reminder', 'It's been 90 minutes! Time to reapply sunscreen.');
+      showInAppSunscreenReminder();
+    }
   }
+ 
+  // Trigger celebration for EACH child individually when they hit goal
+  // Does NOT stop tracking for other children
+  APP.childSessions.forEach((cs, sliderIdx) => {
+    if (cs.goalReached && !cs.celebrationShown) {
+      cs.celebrationShown = true;
+      const elapsed = getElapsedSeconds();
+      // Only stop tick if ALL children have hit goal
+      const allDone = APP.childSessions.every(s => s.goalReached);
+      if (allDone) stopTick();
+      setTimeout(() => triggerCelebration(elapsed, cs.vitdAccumulated, cs, sliderIdx), 500);
+    }
+  });
 }
  
-function triggerCelebration(elapsed, vitd) {
-  // Find which children have hit their goal
-  const goalKids = APP.childSessions.filter(cs => cs.goalReached).map(cs => APP.children[cs.childIndex].name);
-  const pendingKids = APP.childSessions.filter(cs => !cs.goalReached).map(cs => APP.children[cs.childIndex].name);
-  const nameStr = goalKids.length > 0 ? goalKids.join(' & ') : APP.children[APP.session.childIndices[0]].name;
+function triggerCelebration(elapsed, vitd, cs, sliderIdx) {
+  const c = APP.children[cs.childIndex];
+  const pendingKids = APP.childSessions.filter(s => !s.goalReached).map(s => APP.children[s.childIndex].name);
   const min = Math.floor(elapsed / 60);
   const sec = elapsed % 60;
   const timeStr = min > 0 ? min + 'm ' + sec + 's' : sec + 's';
+  const allDone = APP.childSessions.every(s => s.goalReached);
  
-  document.getElementById('cel-title').innerHTML = nameStr + '<br>hit their goal! ☀️';
+  // Store which child this celebration is for
+  APP.currentCelebrationChildIdx = cs.childIndex;
+  APP.currentCelebrationSliderIdx = sliderIdx;
+ 
+  document.getElementById('cel-title').innerHTML = c.name + '<br>hit their goal! ☀️';
   const subText = pendingKids.length > 0
-    ? 'Goal reached after ' + timeStr + ' · ' + pendingKids.join(' & ') + ' still tracking'
-    : 'Daily vitamin D reached after ' + timeStr + ' outdoors';
+    ? 'Goal reached after ' + timeStr + ' · ' + pendingKids.join(' & ') + ' still going!'
+    : 'Daily vitamin D goal reached after ' + timeStr + ' outdoors';
   document.getElementById('cel-sub').textContent = subText;
   document.getElementById('cel-vitd').textContent = Math.round(vitd) + ' IU';
   document.getElementById('cel-duration').textContent = timeStr;
   document.getElementById('cel-streak').textContent = '🔥 ' + calcStreak();
  
-  showNotification('🌟 SunTimeKids', nameStr + ' reached their daily vitamin D goal!');
+  // Update button labels based on whether other children are still tracking
+  const extendBtn = document.getElementById('btn-extend-session');
+  const finishBtn = document.getElementById('btn-finish-session');
+  if (extendBtn) extendBtn.textContent = pendingKids.length > 0
+    ? '▶ Keep going — ' + pendingKids.join(' & ') + ' still tracking'
+    : '▶ Keep Playing Outside';
+  if (finishBtn) finishBtn.textContent = allDone
+    ? '✓ We're Done for Today'
+    : '✓ Done for ' + c.name + ' — keep tracking others';
+ 
+  showNotification('🌟 SunTimeKids', c.name + ' reached their daily vitamin D goal!');
   playGoalChime();
   goTo('screen-celebrate');
 }
@@ -1336,32 +1417,32 @@ function triggerCelebration(elapsed, vitd) {
 function extendSession() {
   if (!APP.session) return;
   const totalElapsed = getElapsedSeconds();
-  // Reset session state for continuation
-  APP.session.goalReached = false;
+  // Keep the clock running — just reset the celebrating child's celebrationShown flag
+  // so the celebration doesn't re-trigger, but keep goalReached true
   APP.session.pausedElapsed = totalElapsed;
   APP.session.startTime = Date.now();
   APP.session.paused = false;
-  // Reset child sessions so they keep accumulating (don't reset vitd, just goalReached flag)
-  APP.childSessions.forEach(cs => {
-    cs.goalReached = false;
-    cs.burnAlerted = false;
-  });
-  // Navigate and rebuild UI
+  // Reset sunscreen timer from now
+  APP.session.sunscreenStartTime = Date.now();
+ 
+  // Navigate back to session screen
   goTo('screen-session');
   renderChildCards();
-  // Restore slider position
-  const slider = document.getElementById('child-cards-slider');
-  if (slider) slider.style.transform = 'translateX(0)';
-  APP.activeChildIdx = 0;
-  // Reset controls
+ 
+  // Navigate slider to the child that was just celebrated, or first pending
+  const pendingIdx = APP.childSessions.findIndex(cs => !cs.goalReached);
+  const targetSlider = pendingIdx >= 0 ? pendingIdx : 0;
+  setActiveChild(targetSlider);
+ 
   const btnPause = document.getElementById('btn-pause');
   if (btnPause) btnPause.textContent = '⏸ Pause';
   const timerEl = document.getElementById('session-timer');
-  if (timerEl) { timerEl.style.opacity = '1'; }
+  if (timerEl) timerEl.style.opacity = '1';
   const noticeEl = document.getElementById('bg-notice');
   if (noticeEl) noticeEl.textContent = '⏸ Tracks time when you switch away — tap to check progress';
   const uvHeader = document.getElementById('session-uv-header');
   if (uvHeader) uvHeader.textContent = APP.session.uvAtStart || '–';
+ 
   stopTick();
   startTick();
   setupVisibilityHandler();
@@ -1776,6 +1857,13 @@ async function appInit() {
       selectSPF(spfBtn, parseFloat(spfBtn.getAttribute('data-spf-factor')));
       return;
     }
+  });
+ 
+  // Sunscreen reminder dismiss
+  const btnDismissSunscreen = document.getElementById('btn-dismiss-sunscreen');
+  if (btnDismissSunscreen) btnDismissSunscreen.addEventListener('click', () => {
+    const banner = document.getElementById('sunscreen-reminder');
+    if (banner) banner.style.display = 'none';
   });
  
   // Photo file inputs
