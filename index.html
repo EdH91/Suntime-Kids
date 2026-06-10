@@ -321,6 +321,7 @@
   <!-- ===== WELCOME ===== -->
   <div class="screen active" id="screen-welcome">
     <div id="debug-error" style="display:none;background:red;color:white;padding:10px;font-size:0.8rem;word-break:break-all;position:absolute;top:0;left:0;right:0;z-index:999;"></div>
+    <div id="debug-error" style="display:none;position:absolute;top:0;left:0;right:0;background:rgba(200,0,0,0.9);color:white;padding:10px 14px;font-size:0.75rem;font-weight:700;z-index:999;word-break:break-all;"></div>
     <div class="welcome-sun">☀️</div>
     <h1 class="welcome-title">Sun<span>Time</span><br>Kids</h1>
     <p class="welcome-sub">Track healthy sunlight for your<br>children — simply and smartly.</p>
@@ -1967,6 +1968,103 @@ async function appInit() {
     console.warn('Preference load error:', e);
   }
 }
+ 
+// ── SYNCHRONOUS SAFETY NET ──
+// Wire critical navigation buttons immediately at script load,
+// completely independent of async appInit. This guarantees buttons
+// work even if storage/location init fails or throws.
+(function wireButtonsSync() {
+  function safeOn(id, fn) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', fn);
+  }
+  // Welcome
+  safeOn('btn-get-started', function() { goTo('screen-onboard'); });
+  // Onboarding
+  safeOn('btn-save-profiles', function() { saveProfiles(); });
+  // Home
+  safeOn('btn-headout', function() { goTo('screen-whosout'); });
+  safeOn('btn-view-dash', function() { goTo('screen-dash'); });
+  // Who's out
+  safeOn('modal-bg', function() { goTo('screen-home'); });
+  safeOn('btn-whos-continue', function() { goTo('screen-setup'); });
+  // Setup
+  safeOn('btn-setup-back', function() { goTo('screen-home'); });
+  safeOn('btn-start-session', function() { startSession(); });
+  // Session
+  safeOn('btn-pause', function() {
+    if (APP.session && APP.session.paused) resumeSessionFromPause();
+    else pauseSession();
+  });
+  safeOn('btn-end-session', function() { endSessionManual(); });
+  // Celebration
+  safeOn('btn-extend-session', function() { extendSession(); });
+  safeOn('btn-finish-session', function() { finishSession(); });
+  // Dashboard
+  safeOn('btn-dash-back', function() { goTo('screen-home'); });
+  safeOn('btn-settings-back', function() { goTo('screen-home'); });
+  // Location modal
+  safeOn('loc-change-btn', function() { promptManualLocation(); });
+  safeOn('loc-gps-btn', function() { applyGPSLocation(); });
+  safeOn('loc-search-btn', function() { applyManualLocation(); });
+  safeOn('loc-cancel-btn', function() { closeLocModal(); });
+  // Sunscreen dismiss
+  safeOn('btn-dismiss-sunscreen', function() {
+    var b = document.getElementById('sunscreen-reminder');
+    if (b) b.style.display = 'none';
+  });
+  // Nav
+  safeOn('nav-home', function() { goTo('screen-home'); });
+  safeOn('nav-session', function() { goTo('screen-whosout'); });
+  safeOn('nav-dash', function() { goTo('screen-dash'); });
+  // Notification enable
+  safeOn('btn-notif-enable', function() { requestNotifications(); });
+  // Photo circles
+  safeOn('photo-circle-0', function() {
+    var f = document.getElementById('file-0'); if (f) f.click();
+  });
+  safeOn('photo-circle-1', function() {
+    var f = document.getElementById('file-1'); if (f) f.click();
+  });
+  // Nav settings (4th item)
+  var navItems = document.querySelectorAll('.nav-item');
+  if (navItems.length >= 4) navItems[3].addEventListener('click', function() { goTo('screen-settings'); });
+  // Event delegation for clothing, spf, fitz, profile type
+  document.addEventListener('click', function(e) {
+    var typeBtn = e.target.closest('[data-profile-type]');
+    if (typeBtn) {
+      setProfileType(parseInt(typeBtn.getAttribute('data-profile-idx')), typeBtn.getAttribute('data-profile-type'));
+      return;
+    }
+    var fitzBtn = e.target.closest('[data-fitz-val]');
+    if (fitzBtn) {
+      selectFitz(parseInt(fitzBtn.getAttribute('data-fitz-idx')), fitzBtn, parseInt(fitzBtn.getAttribute('data-fitz-val')));
+      return;
+    }
+    var clothingBtn = e.target.closest('[data-clothing-factor]');
+    if (clothingBtn) { selectClothing(clothingBtn, parseFloat(clothingBtn.getAttribute('data-clothing-factor'))); return; }
+    var spfBtn = e.target.closest('[data-spf-factor]');
+    if (spfBtn) { selectSPF(spfBtn, parseFloat(spfBtn.getAttribute('data-spf-factor'))); return; }
+  });
+  // File inputs
+  var f0 = document.getElementById('file-0');
+  if (f0) f0.addEventListener('change', function(e) { handlePhoto(0, e); });
+  var f1 = document.getElementById('file-1');
+  if (f1) f1.addEventListener('change', function(e) { handlePhoto(1, e); });
+  // Location input enter key
+  var locInput = document.getElementById('loc-input');
+  if (locInput) locInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') applyManualLocation(); });
+})();
+ 
+// Visible error display for debugging
+window.addEventListener('error', function(e) {
+  var dbg = document.getElementById('debug-error');
+  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'Error: ' + e.message + ' (line ' + e.lineno + ')'; }
+});
+window.addEventListener('unhandledrejection', function(e) {
+  var dbg = document.getElementById('debug-error');
+  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'Promise error: ' + String(e.reason); }
+});
  
 appInit().catch(e => {
   console.warn('appInit error:', e);
