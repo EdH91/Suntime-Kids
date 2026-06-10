@@ -1139,60 +1139,165 @@ function buildChildSessions() {
   });
 }
  
-function renderChildCards() {
-  const slider = document.getElementById('child-cards-slider');
-  const dotsEl = document.getElementById('session-dots');
+function renderSessionCards() {
+  var slider = document.getElementById('child-cards-slider');
+  var dotsEl = document.getElementById('session-dots');
   if (!slider) return;
  
-  slider.innerHTML = APP.childSessions.map((cs, sliderIdx) => {
-    const c = APP.children[cs.childIndex];
-    const bg = cs.childIndex === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
-    const avatarContent = c.photo ? '<img src="' + c.photo + '" alt="' + c.name + '" style="width:100%;height:100%;object-fit:cover;">' : (cs.childIndex===0?'👧':'👦');
-    return '<div class="child-session-card" data-slider-idx="' + sliderIdx + '" style="min-width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px;overflow-y:auto;">'
-      + '<div style="width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid rgba(255,255,255,0.5);margin-bottom:8px;">' + avatarContent + '</div>'
-      + '<div style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:white;margin-bottom:12px;">' + c.name + '</div>'
-      // Progress ring
-      + '<div style="position:relative;margin-bottom:12px;">'
-      + '<svg width="150" height="150" viewBox="0 0 150 150" style="transform:rotate(-90deg);">'
-      + '<circle cx="75" cy="75" r="62" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="11"/>'
-      + '<circle cx="75" cy="75" r="62" fill="none" stroke="#FFB800" stroke-width="11" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390" id="arc-' + sliderIdx + '"/>'
-      + '</svg>'
-      + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">'
-      + '<div style="font-family:var(--font-display);font-size:1.9rem;font-weight:800;color:white;" id="pct-' + sliderIdx + '">0%</div>'
-      + '<div style="font-size:0.65rem;color:rgba(255,255,255,0.7);font-weight:700;">Vitamin D Goal</div>'
-      + '</div></div>'
-      // Stats row
-      + '<div style="display:flex;gap:8px;width:100%;margin-bottom:10px;">'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:white;" id="vitd-' + sliderIdx + '">0 IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Est. Vit D</div></div>'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:white;">' + cs.goal + ' IU</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Daily Goal</div></div>'
-      + '<div style="flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;"><div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:white;" id="fitz-label-' + sliderIdx + '">Type ' + c.fitz + '</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;">Skin Type</div></div>'
-      + '</div>'
-      // Burn risk
-      + '<div style="width:100%;background:rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;">'
-      + '<div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:6px;">🔴 Burn Risk</div>'
-      + '<div style="background:rgba(255,255,255,0.2);border-radius:50px;height:8px;overflow:hidden;">'
-      + '<div id="burn-' + sliderIdx + '" style="height:100%;border-radius:50px;width:3%;background:linear-gradient(90deg,#4DC87A,#7BE89A);transition:width 1s;"></div>'
-      + '</div>'
-      + '<div style="display:flex;justify-content:space-between;margin-top:3px;"><span style="font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:700;">Safe</span><span style="font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:700;">Caution</span><span style="font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:700;">High Risk</span></div>'
-      + '</div>'
-      + '</div>';
-  }).join('');
+  // Clear existing content
+  while (slider.firstChild) slider.removeChild(slider.firstChild);
+ 
+  APP.childSessions.forEach(function(cs, sliderIdx) {
+    var c = APP.children[cs.childIndex];
+    var bg = cs.childIndex === 0
+      ? 'linear-gradient(135deg,#FFE0A0,#FFB800)'
+      : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+ 
+    // Outer card
+    var card = document.createElement('div');
+    card.className = 'child-session-card';
+    card.style.cssText = 'min-width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px;overflow-y:auto;';
+ 
+    // Avatar
+    var avatar = document.createElement('div');
+    avatar.style.cssText = 'width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid rgba(255,255,255,0.5);margin-bottom:8px;';
+    if (c.photo) {
+      var img = document.createElement('img');
+      img.src = c.photo;
+      img.alt = c.name;
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+      avatar.appendChild(img);
+    } else {
+      avatar.textContent = cs.childIndex === 0 ? '👧' : '👦';
+    }
+    card.appendChild(avatar);
+ 
+    // Name
+    var nameEl = document.createElement('div');
+    nameEl.style.cssText = 'font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:white;margin-bottom:12px;';
+    nameEl.textContent = c.name;
+    card.appendChild(nameEl);
+ 
+    // Progress ring container
+    var ringWrap = document.createElement('div');
+    ringWrap.style.cssText = 'position:relative;margin-bottom:12px;';
+ 
+    var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('width','150');
+    svg.setAttribute('height','150');
+    svg.setAttribute('viewBox','0 0 150 150');
+    svg.style.transform = 'rotate(-90deg)';
+ 
+    var trackCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    trackCircle.setAttribute('cx','75'); trackCircle.setAttribute('cy','75');
+    trackCircle.setAttribute('r','62'); trackCircle.setAttribute('fill','none');
+    trackCircle.setAttribute('stroke','rgba(255,255,255,0.15)');
+    trackCircle.setAttribute('stroke-width','11');
+    svg.appendChild(trackCircle);
+ 
+    var progressCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    progressCircle.setAttribute('cx','75'); progressCircle.setAttribute('cy','75');
+    progressCircle.setAttribute('r','62'); progressCircle.setAttribute('fill','none');
+    progressCircle.setAttribute('stroke','#FFB800');
+    progressCircle.setAttribute('stroke-width','11');
+    progressCircle.setAttribute('stroke-linecap','round');
+    progressCircle.setAttribute('stroke-dasharray','390');
+    progressCircle.setAttribute('stroke-dashoffset','390');
+    progressCircle.id = 'arc-' + sliderIdx;
+    svg.appendChild(progressCircle);
+    ringWrap.appendChild(svg);
+ 
+    var ringCenter = document.createElement('div');
+    ringCenter.style.cssText = 'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;';
+ 
+    var pctEl = document.createElement('div');
+    pctEl.id = 'pct-' + sliderIdx;
+    pctEl.style.cssText = 'font-family:var(--font-display);font-size:1.9rem;font-weight:800;color:white;';
+    pctEl.textContent = '0%';
+    ringCenter.appendChild(pctEl);
+ 
+    var subEl = document.createElement('div');
+    subEl.style.cssText = 'font-size:0.65rem;color:rgba(255,255,255,0.7);font-weight:700;';
+    subEl.textContent = 'Vitamin D Goal';
+    ringCenter.appendChild(subEl);
+    ringWrap.appendChild(ringCenter);
+    card.appendChild(ringWrap);
+ 
+    // Stats row
+    var statsRow = document.createElement('div');
+    statsRow.style.cssText = 'display:flex;gap:8px;width:100%;margin-bottom:10px;';
+ 
+    function makeStat(idSuffix, value, label) {
+      var stat = document.createElement('div');
+      stat.style.cssText = 'flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;';
+      var val = document.createElement('div');
+      val.id = idSuffix;
+      val.style.cssText = 'font-family:var(--font-display);font-size:1rem;font-weight:800;color:white;';
+      val.textContent = value;
+      var lbl = document.createElement('div');
+      lbl.style.cssText = 'font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;';
+      lbl.textContent = label;
+      stat.appendChild(val);
+      stat.appendChild(lbl);
+      return stat;
+    }
+ 
+    statsRow.appendChild(makeStat('vitd-' + sliderIdx, '0 IU', 'Est. Vit D'));
+    statsRow.appendChild(makeStat(null, cs.goal + ' IU', 'Daily Goal'));
+    statsRow.appendChild(makeStat('fitz-label-' + sliderIdx, 'Type ' + c.fitz, 'Skin Type'));
+    card.appendChild(statsRow);
+ 
+    // Burn risk
+    var burnSection = document.createElement('div');
+    burnSection.style.cssText = 'width:100%;background:rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;';
+ 
+    var burnTitle = document.createElement('div');
+    burnTitle.style.cssText = 'font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:6px;';
+    burnTitle.textContent = '🔴 Burn Risk';
+    burnSection.appendChild(burnTitle);
+ 
+    var burnBg = document.createElement('div');
+    burnBg.style.cssText = 'background:rgba(255,255,255,0.2);border-radius:50px;height:8px;overflow:hidden;';
+    var burnBar = document.createElement('div');
+    burnBar.id = 'burn-' + sliderIdx;
+    burnBar.style.cssText = 'height:100%;border-radius:50px;width:3%;background:linear-gradient(90deg,#4DC87A,#7BE89A);transition:width 1s;';
+    burnBg.appendChild(burnBar);
+    burnSection.appendChild(burnBg);
+ 
+    var burnLabels = document.createElement('div');
+    burnLabels.style.cssText = 'display:flex;justify-content:space-between;margin-top:3px;';
+    ['Safe','Caution','High Risk'].forEach(function(lbl) {
+      var s = document.createElement('span');
+      s.style.cssText = 'font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:700;';
+      s.textContent = lbl;
+      burnLabels.appendChild(s);
+    });
+    burnSection.appendChild(burnLabels);
+    card.appendChild(burnSection);
+    slider.appendChild(card);
+  });
  
   // Dot indicators
-  if (APP.childSessions.length > 1) {
-    dotsEl.style.display = 'flex';
-    dotsEl.innerHTML = APP.childSessions.map((_, i) =>
-      '<div id="dot-' + i + '" style="width:8px;height:8px;border-radius:50%;background:' + (i===0?'white':'rgba(255,255,255,0.35)') + ';transition:background 0.2s;"></div>'
-    ).join('');
-  } else {
-    dotsEl.style.display = 'none';
+  if (dotsEl) {
+    while (dotsEl.firstChild) dotsEl.removeChild(dotsEl.firstChild);
+    if (APP.childSessions.length > 1) {
+      dotsEl.style.display = 'flex';
+      APP.childSessions.forEach(function(_, i) {
+        var dot = document.createElement('div');
+        dot.id = 'dot-' + i;
+        dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:' + (i===0?'white':'rgba(255,255,255,0.35)') + ';transition:background 0.2s;';
+        dotsEl.appendChild(dot);
+      });
+    } else {
+      dotsEl.style.display = 'none';
+    }
   }
  
-  // Touch swipe support
-  let touchStartX = 0;
-  slider.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  slider.addEventListener('touchend', e => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
+  // Touch swipe
+  var touchStartX = 0;
+  slider.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; }, { passive: true });
+  slider.addEventListener('touchend', function(e) {
+    var diff = touchStartX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) {
       if (diff > 0 && APP.activeChildIdx < APP.childSessions.length - 1) setActiveChild(APP.activeChildIdx + 1);
       else if (diff < 0 && APP.activeChildIdx > 0) setActiveChild(APP.activeChildIdx - 1);
@@ -1225,7 +1330,7 @@ function startSession() {
   };
   APP.goalReached = false;
   goTo('screen-session');
-  renderChildCards();
+  renderSessionCards();
   const uvHeader = document.getElementById('session-uv-header');
   if (uvHeader) uvHeader.textContent = APP.uvIndex || '–';
   startTick();
@@ -1360,7 +1465,7 @@ function tickSession() {
     const minutesElapsed = (Date.now() - sessionStart) / 60000;
     if (minutesElapsed >= 90) {
       APP.session.sunscreenReminderShown = true;
-      showNotification('🧴 SunTimeKids — Sunscreen Reminder', 'It's been 90 minutes! Time to reapply sunscreen.');
+      showNotification('🧴 SunTimeKids', 'Time to reapply sunscreen — 90 minutes have passed.');
       showInAppSunscreenReminder();
     }
   }
@@ -1407,7 +1512,7 @@ function triggerCelebration(elapsed, vitd, cs, sliderIdx) {
     ? '▶ Keep going — ' + pendingKids.join(' & ') + ' still tracking'
     : '▶ Keep Playing Outside';
   if (finishBtn) finishBtn.textContent = allDone
-    ? '✓ We're Done for Today'
+    ? '✓ All Done for Today'
     : '✓ Done for ' + c.name + ' — keep tracking others';
  
   showNotification('🌟 SunTimeKids', c.name + ' reached their daily vitamin D goal!');
@@ -1428,7 +1533,7 @@ function extendSession() {
  
   // Navigate back to session screen
   goTo('screen-session');
-  renderChildCards();
+  renderSessionCards();
  
   // Navigate slider to the child that was just celebrated, or first pending
   const pendingIdx = APP.childSessions.findIndex(cs => !cs.goalReached);
