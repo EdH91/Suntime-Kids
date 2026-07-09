@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SunTimeKids">
 <meta name="mobile-web-app-capable" content="yes">
-<title>SunTimeKids v2.4</title>
+<title>SunTimeKids v2.5</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1133,6 +1133,8 @@ function buildChildSessions() {
       vitdAccumulated: 0,
       burnRisk: 0,
       goalReached: false,
+      celebrationShown: false,
+      extendedMode: false,
       burnAlerted: false,
       done: false
     };
@@ -1406,19 +1408,48 @@ function tickSession() {
   if (!APP.session || APP.session.paused) return;
   const elapsed = getElapsedSeconds();
  
-  // Update shared timer
-  const m = Math.floor(elapsed / 60).toString().padStart(2,'0');
-  const s = (elapsed % 60).toString().padStart(2,'0');
+  // Update shared timer — no upper limit, always keep running
+  const totalMins = Math.floor(elapsed / 60);
+  const secs = (elapsed % 60).toString().padStart(2,'0');
   const timerEl = document.getElementById('session-timer');
-  if (timerEl) timerEl.textContent = m + ':' + s;
- 
-  // Update each child's card independently
-  let allGoalsReached = true;
-  let firstGoalChild = null;
+  if (timerEl) timerEl.textContent = totalMins.toString().padStart(2,'0') + ':' + secs;
  
   APP.childSessions.forEach((cs, sliderIdx) => {
-    if (cs.goalReached) return; // already done
-    allGoalsReached = false;
+    // EXTENDED MODE: vitd goal already hit, keep tracking burn risk only
+    if (cs.extendedMode) {
+      const burn = Math.min(100, elapsed * cs.burnPerSec);
+      cs.burnRisk = burn;
+ 
+      // Ring stays at 100%
+      const arc = document.getElementById('arc-' + sliderIdx);
+      if (arc) arc.style.strokeDashoffset = 0;
+      const pctEl = document.getElementById('pct-' + sliderIdx);
+      if (pctEl) pctEl.textContent = '100%';
+      const vitdEl = document.getElementById('vitd-' + sliderIdx);
+      if (vitdEl) vitdEl.textContent = Math.round(cs.goal) + ' IU';
+ 
+      // Burn bar keeps climbing
+      const burnBar = document.getElementById('burn-' + sliderIdx);
+      if (burnBar) {
+        burnBar.style.width = burn + '%';
+        burnBar.style.background = burn < 40
+          ? 'linear-gradient(90deg,#4DC87A,#7BE89A)'
+          : burn < 70
+            ? 'linear-gradient(90deg,#FFB800,#FF8C00)'
+            : 'linear-gradient(90deg,#FF6060,#FF3030)';
+      }
+ 
+      // Burn alert in extended mode
+      if (burn >= 80 && !cs.burnAlerted) {
+        cs.burnAlerted = true;
+        const c = APP.children[cs.childIndex];
+        showNotification('⚠️ SunTimeKids', c.name + ' — high burn risk. Head for shade.');
+      }
+      return; // skip goal-check logic
+    }
+ 
+    // NORMAL MODE: track vitd and burn, check for goal
+    if (cs.goalReached) return; // waiting for user to act on celebration
  
     const vitd = elapsed * cs.vitdPerSec;
     const burn = Math.min(100, elapsed * cs.burnPerSec);
@@ -1427,7 +1458,6 @@ function tickSession() {
     cs.vitdAccumulated = vitd;
     cs.burnRisk = burn;
  
-    // Update progress ring
     const arc = document.getElementById('arc-' + sliderIdx);
     if (arc) arc.style.strokeDashoffset = 390 - (390 * pct / 100);
     const pctEl = document.getElementById('pct-' + sliderIdx);
@@ -1435,30 +1465,30 @@ function tickSession() {
     const vitdEl = document.getElementById('vitd-' + sliderIdx);
     if (vitdEl) vitdEl.textContent = Math.round(vitd) + ' IU';
  
-    // Update burn bar
     const burnBar = document.getElementById('burn-' + sliderIdx);
     if (burnBar) {
       burnBar.style.width = burn + '%';
-      const burnColor = burn < 40 ? 'linear-gradient(90deg,#4DC87A,#7BE89A)' : burn < 70 ? 'linear-gradient(90deg,#FFB800,#FF8C00)' : 'linear-gradient(90deg,#FF6060,#FF3030)';
-      burnBar.style.background = burnColor;
+      burnBar.style.background = burn < 40
+        ? 'linear-gradient(90deg,#4DC87A,#7BE89A)'
+        : burn < 70
+          ? 'linear-gradient(90deg,#FFB800,#FF8C00)'
+          : 'linear-gradient(90deg,#FF6060,#FF3030)';
     }
  
-    // Burn alert per child
     if (burn >= 80 && !cs.burnAlerted) {
       cs.burnAlerted = true;
       const c = APP.children[cs.childIndex];
       showNotification('⚠️ SunTimeKids', c.name + ' is approaching sun overexposure. Consider shade or sunscreen.');
     }
  
-    // Check if this child hit goal
     if (pct >= 100) {
       cs.goalReached = true;
       cs.elapsedAtGoal = elapsed;
-      if (!firstGoalChild) firstGoalChild = { cs, sliderIdx, elapsed, vitd };
+      cs.vitdAccumulated = vitd;
     }
   });
  
-  // Sunscreen reapplication reminder (90 min after session start, only if sunscreen was applied)
+  // Sunscreen reapplication reminder
   const anyHasSunscreen = APP.childSessions.some(cs => cs.spfFactor < 1.0);
   if (anyHasSunscreen && !APP.session.sunscreenReminderShown) {
     const sessionStart = APP.session.startTime - (APP.session.pausedElapsed * 1000);
@@ -1470,16 +1500,15 @@ function tickSession() {
     }
   }
  
-  // Trigger celebration for EACH child individually when they hit goal
-  // Does NOT stop tracking for other children
+  // Trigger celebration for each child who just hit their goal
   APP.childSessions.forEach((cs, sliderIdx) => {
-    if (cs.goalReached && !cs.celebrationShown) {
+    if (cs.goalReached && !cs.celebrationShown && !cs.extendedMode) {
       cs.celebrationShown = true;
-      const elapsed = getElapsedSeconds();
-      // Only stop tick if ALL children have hit goal
-      const allDone = APP.childSessions.every(s => s.goalReached);
-      if (allDone) stopTick();
-      setTimeout(() => triggerCelebration(elapsed, cs.vitdAccumulated, cs, sliderIdx), 500);
+      const elapsedNow = getElapsedSeconds();
+      // Only stop tick if ALL non-extended children have hit goal
+      const allNormalDone = APP.childSessions.every(s => s.goalReached || s.extendedMode);
+      if (allNormalDone) stopTick();
+      setTimeout(() => triggerCelebration(elapsedNow, cs.vitdAccumulated, cs, sliderIdx), 500);
     }
   });
 }
@@ -1523,22 +1552,28 @@ function triggerCelebration(elapsed, vitd, cs, sliderIdx) {
 function extendSession() {
   if (!APP.session) return;
   const totalElapsed = getElapsedSeconds();
-  // Keep the clock running — just reset the celebrating child's celebrationShown flag
-  // so the celebration doesn't re-trigger, but keep goalReached true
+ 
+  // Mark children who have hit their goal as extendedMode
+  // This keeps goalReached = true so celebration won't retrigger,
+  // but switches tickSession to burn-risk-only tracking for them
+  APP.childSessions.forEach(cs => {
+    if (cs.goalReached) {
+      cs.extendedMode = true;
+      cs.burnAlerted = false; // allow burn alert to fire again in extended play
+    }
+  });
+ 
   APP.session.pausedElapsed = totalElapsed;
   APP.session.startTime = Date.now();
   APP.session.paused = false;
-  // Reset sunscreen timer from now
   APP.session.sunscreenStartTime = Date.now();
  
-  // Navigate back to session screen
   goTo('screen-session');
   renderSessionCards();
  
-  // Navigate slider to the child that was just celebrated, or first pending
-  const pendingIdx = APP.childSessions.findIndex(cs => !cs.goalReached);
-  const targetSlider = pendingIdx >= 0 ? pendingIdx : 0;
-  setActiveChild(targetSlider);
+  // Show first child in extended mode (or first pending)
+  const extendedIdx = APP.childSessions.findIndex(cs => cs.extendedMode);
+  setActiveChild(extendedIdx >= 0 ? extendedIdx : 0);
  
   const btnPause = document.getElementById('btn-pause');
   if (btnPause) btnPause.textContent = '⏸ Pause';
