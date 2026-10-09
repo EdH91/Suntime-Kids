@@ -112,7 +112,7 @@ JavaScript string literals in this file must not contain apostrophes (`'`) unles
 
 ### 4. Syntax-check before deploying
 
-Before uploading a new version to Cloudflare Pages or committing to GitHub, extract the `<script>` block and syntax-check it:
+Before committing and pushing (which deploys), extract the `<script>` block and syntax-check it:
 
 ```bash
 awk '/<script>/{f=1;next}/<\/script>/{f=0}f' index.html > /tmp/stk-check.js && node --check /tmp/stk-check.js && echo OK
@@ -179,21 +179,15 @@ Records saved before v2.5 have no `perChild`. Always read through `sessionChildR
 
 ## Deployment process
 
-### To Cloudflare Pages
+Cloudflare Pages is connected to the GitHub repo and **deploys automatically on every push to `main`**. There is no manual upload step.
 
-1. Go to Cloudflare Pages → Workers & Pages → `suntime-kids` project
-2. Create new deployment → Direct Upload
-3. Upload the new `index.html` (rename it `index.html` if needed)
-4. Deployment goes live immediately at https://suntime-kids.pages.dev
+1. Syntax-check the script (see rule 4 above) and test locally.
+2. Commit and push to `main`, either with `git push origin main` or the **Push origin** button in GitHub Desktop.
+3. Within a minute or two the new version is live at https://suntime-kids.pages.dev. Check Cloudflare → Workers & Pages → `suntime-kids` → Deployments if needed.
 
-### To GitHub
+Do **not** edit `index.html` on GitHub's website or use Cloudflare Direct Upload. Web edits make the local copy fall behind, and a direct upload is overwritten by the next push.
 
-1. Go to https://github.com/EdH91/Suntime-Kids
-2. Click `index.html` → edit (pencil icon)
-3. Select all, paste the new code
-4. Commit directly to `main`
-
-Always update **both** Cloudflare and GitHub together so they stay in sync.
+Installed home-screen copies of the PWA may keep the old version until the app is fully closed and reopened.
 
 ---
 
