@@ -319,9 +319,10 @@
   </div>
  
   <!-- ===== WELCOME ===== -->
+  <!-- Error banner lives outside the screens so it is visible on any screen -->
+  <div id="debug-error" style="display:none;position:absolute;top:0;left:0;right:0;background:rgba(200,0,0,0.9);color:white;padding:10px 14px;font-size:0.75rem;font-weight:700;z-index:999;word-break:break-all;"></div>
+
   <div class="screen active" id="screen-welcome">
-    <div id="debug-error" style="display:none;background:red;color:white;padding:10px;font-size:0.8rem;word-break:break-all;position:absolute;top:0;left:0;right:0;z-index:999;"></div>
-    <div id="debug-error" style="display:none;position:absolute;top:0;left:0;right:0;background:rgba(200,0,0,0.9);color:white;padding:10px 14px;font-size:0.75rem;font-weight:700;z-index:999;word-break:break-all;"></div>
     <div class="welcome-sun">☀️</div>
     <h1 class="welcome-title">Sun<span>Time</span><br>Kids</h1>
     <p class="welcome-sub">Track healthy sunlight for your<br>children — simply and smartly.</p>
@@ -353,7 +354,7 @@
           </div>
           <div style="width:80px;">
             <div class="field-label" id="age-label-0">Age</div>
-            <input class="field-input" id="age-0" type="number" placeholder="5" value="5" min="0" max="99">
+            <input class="field-input" id="age-0" type="number" placeholder="6" value="6" min="0" max="99">
           </div>
         </div>
         <div class="field-label">Skin Tone</div>
@@ -368,7 +369,7 @@
         <div style="margin-top:12px;">
           <div class="field-label">Photo (optional)</div>
           <div class="photo-row">
-            <div class="photo-circle" id="photo-0" id="photo-circle-0">📷</div>
+            <div class="photo-circle" id="photo-0">📷</div>
             <input type="file" id="file-0" accept="image/*" style="display:none">
             <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
           </div>
@@ -406,7 +407,7 @@
         <div style="margin-top:12px;">
           <div class="field-label">Photo (optional)</div>
           <div class="photo-row">
-            <div class="photo-circle" id="photo-1" id="photo-circle-1">📷</div>
+            <div class="photo-circle" id="photo-1">📷</div>
             <input type="file" id="file-1" accept="image/*" style="display:none">
             <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
           </div>
@@ -601,7 +602,7 @@
  
       <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">About</div>
       <div class="card" style="padding:20px;">
-        <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:4px;">SunTimeKids v2.2</div>
+        <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:4px;">SunTimeKids v2.5</div>
         <div style="font-size:0.78rem;color:var(--soft);font-weight:600;margin-bottom:16px;">UV exposure tracker for children</div>
         <div style="background:#FFF8E8;border:1.5px solid #FFB800;border-radius:12px;padding:14px;font-size:0.75rem;font-weight:600;color:#7A5500;line-height:1.6;">
           <strong style="display:block;margin-bottom:4px;">⚕️ Medical Disclaimer</strong>
@@ -614,7 +615,8 @@
         <div style="font-size:0.82rem;font-weight:600;color:var(--ink);line-height:1.6;">🔒 All data including child profiles, photos, and session history is stored locally on your device only. No data is ever sent to any server. No account is required. SunTimeKids is designed to be fully COPPA compliant.</div>
       </div>
  
-      <button class="btn-nav" style="margin-top:8px;" id="btn-settings-back">← Back to Home</button>
+      <button class="btn-nav" style="margin-top:8px;" id="btn-edit-profiles">✏️ Edit Profiles</button>
+      <button class="btn-nav" id="btn-settings-back">← Back to Home</button>
     </div>
   </div>
  
@@ -635,7 +637,7 @@
     <div class="nav-item" id="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
     <div class="nav-item" id="nav-session"><span class="nav-icon">🌤️</span><span class="nav-label">Session</span></div>
     <div class="nav-item" id="nav-dash"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></div>
-    <div class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></div>
+    <div class="nav-item" id="nav-settings"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></div>
   </div>
 </div>
  
@@ -645,20 +647,20 @@
 // ============================================================
 const APP = {
   children: [
-    { name:'Emma', age:5, fitz:3, photo:null, goal:400, isAdult:false },
-    { name:'Alex',  age:2, fitz:3, photo:null, goal:300, isAdult:false }
+    { name:'Alex', age:6, fitz:3, photo:null, goal:400, isAdult:false },
+    { name:'Archie', age:2, fitz:3, photo:null, goal:400, isAdult:false }
   ],
   selectedChildren: [0,1],
   uvIndex: null,
   locationName: 'Essex County, NJ',
   lat: 40.79, lng: -74.21,          // default Essex County
-  clothingFactor: 1.0,
-  spfFactor: 1.0,
   childSetups: [{clothingFactor:1.0, spfFactor:1.0}, {clothingFactor:1.0, spfFactor:1.0}],
   session: null,                     // active session object
   sessions: [],                      // persisted completed sessions
-  goalReached: false,
+  uvIsEstimate: false,               // true when the UV fetch failed and a fallback is in use
+  uvFetchedAt: 0,                    // time of the last successful UV fetch
   tickInterval: null,
+  celebrationTimer: null,            // 60-second auto-continue on the celebration screen
   visibilityHandler: null,
   sessionEndMode: 'auto',
   childSessions: [],
@@ -671,7 +673,57 @@ const APP = {
 const FITZ_BASE_MIN = [8, 12, 16, 22, 32, 45];
 // Fitzpatrick: minutes to burn at UV 5
 const FITZ_BURN_MIN = [15, 20, 30, 45, 60, 90];
- 
+// Used only when the live UV fetch fails
+const FALLBACK_UV = 4.5;
+
+// ============================================================
+// DOM HELPER — builds elements without innerHTML (CSP + XSS safe)
+// el('div', { className: 'x', style: 'color:red', text: 'Hi' }, [child, 'text'])
+// ============================================================
+function el(tag, props, children) {
+  const node = document.createElement(tag);
+  if (props) {
+    Object.keys(props).forEach(k => {
+      const v = props[k];
+      if (v == null) return;
+      if (k === 'text') node.textContent = v;
+      else if (k === 'style') node.style.cssText = v;
+      else if (k === 'className') node.className = v;
+      else node.setAttribute(k, v);
+    });
+  }
+  (children || []).forEach(ch => {
+    if (ch == null) return;
+    node.appendChild(typeof ch === 'string' ? document.createTextNode(ch) : ch);
+  });
+  return node;
+}
+
+function clearEl(node) {
+  while (node.firstChild) node.removeChild(node.firstChild);
+}
+
+// Default avatar emoji per profile slot (used when there is no photo)
+const DEFAULT_AVATARS = ['👦', '👦'];
+
+function defaultAvatar(idx) {
+  return DEFAULT_AVATARS[idx] || '🙂';
+}
+
+// Avatar contents: photo if present, otherwise the default emoji
+function avatarContent(child, idx) {
+  if (child.photo) return el('img', { src: child.photo, alt: child.name });
+  return document.createTextNode(defaultAvatar(idx));
+}
+
+function avatarBg(idx) {
+  return idx === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+}
+
+function formatMinutes(min) {
+  return min >= 60 ? (min / 60).toFixed(1) + 'h' : min + 'm';
+}
+
 // ============================================================
 // CLOCK
 // ============================================================
@@ -701,7 +753,7 @@ function initLocation() {
     pos => {
       APP.lat = pos.coords.latitude;
       APP.lng = pos.coords.longitude;
-      APP.locationName = pos.coords.latitude.toFixed(2) + '°N, ' + Math.abs(pos.coords.longitude).toFixed(2) + '°W';
+      APP.locationName = formatCoords(pos.coords.latitude, pos.coords.longitude);
       setLocLabel(APP.locationName);
       fetchUV(APP.lat, APP.lng);
     },
@@ -714,6 +766,11 @@ function initLocation() {
   );
 }
  
+function formatCoords(lat, lng) {
+  return Math.abs(lat).toFixed(2) + '°' + (lat >= 0 ? 'N' : 'S') + ', '
+    + Math.abs(lng).toFixed(2) + '°' + (lng >= 0 ? 'E' : 'W');
+}
+
 function setLocLabel(text) {
   const el = document.getElementById('loc-label');
   if (el) el.textContent = '📍 ' + text;
@@ -758,7 +815,7 @@ function applyGPSLocation() {
     pos => {
       APP.lat = pos.coords.latitude;
       APP.lng = pos.coords.longitude;
-      APP.locationName = pos.coords.latitude.toFixed(2) + '°N, ' + Math.abs(pos.coords.longitude).toFixed(2) + '°W';
+      APP.locationName = formatCoords(pos.coords.latitude, pos.coords.longitude);
       setLocLabel(APP.locationName);
       fetchUV(APP.lat, APP.lng);
     },
@@ -792,16 +849,27 @@ async function fetchUV(lat, lng) {
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=uv_index&timezone=auto`;
     const res = await fetch(url);
+    if (!res.ok) throw new Error('UV HTTP ' + res.status);
     const data = await res.json();
     const uv = data.current?.uv_index;
-    if (uv != null) {
-      APP.uvIndex = parseFloat(uv.toFixed(1));
-      updateAllUVDisplays();
-    }
+    if (uv == null) throw new Error('UV missing from response');
+    APP.uvIndex = parseFloat(uv.toFixed(1));
+    APP.uvIsEstimate = false;
+    APP.uvFetchedAt = Date.now();
   } catch(e) {
-    APP.uvIndex = 4.5;
-    updateAllUVDisplays();
+    // Keep the last good reading if we have one; otherwise fall back to an estimate
+    if (APP.uvIndex == null || APP.uvIsEstimate) {
+      APP.uvIndex = FALLBACK_UV;
+      APP.uvIsEstimate = true;
+    }
   }
+  updateAllUVDisplays();
+  applyUVToSession();
+}
+
+// UV 0 (night) is a real reading, so only fall back when there is no value at all
+function currentUV() {
+  return APP.uvIndex != null ? APP.uvIndex : FALLBACK_UV;
 }
  
 function uvLabel(uv) {
@@ -813,20 +881,20 @@ function uvLabel(uv) {
 }
  
 function updateAllUVDisplays() {
+  const setupLoc = document.getElementById('setup-loc');
+  if (setupLoc) setupLoc.textContent = APP.locationName;
   const uv = APP.uvIndex;
-  const lbl = uvLabel(uv);
+  if (uv == null) return; // not loaded yet, keep the "Fetching" placeholders
+  const lbl = uvLabel(uv) + (APP.uvIsEstimate ? ' (estimate, offline)' : '');
   const disp = document.getElementById('uv-display');
   if (disp) { disp.textContent = `UV ${uv} · ${lbl}`; }
   const setup = document.getElementById('uv-setup');
   if (setup) setup.textContent = `${uv} — ${lbl}`;
-  const live = document.getElementById('live-uv');
-  if (live) live.textContent = uv;
-  const setupLoc = document.getElementById('setup-loc');
-  if (setupLoc) setupLoc.textContent = APP.locationName;
 }
  
-// Refresh UV every 5 min
-setInterval(() => fetchUV(APP.lat, APP.lng), 300000);
+// Refresh UV every 5 min; an active session re-rates its exposure on each new reading
+const UV_REFRESH_MS = 5 * 60 * 1000;
+setInterval(() => fetchUV(APP.lat, APP.lng), UV_REFRESH_MS);
  
 // ============================================================
 // NOTIFICATIONS
@@ -836,8 +904,8 @@ function requestNotifications() {
     if (typeof Notification === 'undefined') return;
     if (typeof Notification.requestPermission !== 'function') return;
     Notification.requestPermission().then(p => {
-      document.getElementById('notif-banner-wrap').innerHTML = '';
-      if (p === 'granted') showNotification('SunTimeKids', 'Notifications enabled! You\'ll be alerted when goals are reached 🌟');
+      clearEl(document.getElementById('notif-banner-wrap'));
+      if (p === 'granted') showNotification('SunTimeKids', 'Notifications enabled! You will be alerted when goals are reached 🌟');
     }).catch(() => {});
   } catch(e) {}
 }
@@ -855,21 +923,25 @@ function showNotification(title, body) {
  
 function maybeShowNotifBanner() {
   if (!('Notification' in window)) return;
-  if (Notification.permission === 'default') {
-    document.getElementById('notif-banner-wrap').innerHTML = `
-      <div class="notif-banner" style="margin-bottom:10px;">
-        🔔 Get goal alerts even when app is backgrounded
-        <button id="btn-notif-enable">Enable</button>
-      </div>`;
-  }
+  const wrap = document.getElementById('notif-banner-wrap');
+  if (!wrap || Notification.permission !== 'default' || wrap.firstChild) return;
+  // Built dynamically, so the button is wired here rather than in wireButtonsSync
+  const btn = el('button', { id: 'btn-notif-enable', text: 'Enable' });
+  btn.addEventListener('click', requestNotifications);
+  wrap.appendChild(el('div', { className: 'notif-banner', style: 'margin-bottom:10px;' },
+    ['🔔 Get goal alerts even when app is backgrounded', btn]));
 }
  
 // ============================================================
 // NAVIGATION
 // ============================================================
-const NAV_SCREENS = ['screen-home', 'screen-dash'];
+const NAV_SCREENS = ['screen-home', 'screen-dash', 'screen-settings'];
  
 function goTo(id) {
+  if (id !== 'screen-celebrate' && APP.celebrationTimer) {
+    clearTimeout(APP.celebrationTimer);
+    APP.celebrationTimer = null;
+  }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const nav = document.getElementById('bottom-nav');
@@ -879,12 +951,19 @@ function goTo(id) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   if (id === 'screen-home') document.getElementById('nav-home')?.classList.add('active');
   if (id === 'screen-dash') document.getElementById('nav-dash')?.classList.add('active');
+  if (id === 'screen-settings') document.getElementById('nav-settings')?.classList.add('active');
  
   if (id === 'screen-home') renderHome();
   if (id === 'screen-whosout') renderWhosList();
   if (id === 'screen-setup') { updateAllUVDisplays(); renderPerChildSetup(); }
   if (id === 'screen-dash') renderDash();
   if (id === 'screen-session') resumeSessionUI();
+  if (id === 'screen-onboard') populateOnboarding();
+}
+
+// "Head out" while a session is already running returns to it instead of starting over
+function goToSessionOrStart() {
+  goTo(APP.session ? 'screen-session' : 'screen-whosout');
 }
  
 // ============================================================
@@ -901,11 +980,49 @@ function handlePhoto(idx, event) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
-    APP.children[idx].photo = e.target.result;
-    const circle = document.getElementById(`photo-${idx}`);
-    circle.innerHTML = `<img src="${e.target.result}" alt="photo">`;
+    // Downscale before storing: a full-size phone photo is several MB as a data URL,
+    // which overflows localStorage and makes every profile save slow
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 256;
+      const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      let dataUrl = e.target.result;
+      try {
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      } catch(ex) {}
+      APP.children[idx].photo = dataUrl;
+      setPhotoPreview(idx);
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
+}
+
+function setPhotoPreview(idx) {
+  const circle = document.getElementById('photo-' + idx);
+  if (!circle) return;
+  clearEl(circle);
+  const photo = APP.children[idx].photo;
+  circle.appendChild(photo ? el('img', { src: photo, alt: 'photo' }) : document.createTextNode('📷'));
+}
+
+// Fill the onboarding form from the current profiles so it doubles as "Edit Profiles"
+function populateOnboarding() {
+  APP.children.forEach((c, i) => {
+    const nameEl = document.getElementById('name-' + i);
+    const ageEl = document.getElementById('age-' + i);
+    if (nameEl) nameEl.value = c.name;
+    if (ageEl) ageEl.value = c.age;
+    setProfileType(i, c.isAdult ? 'adult' : 'child');
+    document.querySelectorAll('#fitz-' + i + ' .fitz-btn').forEach(b => {
+      b.classList.toggle('selected', parseInt(b.getAttribute('data-fitz-val')) === c.fitz);
+    });
+    setPhotoPreview(i);
+  });
 }
  
 function setProfileType(idx, type) {
@@ -932,7 +1049,8 @@ function getVitDGoal(age, isAdult) {
 function saveProfiles() {
   for (let i = 0; i < 2; i++) {
     const name = document.getElementById('name-' + i).value.trim();
-    const age = parseInt(document.getElementById('age-' + i).value) || (i === 0 ? 5 : 2);
+    const ageRaw = parseInt(document.getElementById('age-' + i).value, 10);
+    const age = isNaN(ageRaw) ? APP.children[i].age : Math.max(0, Math.min(99, ageRaw));
     if (name) APP.children[i].name = name;
     APP.children[i].age = age;
     APP.children[i].goal = getVitDGoal(age, APP.children[i].isAdult);
@@ -952,35 +1070,30 @@ function renderHome() {
  
 function renderChildCards() {
   const container = document.getElementById('child-cards');
-  const todaySessions = getTodaySessions();
-  container.innerHTML = APP.children.map((c, i) => {
-    const todayVitD = todaySessions
-      .filter(s => s.childIndices.includes(i))
-      .reduce((sum, s) => sum + (s.vitdAccumulated || 0), 0);
+  const today = new Date().toDateString();
+  clearEl(container);
+  APP.children.forEach((c, i) => {
+    const todayVitD = childVitDOnDay(i, today);
     const pct = Math.min(100, Math.round((todayVitD / c.goal) * 100));
-    const avatarBg = i === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
-    const avatarContent = c.photo ? `<img src="${c.photo}" alt="${c.name}">` : (i===0?'👧':'👦');
-    return `
-      <div class="child-card" style="margin-bottom:10px;">
-        <div class="child-avatar" style="background:${avatarBg};">${avatarContent}</div>
-        <div class="child-info">
-          <div class="child-name">${c.name}, age ${c.age}</div>
-          <div class="child-meta">Vitamin D: ${Math.round(todayVitD)} / ${c.goal} IU today</div>
-          <div class="vit-bar-wrap"><div class="vit-bar" style="width:${pct}%"></div></div>
-        </div>
-        <div style="font-size:1.2rem;">${pct >= 100 ? '✅' : '☀️'}</div>
-      </div>`;
-  }).join('');
+    container.appendChild(el('div', { className: 'child-card', style: 'margin-bottom:10px;' }, [
+      el('div', { className: 'child-avatar', style: 'background:' + avatarBg(i) + ';' }, [avatarContent(c, i)]),
+      el('div', { className: 'child-info' }, [
+        el('div', { className: 'child-name', text: c.name + ', age ' + c.age }),
+        el('div', { className: 'child-meta', text: 'Vitamin D: ' + Math.round(todayVitD) + ' / ' + c.goal + ' IU today' }),
+        el('div', { className: 'vit-bar-wrap' }, [el('div', { className: 'vit-bar', style: 'width:' + pct + '%' })])
+      ]),
+      el('div', { style: 'font-size:1.2rem;', text: pct >= 100 ? '✅' : '☀️' })
+    ]));
+  });
 }
  
 function renderHomeStats() {
   const streak = calcStreak();
   const weekMin = getWeekTotalMinutes();
-  const weekGoals = getWeekGoalCount();
-  const weekDays = getWeekDayCount();
+  const goals = getWeekGoalStats();
   document.getElementById('stat-streak').textContent = streak;
-  document.getElementById('stat-weektime').textContent = weekMin >= 60 ? (weekMin/60).toFixed(1)+'h' : weekMin+'m';
-  document.getElementById('stat-goals').textContent = `${weekGoals}/${weekDays}`;
+  document.getElementById('stat-weektime').textContent = formatMinutes(weekMin);
+  document.getElementById('stat-goals').textContent = goals.hit + '/' + goals.total;
 }
  
 // ============================================================
@@ -988,25 +1101,19 @@ function renderHomeStats() {
 // ============================================================
 function renderWhosList() {
   const list = document.getElementById('who-list');
-  list.innerHTML = APP.children.map((c, i) => {
-    const sel = APP.selectedChildren.includes(i) ? 'selected' : '';
-    const avatarBg = i === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
-    const avatarContent = c.photo ? `<img src="${c.photo}" alt="${c.name}">` : (i===0?'👧':'👦');
-    return `
-      <div class="who-child ${sel}" data-child-idx="${i}">
-        <div class="child-avatar" style="width:44px;height:44px;font-size:1.3rem;background:${avatarBg};">${avatarContent}</div>
-        <div>
-          <div style="font-weight:800;font-size:0.9rem;color:var(--ink);">${c.name}</div>
-          <div style="font-size:0.75rem;color:var(--soft);font-weight:600;">Age ${c.age} · Fitzpatrick Type ${c.fitz}</div>
-        </div>
-        <div class="who-check">${sel ? '✓' : ''}</div>
-      </div>`;
-  }).join('');
- 
-  // Use event delegation — attach ONE listener to parent, not inline onclick per child
-  // This is the only reliable approach on iOS Safari for dynamically rendered elements
-  list.removeEventListener('click', whoListClickHandler);
-  list.addEventListener('click', whoListClickHandler);
+  clearEl(list);
+  APP.children.forEach((c, i) => {
+    const sel = APP.selectedChildren.includes(i);
+    list.appendChild(el('div', { className: 'who-child' + (sel ? ' selected' : ''), 'data-child-idx': i }, [
+      el('div', { className: 'child-avatar', style: 'width:44px;height:44px;font-size:1.3rem;background:' + avatarBg(i) + ';' }, [avatarContent(c, i)]),
+      el('div', null, [
+        el('div', { style: 'font-weight:800;font-size:0.9rem;color:var(--ink);', text: c.name }),
+        el('div', { style: 'font-size:0.75rem;color:var(--soft);font-weight:600;', text: 'Age ' + c.age + ' · Fitzpatrick Type ' + c.fitz })
+      ]),
+      el('div', { className: 'who-check', text: sel ? '✓' : '' })
+    ]));
+  });
+  // Row clicks are handled by whoListClickHandler, delegated from #who-list in wireButtonsSync
 }
  
 function whoListClickHandler(e) {
@@ -1030,90 +1137,79 @@ function whoListClickHandler(e) {
 // ============================================================
 // SESSION SETUP
 // ============================================================
+const CLOTHING_OPTIONS = [['🩱','Swimsuit',1.0],['🩳','Tank+Shorts',0.7],['👕','Tee+Shorts',0.55],['👖','Tee+Pants',0.35],['🧥','Full Cover',0.2]];
+const SPF_OPTIONS = [['🚫','None',1.0],['🧴','SPF 15',0.45],['🧴','SPF 30',0.28],['🧴','SPF 50+',0.2]];
+
 function renderPerChildSetup() {
   const container = document.getElementById('per-child-setup');
   if (!container) return;
-  const selected = APP.selectedChildren;
-  container.innerHTML = '';
-  selected.forEach(ci => {
+  clearEl(container);
+  APP.selectedChildren.forEach(ci => {
     const c = APP.children[ci];
+    if (!APP.childSetups[ci]) APP.childSetups[ci] = { clothingFactor: 1.0, spfFactor: 1.0 };
+    const setup = APP.childSetups[ci];
     const bg = ci === 0 ? '#FFF8E8' : '#EEF6FF';
     const borderColor = ci === 0 ? '#FFB800' : '#4AB8F5';
-    const div = document.createElement('div');
-    div.style.cssText = 'background:' + bg + ';border:2px solid ' + borderColor + ';border-radius:16px;padding:14px 16px;margin-bottom:12px;';
-    div.innerHTML = '<div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink);margin-bottom:10px;">'
-      + (c.photo ? '<img src="' + c.photo + '" style="width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;">' : (ci===0?'👧 ':'👦 '))
-      + c.name + '</div>'
-      + '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--soft);margin-bottom:8px;">👕 Clothing</div>'
-      + '<div class="clothing-grid" id="clothing-' + ci + '" style="margin-bottom:12px;">'
-      + ['🩱|Swimsuit|1.0','🩳|Tank+Shorts|0.7','👕|Tee+Shorts|0.55','👖|Tee+Pants|0.35','🧥|Full Cover|0.2'].map((s,i) => {
-          const parts = s.split('|');
-          const sel = i===0 ? ' selected' : '';
-          return '<button class="clothing-btn' + sel + '" data-child-idx="' + ci + '" data-clothing-factor="' + parts[2] + '"><span class="clothing-icon">' + parts[0] + '</span><span class="clothing-label">' + parts[1] + '</span></button>';
-        }).join('')
-      + '</div>'
-      + '<div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--soft);margin-bottom:8px;">🧴 Sunscreen</div>'
-      + '<div class="spf-grid" id="spf-' + ci + '">'
-      + [['🚫','None','1.0'],['🧴','SPF 15','0.45'],['🧴','SPF 30','0.28'],['🧴','SPF 50+','0.2']].map((s,i) => {
-          const sel = i===0 ? ' selected' : '';
-          return '<button class="spf-btn' + sel + '" data-child-idx="' + ci + '" data-spf-factor="' + s[2] + '"><span class="spf-icon">' + s[0] + '</span><span class="spf-label">' + s[1] + '</span></button>';
-        }).join('')
-      + '</div>';
-    container.appendChild(div);
+    const subTitle = 'font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--soft);margin-bottom:8px;';
+
+    const heading = el('div', { style: 'font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink);margin-bottom:10px;' }, [
+      c.photo
+        ? el('img', { src: c.photo, alt: '', style: 'width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;' })
+        : defaultAvatar(ci) + ' ',
+      c.name
+    ]);
+
+    // Selection reflects the stored factor, so the UI always matches what the session will use
+    const clothingGrid = el('div', { className: 'clothing-grid', id: 'clothing-' + ci, style: 'margin-bottom:12px;' },
+      CLOTHING_OPTIONS.map(o => el('button', {
+        className: 'clothing-btn' + (o[2] === setup.clothingFactor ? ' selected' : ''),
+        'data-child-idx': ci, 'data-clothing-factor': o[2]
+      }, [el('span', { className: 'clothing-icon', text: o[0] }), el('span', { className: 'clothing-label', text: o[1] })])));
+
+    const spfGrid = el('div', { className: 'spf-grid', id: 'spf-' + ci },
+      SPF_OPTIONS.map(o => el('button', {
+        className: 'spf-btn' + (o[2] === setup.spfFactor ? ' selected' : ''),
+        'data-child-idx': ci, 'data-spf-factor': o[2]
+      }, [el('span', { className: 'spf-icon', text: o[0] }), el('span', { className: 'spf-label', text: o[1] })])));
+
+    container.appendChild(el('div', {
+      style: 'background:' + bg + ';border:2px solid ' + borderColor + ';border-radius:16px;padding:14px 16px;margin-bottom:12px;'
+    }, [heading, el('div', { style: subTitle, text: '👕 Clothing' }), clothingGrid, el('div', { style: subTitle, text: '🧴 Sunscreen' }), spfGrid]));
   });
 }
- 
+
 function selectClothing(btn, factor) {
-  const ci = parseInt(btn.getAttribute('data-child-idx'));
-  const grid = document.getElementById('clothing-' + ci);
-  if (grid) grid.querySelectorAll('.clothing-btn').forEach(b => b.classList.remove('selected'));
-  else document.querySelectorAll('.clothing-btn').forEach(b => b.classList.remove('selected'));
+  const ci = parseInt(btn.getAttribute('data-child-idx'), 10);
+  document.querySelectorAll('#clothing-' + ci + ' .clothing-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  if (!isNaN(ci)) APP.childSetups[ci].clothingFactor = factor;
-  else APP.clothingFactor = factor;
+  APP.childSetups[ci].clothingFactor = factor;
 }
- 
+
 function selectSPF(btn, factor) {
-  const ci = parseInt(btn.getAttribute('data-child-idx'));
-  const grid = document.getElementById('spf-' + ci);
-  if (grid) grid.querySelectorAll('.spf-btn').forEach(b => b.classList.remove('selected'));
-  else document.querySelectorAll('.spf-btn').forEach(b => b.classList.remove('selected'));
+  const ci = parseInt(btn.getAttribute('data-child-idx'), 10);
+  document.querySelectorAll('#spf-' + ci + ' .spf-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  if (!isNaN(ci)) APP.childSetups[ci].spfFactor = factor;
-  else APP.spfFactor = factor;
+  APP.childSetups[ci].spfFactor = factor;
 }
- 
+
 // ============================================================
 // SESSION CORE — TIMESTAMP BASED
 // ============================================================
-function calcVitDPerSecond(fitzType) {
-  const uv = APP.uvIndex || 4;
-  const baseMin = FITZ_BASE_MIN[fitzType - 1];
-  const iuPerMin = (400 / baseMin) * (uv / 5) * APP.clothingFactor * APP.spfFactor;
-  return iuPerMin / 60;
-}
- 
-function calcBurnPercentPerSecond(fitzType) {
-  const uv = APP.uvIndex || 4;
-  const burnMin = FITZ_BURN_MIN[fitzType - 1];
-  const adjustedBurnSec = (burnMin * 60) / (uv / 5) / Math.max(APP.clothingFactor, 0.1) / Math.max(APP.spfFactor, 0.1);
-  return 100 / adjustedBurnSec;
-}
- 
 function calcVitDPerSecondWithFactors(fitzType, clothingFactor, spfFactor) {
-  const uv = APP.uvIndex || 4;
+  const uv = currentUV();
   const baseMin = FITZ_BASE_MIN[fitzType - 1];
   const iuPerMin = (400 / baseMin) * (uv / 5) * clothingFactor * spfFactor;
   return iuPerMin / 60;
 }
- 
+
 function calcBurnPercentPerSecondWithFactors(fitzType, clothingFactor, spfFactor) {
-  const uv = APP.uvIndex || 4;
+  const uv = currentUV();
+  if (uv <= 0) return 0;
   const burnMin = FITZ_BURN_MIN[fitzType - 1];
   const adjustedBurnSec = (burnMin * 60) / (uv / 5) / Math.max(clothingFactor, 0.1) / Math.max(spfFactor, 0.1);
   return 100 / adjustedBurnSec;
 }
- 
+
 // Per-child session data
 APP.childSessions = []; // one entry per selected child
 APP.activeChildIdx = 0; // which child card is showing
@@ -1121,7 +1217,7 @@ APP.activeChildIdx = 0; // which child card is showing
 function buildChildSessions() {
   APP.childSessions = APP.selectedChildren.map(ci => {
     const c = APP.children[ci];
-    const setup = APP.childSetups[ci] || { clothingFactor: APP.clothingFactor, spfFactor: APP.spfFactor };
+    const setup = APP.childSetups[ci] || { clothingFactor: 1.0, spfFactor: 1.0 };
     return {
       childIndex: ci,
       fitzType: c.fitz,
@@ -1130,13 +1226,19 @@ function buildChildSessions() {
       spfFactor: setup.spfFactor,
       vitdPerSec: calcVitDPerSecondWithFactors(c.fitz, setup.clothingFactor, setup.spfFactor),
       burnPerSec: calcBurnPercentPerSecondWithFactors(c.fitz, setup.clothingFactor, setup.spfFactor),
+      // Exposure is piecewise: totals banked at earlier UV readings, plus the
+      // current rate since `rateSince` (elapsed seconds). See vitdAt / burnAt.
+      vitdBanked: 0,
+      burnBanked: 0,
+      rateSince: 0,
       vitdAccumulated: 0,
       burnRisk: 0,
       goalReached: false,
       celebrationShown: false,
       extendedMode: false,
       burnAlerted: false,
-      done: false
+      elapsedAtGoal: null,
+      done: false            // parent tapped "Done for <name>" while others keep going
     };
   });
 }
@@ -1170,7 +1272,7 @@ function renderSessionCards() {
       img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
       avatar.appendChild(img);
     } else {
-      avatar.textContent = cs.childIndex === 0 ? '👧' : '👦';
+      avatar.textContent = defaultAvatar(cs.childIndex);
     }
     card.appendChild(avatar);
  
@@ -1295,7 +1397,9 @@ function renderSessionCards() {
     }
   }
  
-  // Touch swipe
+  // Touch swipe (wired once; renderSessionCards runs again on every new session)
+  if (slider.getAttribute('data-swipe-wired')) return;
+  slider.setAttribute('data-swipe-wired', '1');
   var touchStartX = 0;
   slider.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; }, { passive: true });
   slider.addEventListener('touchend', function(e) {
@@ -1319,40 +1423,113 @@ function setActiveChild(idx) {
  
 function startSession() {
   buildChildSessions();
-  APP.activeChildIdx = 0;
   APP.session = {
-    startTime: Date.now(),
+    startedAt: Date.now(),             // wall-clock start, used for the history date
+    startTime: Date.now(),             // reference point for the running segment
     childIndices: [...APP.selectedChildren],
-    clothingFactor: APP.clothingFactor,
-    spfFactor: APP.spfFactor,
-    uvAtStart: APP.uvIndex || 4,
-    goalReached: false,
+    uvAtStart: currentUV(),
+    uvNow: currentUV(),                // UV the current rates were computed from
+    uvSince: 0,                        // elapsed seconds when uvNow took effect
+    uvSecondsBank: 0,                  // sum of uv × seconds for earlier readings (for the average)
     pausedElapsed: 0,
-    paused: false
+    paused: false,
+    nextSunscreenReminderAt: SUNSCREEN_REMINDER_SECS
   };
-  APP.goalReached = false;
+  APP.currentCelebrationSliderIdx = null;
   goTo('screen-session');
   renderSessionCards();
-  const uvHeader = document.getElementById('session-uv-header');
-  if (uvHeader) uvHeader.textContent = APP.uvIndex || '–';
+  setActiveChild(0);
+  resetSessionControls();
+  renderSessionUVHeader();
   startTick();
   setupVisibilityHandler();
+  // If the last reading is stale (app was closed for a while), get a fresh one now
+  if (Date.now() - APP.uvFetchedAt > UV_REFRESH_MS) fetchUV(APP.lat, APP.lng);
 }
- 
+
+function renderSessionUVHeader() {
+  const uvHeader = document.getElementById('session-uv-header');
+  if (uvHeader && APP.session) uvHeader.textContent = APP.session.uvNow + (APP.uvIsEstimate ? ' (est.)' : '');
+}
+
+// Exposure at a given elapsed time: banked total + current rate since the last UV change
+function vitdAt(cs, elapsed) {
+  return cs.vitdBanked + Math.max(0, elapsed - cs.rateSince) * cs.vitdPerSec;
+}
+
+function burnAt(cs, elapsed) {
+  return cs.burnBanked + Math.max(0, elapsed - cs.rateSince) * cs.burnPerSec;
+}
+
+// Called after every UV fetch. If the reading changed, bank each child's exposure
+// so far at the old rate, then continue at rates for the new UV. Elapsed time is
+// still timestamp-based, so this stays correct across backgrounding and pauses.
+function applyUVToSession() {
+  if (!APP.session) return;
+  const uv = currentUV();
+  if (uv === APP.session.uvNow) return;
+  const elapsed = getElapsedSeconds();
+  APP.session.uvSecondsBank += (elapsed - APP.session.uvSince) * APP.session.uvNow;
+  APP.session.uvSince = elapsed;
+  APP.session.uvNow = uv;
+  APP.childSessions.forEach(cs => {
+    if (cs.done) return; // finished children keep their frozen totals
+    cs.vitdBanked = vitdAt(cs, elapsed);
+    cs.burnBanked = burnAt(cs, elapsed);
+    cs.rateSince = elapsed;
+    cs.vitdPerSec = calcVitDPerSecondWithFactors(cs.fitzType, cs.clothingFactor, cs.spfFactor);
+    cs.burnPerSec = calcBurnPercentPerSecondWithFactors(cs.fitzType, cs.clothingFactor, cs.spfFactor);
+  });
+  renderSessionUVHeader();
+  const notice = document.getElementById('bg-notice');
+  if (notice && !APP.session.paused) notice.textContent = sessionNoticeText();
+  tickSession();
+}
+
+// Time-weighted average UV over the session so far
+function sessionAverageUV(elapsed) {
+  const s = APP.session;
+  if (!s || elapsed <= 0) return s ? s.uvNow : null;
+  const total = s.uvSecondsBank + (elapsed - s.uvSince) * s.uvNow;
+  return parseFloat((total / elapsed).toFixed(1));
+}
+
+function sessionNoticeText() {
+  return currentUV() < 1
+    ? '🌙 UV is very low right now, so little vitamin D will be made'
+    : DEFAULT_BG_NOTICE;
+}
+
+const SUNSCREEN_REMINDER_SECS = 90 * 60;
+const DEFAULT_BG_NOTICE = '⏸ Tracks time when you switch away — tap to check progress';
+
+// A previous session may have ended while paused or with the sunscreen banner up
+function resetSessionControls() {
+  const btn = document.getElementById('btn-pause');
+  if (btn) btn.textContent = '⏸ Pause';
+  const timerEl = document.getElementById('session-timer');
+  if (timerEl) { timerEl.style.opacity = '1'; timerEl.textContent = '00:00'; }
+  const notice = document.getElementById('bg-notice');
+  if (notice) notice.textContent = sessionNoticeText();
+  const banner = document.getElementById('sunscreen-reminder');
+  if (banner) banner.style.display = 'none';
+}
+
 function getElapsedSeconds() {
   if (!APP.session) return 0;
+  if (APP.session.paused) return APP.session.pausedElapsed;
   return APP.session.pausedElapsed + Math.floor((Date.now() - APP.session.startTime) / 1000);
 }
- 
+
 function startTick() {
   if (APP.tickInterval) clearInterval(APP.tickInterval);
   APP.tickInterval = setInterval(tickSession, 1000);
 }
- 
+
 function stopTick() {
   if (APP.tickInterval) { clearInterval(APP.tickInterval); APP.tickInterval = null; }
 }
- 
+
 function pauseSession() {
   if (!APP.session || APP.session.paused) return;
   APP.session.pausedElapsed = getElapsedSeconds();
@@ -1363,7 +1540,7 @@ function pauseSession() {
   document.getElementById('session-timer').style.opacity = '0.5';
   document.getElementById('bg-notice').textContent = '⏸ Session paused — tap Resume when back outside';
 }
- 
+
 function resumeSessionFromPause() {
   if (!APP.session || !APP.session.paused) return;
   APP.session.startTime = Date.now();
@@ -1371,279 +1548,266 @@ function resumeSessionFromPause() {
   const btn = document.getElementById('btn-pause');
   if (btn) btn.textContent = '⏸ Pause';
   document.getElementById('session-timer').style.opacity = '1';
-  document.getElementById('bg-notice').textContent = '⏸ App tracks time even when you switch away — come back to check progress';
+  document.getElementById('bg-notice').textContent = sessionNoticeText();
   startTick();
+  tickSession();
 }
- 
-// Page visibility — catch background/foreground transitions
+
+// Page visibility — elapsed time is timestamp-based, so backgrounding only
+// needs to stop the interval; coming back catches the UI up immediately
 function setupVisibilityHandler() {
   if (APP.visibilityHandler) document.removeEventListener('visibilitychange', APP.visibilityHandler);
   APP.visibilityHandler = () => {
+    if (!APP.session) return;
     if (document.hidden) {
-      // Going to background: store elapsed, stop tick
-      APP.session.pausedElapsed = getElapsedSeconds();
-      APP.session.startTime = Date.now(); // reset reference for when we come back
       stopTick();
     } else {
-      // Coming back: restart tick, catchup UI immediately
-      startTick();
-      tickSession();
+      // Background timers are throttled or suspended, so the 5-minute refresh may have been missed
+      if (Date.now() - APP.uvFetchedAt > UV_REFRESH_MS) fetchUV(APP.lat, APP.lng);
+      if (!APP.session.paused) {
+        startTick();
+        tickSession();
+      }
     }
   };
   document.addEventListener('visibilitychange', APP.visibilityHandler);
 }
- 
+
+function teardownSession() {
+  stopTick();
+  if (APP.visibilityHandler) {
+    document.removeEventListener('visibilitychange', APP.visibilityHandler);
+    APP.visibilityHandler = null;
+  }
+  APP.session = null;
+  APP.currentCelebrationSliderIdx = null;
+}
+
 function resumeSessionUI() {
-  if (!APP.session) return;
+  if (!APP.session || APP.session.paused) return;
   tickSession();
   startTick();
 }
- 
+
 function showInAppSunscreenReminder() {
   const banner = document.getElementById('sunscreen-reminder');
   if (banner) banner.style.display = 'block';
 }
- 
+
+function burnGradient(burn) {
+  return burn < 40
+    ? 'linear-gradient(90deg,#4DC87A,#7BE89A)'
+    : burn < 70
+      ? 'linear-gradient(90deg,#FFB800,#FF8C00)'
+      : 'linear-gradient(90deg,#FF6060,#FF3030)';
+}
+
+function renderChildProgress(sliderIdx, vitd, pct, burn) {
+  const arc = document.getElementById('arc-' + sliderIdx);
+  if (arc) arc.style.strokeDashoffset = 390 - (390 * pct / 100);
+  const pctEl = document.getElementById('pct-' + sliderIdx);
+  if (pctEl) pctEl.textContent = Math.round(pct) + '%';
+  const vitdEl = document.getElementById('vitd-' + sliderIdx);
+  if (vitdEl) vitdEl.textContent = Math.round(vitd) + ' IU';
+  const burnBar = document.getElementById('burn-' + sliderIdx);
+  if (burnBar) {
+    burnBar.style.width = Math.max(3, burn) + '%';
+    burnBar.style.background = burnGradient(burn);
+  }
+}
+
 function tickSession() {
   if (!APP.session || APP.session.paused) return;
   const elapsed = getElapsedSeconds();
- 
-  // Update shared timer — no upper limit, always keep running
+
+  // Update shared timer — no upper limit, minutes are a plain integer
   const totalMins = Math.floor(elapsed / 60);
   const secs = (elapsed % 60).toString().padStart(2,'0');
   const timerEl = document.getElementById('session-timer');
-  if (timerEl) timerEl.textContent = totalMins.toString().padStart(2,'0') + ':' + secs;
- 
+  if (timerEl) timerEl.textContent = (totalMins < 10 ? '0' : '') + totalMins + ':' + secs;
+
   APP.childSessions.forEach((cs, sliderIdx) => {
-    // EXTENDED MODE: vitd goal already hit, keep tracking burn risk only
+    if (cs.done) return;                              // finished early, card stays frozen
+    if (cs.goalReached && !cs.extendedMode) return;   // waiting for the parent to answer the celebration
+
+    const c = APP.children[cs.childIndex];
+    const burn = Math.min(100, burnAt(cs, elapsed));
+    cs.burnRisk = burn;
+
     if (cs.extendedMode) {
-      const burn = Math.min(100, elapsed * cs.burnPerSec);
-      cs.burnRisk = burn;
- 
-      // Ring stays at 100%
-      const arc = document.getElementById('arc-' + sliderIdx);
-      if (arc) arc.style.strokeDashoffset = 0;
-      const pctEl = document.getElementById('pct-' + sliderIdx);
-      if (pctEl) pctEl.textContent = '100%';
-      const vitdEl = document.getElementById('vitd-' + sliderIdx);
-      if (vitdEl) vitdEl.textContent = Math.round(cs.goal) + ' IU';
- 
-      // Burn bar keeps climbing
-      const burnBar = document.getElementById('burn-' + sliderIdx);
-      if (burnBar) {
-        burnBar.style.width = burn + '%';
-        burnBar.style.background = burn < 40
-          ? 'linear-gradient(90deg,#4DC87A,#7BE89A)'
-          : burn < 70
-            ? 'linear-gradient(90deg,#FFB800,#FF8C00)'
-            : 'linear-gradient(90deg,#FF6060,#FF3030)';
-      }
- 
-      // Burn alert in extended mode
+      // EXTENDED MODE: vitamin D pinned at the goal, burn risk keeps climbing
+      cs.vitdAccumulated = cs.goal;
+      renderChildProgress(sliderIdx, cs.goal, 100, burn);
       if (burn >= 80 && !cs.burnAlerted) {
         cs.burnAlerted = true;
-        const c = APP.children[cs.childIndex];
         showNotification('⚠️ SunTimeKids', c.name + ' — high burn risk. Head for shade.');
       }
-      return; // skip goal-check logic
+      return;
     }
- 
-    // NORMAL MODE: track vitd and burn, check for goal
-    if (cs.goalReached) return; // waiting for user to act on celebration
- 
-    const vitd = elapsed * cs.vitdPerSec;
-    const burn = Math.min(100, elapsed * cs.burnPerSec);
+
+    // NORMAL MODE: track vitamin D and burn, check for goal
+    const vitd = vitdAt(cs, elapsed);
     const pct = Math.min(100, (vitd / cs.goal) * 100);
- 
     cs.vitdAccumulated = vitd;
-    cs.burnRisk = burn;
- 
-    const arc = document.getElementById('arc-' + sliderIdx);
-    if (arc) arc.style.strokeDashoffset = 390 - (390 * pct / 100);
-    const pctEl = document.getElementById('pct-' + sliderIdx);
-    if (pctEl) pctEl.textContent = Math.round(pct) + '%';
-    const vitdEl = document.getElementById('vitd-' + sliderIdx);
-    if (vitdEl) vitdEl.textContent = Math.round(vitd) + ' IU';
- 
-    const burnBar = document.getElementById('burn-' + sliderIdx);
-    if (burnBar) {
-      burnBar.style.width = burn + '%';
-      burnBar.style.background = burn < 40
-        ? 'linear-gradient(90deg,#4DC87A,#7BE89A)'
-        : burn < 70
-          ? 'linear-gradient(90deg,#FFB800,#FF8C00)'
-          : 'linear-gradient(90deg,#FF6060,#FF3030)';
-    }
- 
+    renderChildProgress(sliderIdx, vitd, pct, burn);
+
     if (burn >= 80 && !cs.burnAlerted) {
       cs.burnAlerted = true;
-      const c = APP.children[cs.childIndex];
       showNotification('⚠️ SunTimeKids', c.name + ' is approaching sun overexposure. Consider shade or sunscreen.');
     }
- 
     if (pct >= 100) {
       cs.goalReached = true;
       cs.elapsedAtGoal = elapsed;
-      cs.vitdAccumulated = vitd;
     }
   });
- 
-  // Sunscreen reapplication reminder
-  const anyHasSunscreen = APP.childSessions.some(cs => cs.spfFactor < 1.0);
-  if (anyHasSunscreen && !APP.session.sunscreenReminderShown) {
-    const sessionStart = APP.session.startTime - (APP.session.pausedElapsed * 1000);
-    const minutesElapsed = (Date.now() - sessionStart) / 60000;
-    if (minutesElapsed >= 90) {
-      APP.session.sunscreenReminderShown = true;
-      showNotification('🧴 SunTimeKids', 'Time to reapply sunscreen — 90 minutes have passed.');
-      showInAppSunscreenReminder();
-    }
+
+  // Sunscreen reapplication reminder, repeated every 90 minutes
+  const anyHasSunscreen = APP.childSessions.some(cs => !cs.done && cs.spfFactor < 1.0);
+  if (anyHasSunscreen && elapsed >= APP.session.nextSunscreenReminderAt) {
+    APP.session.nextSunscreenReminderAt = elapsed + SUNSCREEN_REMINDER_SECS;
+    showNotification('🧴 SunTimeKids', 'Time to reapply sunscreen — 90 minutes have passed.');
+    showInAppSunscreenReminder();
   }
- 
-  // Trigger celebration for each child who just hit their goal
-  APP.childSessions.forEach((cs, sliderIdx) => {
-    if (cs.goalReached && !cs.celebrationShown && !cs.extendedMode) {
-      cs.celebrationShown = true;
-      const elapsedNow = getElapsedSeconds();
-      // Only stop tick if ALL non-extended children have hit goal
-      const allNormalDone = APP.childSessions.every(s => s.goalReached || s.extendedMode);
-      if (allNormalDone) stopTick();
-      setTimeout(() => triggerCelebration(elapsedNow, cs.vitdAccumulated, cs, sliderIdx), 500);
-    }
-  });
+
+  // Celebrate one child at a time; others who hit the goal meanwhile are picked up next tick
+  if (APP.currentCelebrationSliderIdx != null) return;
+  const sliderIdx = APP.childSessions.findIndex(cs => cs.goalReached && !cs.celebrationShown && !cs.extendedMode && !cs.done);
+  if (sliderIdx < 0) return;
+  const cs = APP.childSessions[sliderIdx];
+  cs.celebrationShown = true;
+
+  if (APP.sessionEndMode === 'keep') {
+    // Settings: keep tracking automatically, no prompt
+    cs.extendedMode = true;
+    showNotification('🌟 SunTimeKids', APP.children[cs.childIndex].name + ' reached their daily vitamin D goal!');
+    playGoalChime();
+    return;
+  }
+
+  APP.currentCelebrationSliderIdx = sliderIdx;
+  // Stop ticking only if nobody is still actively accumulating
+  const anyStillTracking = APP.childSessions.some(s => !s.done && (!s.goalReached || s.extendedMode));
+  if (!anyStillTracking) stopTick();
+  setTimeout(() => triggerCelebration(sliderIdx), 500);
 }
- 
-function triggerCelebration(elapsed, vitd, cs, sliderIdx) {
+
+// Other children (not this slider index) who are still being tracked
+function otherActiveChildren(sliderIdx) {
+  return APP.childSessions.filter((s, i) => i !== sliderIdx && !s.done);
+}
+
+function triggerCelebration(sliderIdx) {
+  if (!APP.session) return;
+  const cs = APP.childSessions[sliderIdx];
   const c = APP.children[cs.childIndex];
-  const pendingKids = APP.childSessions.filter(s => !s.goalReached).map(s => APP.children[s.childIndex].name);
+  const others = otherActiveChildren(sliderIdx).map(s => APP.children[s.childIndex].name);
+  const elapsed = cs.elapsedAtGoal != null ? cs.elapsedAtGoal : getElapsedSeconds();
   const min = Math.floor(elapsed / 60);
   const sec = elapsed % 60;
   const timeStr = min > 0 ? min + 'm ' + sec + 's' : sec + 's';
-  const allDone = APP.childSessions.every(s => s.goalReached);
- 
-  // Store which child this celebration is for
-  APP.currentCelebrationChildIdx = cs.childIndex;
-  APP.currentCelebrationSliderIdx = sliderIdx;
- 
-  document.getElementById('cel-title').innerHTML = c.name + '<br>hit their goal! ☀️';
-  const subText = pendingKids.length > 0
-    ? 'Goal reached after ' + timeStr + ' · ' + pendingKids.join(' & ') + ' still going!'
+
+  const titleEl = document.getElementById('cel-title');
+  clearEl(titleEl);
+  titleEl.appendChild(document.createTextNode(c.name));
+  titleEl.appendChild(document.createElement('br'));
+  titleEl.appendChild(document.createTextNode('hit their goal! ☀️'));
+
+  let subText = others.length > 0
+    ? 'Goal reached after ' + timeStr + ' · ' + others.join(' & ') + ' still going!'
     : 'Daily vitamin D goal reached after ' + timeStr + ' outdoors';
+  subText += ' · Keeps playing automatically in 60 seconds';
   document.getElementById('cel-sub').textContent = subText;
-  document.getElementById('cel-vitd').textContent = Math.round(vitd) + ' IU';
+  document.getElementById('cel-vitd').textContent = Math.round(cs.goal) + ' IU';
   document.getElementById('cel-duration').textContent = timeStr;
-  document.getElementById('cel-streak').textContent = '🔥 ' + calcStreak();
- 
-  // Update button labels based on whether other children are still tracking
+  document.getElementById('cel-streak').textContent = '🔥 ' + Math.max(1, calcStreak(cs.childIndex) + (childGoalHitOnDay(cs.childIndex, new Date().toDateString()) ? 0 : 1));
+
   const extendBtn = document.getElementById('btn-extend-session');
   const finishBtn = document.getElementById('btn-finish-session');
-  if (extendBtn) extendBtn.textContent = pendingKids.length > 0
-    ? '▶ Keep going — ' + pendingKids.join(' & ') + ' still tracking'
-    : '▶ Keep Playing Outside';
-  if (finishBtn) finishBtn.textContent = allDone
-    ? '✓ All Done for Today'
-    : '✓ Done for ' + c.name + ' — keep tracking others';
- 
+  if (extendBtn) extendBtn.textContent = '▶ Keep Playing Outside';
+  if (finishBtn) finishBtn.textContent = others.length > 0
+    ? '✓ Done for ' + c.name + ' — keep tracking ' + others.join(' & ')
+    : '✓ We are Done for Today';
+
   showNotification('🌟 SunTimeKids', c.name + ' reached their daily vitamin D goal!');
   playGoalChime();
   goTo('screen-celebrate');
+  // Settings: "Show 60-second prompt" — if nobody answers, keep tracking (burn risk still matters)
+  APP.celebrationTimer = setTimeout(extendSession, 60000);
 }
- 
+
 function extendSession() {
   if (!APP.session) return;
-  const totalElapsed = getElapsedSeconds();
- 
-  // Mark children who have hit their goal as extendedMode
-  // This keeps goalReached = true so celebration won't retrigger,
-  // but switches tickSession to burn-risk-only tracking for them
-  APP.childSessions.forEach(cs => {
-    if (cs.goalReached) {
-      cs.extendedMode = true;
-      cs.burnAlerted = false; // allow burn alert to fire again in extended play
-    }
-  });
- 
-  APP.session.pausedElapsed = totalElapsed;
-  APP.session.startTime = Date.now();
-  APP.session.paused = false;
-  APP.session.sunscreenStartTime = Date.now();
- 
+  const sliderIdx = APP.currentCelebrationSliderIdx;
+  const cs = APP.childSessions[sliderIdx];
+  // extendedMode is per child: only the child being celebrated switches to burn-only tracking
+  if (cs) {
+    cs.extendedMode = true;
+    cs.burnAlerted = false; // allow burn alert to fire again in extended play
+  }
+  APP.currentCelebrationSliderIdx = null;
   goTo('screen-session');
-  renderSessionCards();
- 
-  // Show first child in extended mode (or first pending)
-  const extendedIdx = APP.childSessions.findIndex(cs => cs.extendedMode);
-  setActiveChild(extendedIdx >= 0 ? extendedIdx : 0);
- 
-  const btnPause = document.getElementById('btn-pause');
-  if (btnPause) btnPause.textContent = '⏸ Pause';
-  const timerEl = document.getElementById('session-timer');
-  if (timerEl) timerEl.style.opacity = '1';
-  const noticeEl = document.getElementById('bg-notice');
-  if (noticeEl) noticeEl.textContent = '⏸ Tracks time when you switch away — tap to check progress';
-  const uvHeader = document.getElementById('session-uv-header');
-  if (uvHeader) uvHeader.textContent = APP.session.uvAtStart || '–';
- 
-  stopTick();
-  startTick();
-  setupVisibilityHandler();
-  tickSession();
+  setActiveChild(sliderIdx != null ? sliderIdx : 0);
 }
- 
+
 function endSessionManual() {
-  const elapsed = getElapsedSeconds();
-  // Save accumulated vitd for each child
-  APP.childSessions.forEach(cs => {
-    cs.vitdAccumulated = elapsed * cs.vitdPerSec;
-  });
-  APP.session.elapsedSeconds = elapsed;
-  APP.session.vitdAccumulated = APP.childSessions.reduce((sum, cs) => sum + cs.vitdAccumulated, 0) / APP.childSessions.length;
+  if (!APP.session) return;
   saveSession();
-  stopTick();
-  if (APP.visibilityHandler) {
-    document.removeEventListener('visibilitychange', APP.visibilityHandler);
-    APP.visibilityHandler = null;
-  }
-  APP.session = null;
+  teardownSession();
   goTo('screen-home');
 }
- 
+
 function finishSession() {
-  APP.session.elapsedSeconds = APP.session.elapsedAtGoal || getElapsedSeconds();
-  saveSession();
-  stopTick();
-  if (APP.visibilityHandler) {
-    document.removeEventListener('visibilitychange', APP.visibilityHandler);
-    APP.visibilityHandler = null;
+  if (!APP.session) return;
+  const sliderIdx = APP.currentCelebrationSliderIdx;
+  const cs = APP.childSessions[sliderIdx];
+  const others = sliderIdx != null ? otherActiveChildren(sliderIdx) : [];
+  if (cs && others.length > 0) {
+    // "Done for <name>" — freeze this child, keep the session going for the others
+    cs.done = true;
+    APP.currentCelebrationSliderIdx = null;
+    goTo('screen-session');
+    setActiveChild(APP.childSessions.indexOf(others[0]));
+    return;
   }
-  APP.session = null;
-  goTo('screen-home');
+  endSessionManual();
 }
- 
+
 // ============================================================
 // SESSION PERSISTENCE
 // ============================================================
 function saveSession() {
   if (!APP.session) return;
-  const elapsed = APP.session.elapsedSeconds || getElapsedSeconds();
-  const vitd = APP.session.vitdAccumulated || elapsed * APP.session.vitdPerSec;
+  const elapsed = getElapsedSeconds();
+  const perChild = APP.childSessions.map(cs => {
+    const childElapsed = cs.done && cs.elapsedAtGoal != null ? cs.elapsedAtGoal : elapsed;
+    // Capped at the goal, matching the ring which is pinned at 100% once reached
+    const vitd = Math.min(cs.goal, vitdAt(cs, childElapsed));
+    return {
+      childIndex: cs.childIndex,
+      vitd: vitd,
+      goal: cs.goal,
+      goalReached: cs.goalReached || vitd >= cs.goal,
+      elapsedSeconds: childElapsed
+    };
+  });
   const record = {
     id: Date.now(),
-    date: new Date().toISOString(),
+    date: new Date(APP.session.startedAt).toISOString(),
     childIndices: APP.session.childIndices,
     elapsedSeconds: elapsed,
-    vitdAccumulated: vitd,
-    goalReached: vitd >= APP.session.goal,
-    goal: APP.session.goal,
-    uvIndex: APP.session.uvAtStart,
+    perChild: perChild,
+    // Session-level summary fields, kept for compatibility with older records
+    vitdAccumulated: perChild.reduce((sum, r) => sum + r.vitd, 0) / perChild.length,
+    goalReached: perChild.every(r => r.goalReached),
+    uvIndex: sessionAverageUV(elapsed),   // time-weighted over the 5-minute UV refreshes
     location: APP.locationName
   };
   APP.sessions.push(record);
-  // Persist to localStorage so data survives closing and reopening the app
+  // Persist so data survives closing and reopening the app
   storeSet('stk_sessions', APP.sessions);
   saveProfilesToStorage();
 }
- 
+
 async function loadSessions() {
   const saved = await storeLoad('stk_sessions');
   if (saved && Array.isArray(saved)) APP.sessions = saved;
@@ -1651,9 +1815,10 @@ async function loadSessions() {
  
 function saveProfilesToStorage() {
   const profiles = APP.children.map(c => ({
-    name: c.name, age: c.age, fitz: c.fitz, goal: c.goal, photo: c.photo
+    name: c.name, age: c.age, fitz: c.fitz, goal: c.goal, photo: c.photo, isAdult: c.isAdult
   }));
-  storeSet('stk_profiles', profiles);
+  // Photos are far too large for the cookie fallback, so the cookie copy omits them
+  storeSet('stk_profiles', profiles, profiles.map(p => Object.assign({}, p, { photo: null })));
 }
  
 async function loadProfiles() {
@@ -1662,14 +1827,9 @@ async function loadProfiles() {
     profiles.forEach((p, i) => {
       if (APP.children[i]) Object.assign(APP.children[i], p);
     });
+    return true;
   }
-}
- 
-function restoreProfileToggles() {
-  // After loading profiles, restore the adult/child toggle visual state in onboarding
-  APP.children.forEach((c, i) => {
-    if (c.isAdult) setProfileType(i, 'adult');
-  });
+  return false;
 }
  
 // ============================================================
@@ -1681,6 +1841,8 @@ function playGoalChime() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
     const ctx = new AudioContext();
+    // Browsers cap the number of live AudioContexts, so release this one when the chime ends
+    setTimeout(() => { try { ctx.close(); } catch(ex) {} }, 2000);
     const notes = [523.25, 659.25, 783.99, 1046.50];
     const noteDuration = 0.18;
     const gap = 0.06;
@@ -1739,6 +1901,8 @@ function cookieSet(key, val) {
   try {
     // Encode as base64 to avoid cookie character issues
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(val))));
+    // Browsers silently drop cookies over ~4KB, and a huge cookie is sent with every request
+    if (encoded.length > 3800) return;
     // Set with 1-year expiry
     const exp = new Date(Date.now() + 365*24*60*60*1000).toUTCString();
     document.cookie = key + '=' + encoded + '; expires=' + exp + '; path=/; SameSite=Lax';
@@ -1747,13 +1911,14 @@ function cookieSet(key, val) {
  
 function cookieGet(key) {
   try {
-    const match = document.cookie.match('(^|;)\s*' + key + '\s*=\s*([^;]+)');
+    const match = document.cookie.match(new RegExp('(^|;)\\s*' + key + '\\s*=\\s*([^;]+)'));
     if (match) return JSON.parse(decodeURIComponent(escape(atob(match[2]))));
   } catch(e) {}
   return null;
 }
  
-function storeSet(key, val) {
+// cookieVal: optional smaller copy for the cookie fallback (defaults to val)
+function storeSet(key, val, cookieVal) {
   _mem[key] = val;
   // IndexedDB
   if (_db) {
@@ -1765,7 +1930,7 @@ function storeSet(key, val) {
   // localStorage
   try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
   // Cookie (most reliable in iOS PWA)
-  cookieSet(key, val);
+  cookieSet(key, cookieVal !== undefined ? cookieVal : val);
 }
  
 async function storeLoad(key) {
@@ -1793,46 +1958,75 @@ async function storeLoad(key) {
   return _mem[key] || null;
 }
  
-function getTodaySessions() {
-  const today = new Date().toDateString();
-  return APP.sessions.filter(s => new Date(s.date).toDateString() === today);
+// Per-child results for a session record. Records before v2.5 only stored a
+// session-wide average, so those are spread evenly across the children present.
+function sessionChildResults(s) {
+  if (Array.isArray(s.perChild)) return s.perChild;
+  const vitd = Number.isFinite(s.vitdAccumulated) ? s.vitdAccumulated : 0;
+  return (s.childIndices || []).map(ci => ({
+    childIndex: ci, vitd: vitd, goal: s.goal, goalReached: !!s.goalReached, elapsedSeconds: s.elapsedSeconds || 0
+  }));
 }
- 
+
+function dayKey(s) {
+  return new Date(s.date).toDateString();
+}
+
+function childVitDOnDay(ci, dayStr) {
+  return APP.sessions
+    .filter(s => dayKey(s) === dayStr)
+    .reduce((sum, s) => {
+      const r = sessionChildResults(s).find(x => x.childIndex === ci);
+      return sum + (r ? r.vitd : 0);
+    }, 0);
+}
+
+// A daily goal can be met across several sessions in one day
+function childGoalHitOnDay(ci, dayStr) {
+  const goal = APP.children[ci] ? APP.children[ci].goal : 400;
+  if (childVitDOnDay(ci, dayStr) >= goal - 0.5) return true;
+  return APP.sessions.some(s => dayKey(s) === dayStr &&
+    sessionChildResults(s).some(r => r.childIndex === ci && r.goalReached));
+}
+
+// Last 7 calendar days including today
 function getWeekSessions() {
-  const now = new Date();
-  const weekAgo = new Date(now - 7 * 86400000);
-  return APP.sessions.filter(s => new Date(s.date) >= weekAgo);
+  const cutoff = new Date(); cutoff.setHours(0,0,0,0); cutoff.setDate(cutoff.getDate() - 6);
+  return APP.sessions.filter(s => new Date(s.date) >= cutoff);
 }
- 
+
 function getWeekTotalMinutes() {
-  return Math.round(getWeekSessions().reduce((sum, s) => sum + s.elapsedSeconds, 0) / 60);
+  return Math.round(getWeekSessions().reduce((sum, s) => sum + (s.elapsedSeconds || 0), 0) / 60);
 }
- 
-function getWeekGoalCount() {
-  return getWeekSessions().filter(s => s.goalReached).length;
+
+// Child-days this week where the goal was hit, out of child-days spent outside
+function getWeekGoalStats() {
+  const pairs = new Set();
+  getWeekSessions().forEach(s => sessionChildResults(s).forEach(r => pairs.add(r.childIndex + '|' + dayKey(s))));
+  let hit = 0;
+  pairs.forEach(p => {
+    const parts = p.split('|');
+    if (childGoalHitOnDay(parseInt(parts[0], 10), parts[1])) hit++;
+  });
+  return { hit: hit, total: pairs.size };
 }
- 
-function getWeekDayCount() {
-  const days = new Set(getWeekSessions().map(s => new Date(s.date).toDateString()));
-  return days.size || 1;
-}
- 
-function calcStreak() {
-  if (!APP.sessions.length) return 0;
-  const days = [...new Set(APP.sessions.filter(s=>s.goalReached).map(s => new Date(s.date).toDateString()))];
-  if (!days.length) return 0;
-  days.sort((a,b) => new Date(b) - new Date(a));
+
+// Consecutive days with a goal hit, for one child or (ci omitted) for any child.
+// Today counts if already hit; otherwise the streak runs up to yesterday.
+function calcStreak(ci) {
+  const hitDays = new Set();
+  APP.sessions.forEach(s => {
+    const day = dayKey(s);
+    const kids = ci == null ? sessionChildResults(s).map(r => r.childIndex) : [ci];
+    if (kids.some(k => childGoalHitOnDay(k, day))) hitDays.add(day);
+  });
+  const d = new Date(); d.setHours(0,0,0,0);
+  if (!hitDays.has(d.toDateString())) d.setDate(d.getDate() - 1);
   let streak = 0;
-  let check = new Date(); check.setHours(0,0,0,0);
-  for (let d of days) {
-    const day = new Date(d); day.setHours(0,0,0,0);
-    const diff = Math.round((check - day) / 86400000);
-    if (diff <= 1) { streak++; check = day; }
-    else break;
-  }
+  while (hitDays.has(d.toDateString())) { streak++; d.setDate(d.getDate() - 1); }
   return streak;
 }
- 
+
 // ============================================================
 // DASHBOARD
 // ============================================================
@@ -1849,270 +2043,167 @@ function renderWeekChart() {
   const today = new Date().getDay();
   const barsEl = document.getElementById('week-bars');
   const labelsEl = document.getElementById('week-day-labels');
- 
-  // Build per-day minute totals from real sessions
+
+  // Per-day minute totals for the last 7 days (each weekday maps to exactly one date)
   const dayTotals = Array(7).fill(0);
   const dayGoals = Array(7).fill(false);
-  APP.sessions.forEach(s => {
+  getWeekSessions().forEach(s => {
     const d = new Date(s.date).getDay();
-    dayTotals[d] += s.elapsedSeconds / 60;
-    if (s.goalReached) dayGoals[d] = true;
+    dayTotals[d] += (s.elapsedSeconds || 0) / 60;
+    if (sessionChildResults(s).some(r => childGoalHitOnDay(r.childIndex, dayKey(s)))) dayGoals[d] = true;
   });
- 
-  // Add some demo data if no real sessions yet so chart looks useful
-  if (!APP.sessions.length) {
-    const demo = [35, 0, 65, 48, 70, 55, 0];
-    demo.forEach((v,i) => { if (i !== today) { dayTotals[i] = v; if (v >= 60) dayGoals[i] = true; } });
-  }
- 
+
   const maxVal = Math.max(...dayTotals, 1);
-  barsEl.innerHTML = days.map((d,i) => {
+  clearEl(barsEl);
+  clearEl(labelsEl);
+  days.forEach((d, i) => {
     const v = dayTotals[i];
     const cls = v === 0 ? 'none' : dayGoals[i] ? 'goal' : 'partial';
     const h = v === 0 ? 4 : Math.max(8, Math.round((v / maxVal) * 72));
-    return `<div class="week-bar-wrap"><div class="week-bar ${cls}" style="height:${h}px;"></div></div>`;
-  }).join('');
- 
-  labelsEl.innerHTML = days.map((d,i) => {
-    const isToday = i === today;
-    return `<div class="week-day ${isToday?'today':''}" style="flex:1;text-align:center;">${d}</div>`;
-  }).join('');
+    barsEl.appendChild(el('div', { className: 'week-bar-wrap', title: d + ': ' + Math.round(v) + 'm' }, [
+      el('div', { className: 'week-bar ' + cls, style: 'height:' + h + 'px;' })
+    ]));
+    labelsEl.appendChild(el('div', { className: 'week-day' + (i === today ? ' today' : ''), style: 'flex:1;text-align:center;', text: d }));
+  });
 }
- 
+
 function renderTrendGrid() {
   const weekMin = getWeekTotalMinutes();
-  const weekGoals = getWeekGoalCount();
-  const weekDays = getWeekDayCount();
+  const goals = getWeekGoalStats();
   const streak = calcStreak();
-  const uv = APP.uvIndex ? `${APP.uvIndex}` : '–';
- 
-  document.getElementById('trend-grid').innerHTML = `
-    <div class="trend-card"><span class="trend-icon">⏱️</span><div class="trend-val">${weekMin >= 60 ? (weekMin/60).toFixed(1)+'h' : weekMin+'m'}</div><div class="trend-label">Outdoor time (7 days)</div></div>
-    <div class="trend-card"><span class="trend-icon">🎯</span><div class="trend-val">${weekGoals}/${weekDays}</div><div class="trend-label">Goals hit this week</div></div>
-    <div class="trend-card"><span class="trend-icon">🔥</span><div class="trend-val">${streak} day${streak!==1?'s':''}</div><div class="trend-label">Current streak</div></div>
-    <div class="trend-card"><span class="trend-icon">🌡️</span><div class="trend-val">${uv}</div><div class="trend-label">Live UV · ${APP.locationName.split(',')[0]}</div></div>`;
+  const uv = APP.uvIndex != null ? APP.uvIndex + (APP.uvIsEstimate ? ' (est.)' : '') : '–';
+  const grid = document.getElementById('trend-grid');
+  clearEl(grid);
+  [
+    ['⏱️', formatMinutes(weekMin), 'Outdoor time (7 days)'],
+    ['🎯', goals.hit + '/' + goals.total, 'Goals hit this week'],
+    ['🔥', streak + ' day' + (streak !== 1 ? 's' : ''), 'Current streak'],
+    ['🌡️', String(uv), 'Live UV · ' + APP.locationName.split(',')[0]]
+  ].forEach(t => {
+    grid.appendChild(el('div', { className: 'trend-card' }, [
+      el('span', { className: 'trend-icon', text: t[0] }),
+      el('div', { className: 'trend-val', text: t[1] }),
+      el('div', { className: 'trend-label', text: t[2] })
+    ]));
+  });
 }
- 
+
 function renderDashChildren() {
   const list = document.getElementById('dash-child-list');
-  list.innerHTML = APP.children.map((c, i) => {
-    const sessions = APP.sessions.filter(s => s.childIndices.includes(i));
-    const totalMin = Math.round(sessions.reduce((sum,s) => sum + s.elapsedSeconds, 0) / 60);
-    const goals = sessions.filter(s => s.goalReached).length;
-    const avatarBg = i === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
-    const avatarContent = c.photo ? `<img src="${c.photo}" alt="${c.name}">` : (i===0?'👧':'👦');
-    return `
-      <div class="child-summary">
-        <div class="cs-avatar" style="background:${avatarBg};">${avatarContent}</div>
-        <div class="cs-info">
-          <div class="cs-name">${c.name}</div>
-          <div class="cs-stats">${totalMin}m outdoors total · ${goals} goal${goals!==1?'s':''} hit</div>
-        </div>
-        <div class="cs-streak">🔥 ${calcStreak()}</div>
-      </div>`;
-  }).join('');
+  clearEl(list);
+  APP.children.forEach((c, i) => {
+    const results = [];
+    APP.sessions.forEach(s => sessionChildResults(s).forEach(r => { if (r.childIndex === i) results.push(r); }));
+    const totalMin = Math.round(results.reduce((sum, r) => sum + (r.elapsedSeconds || 0), 0) / 60);
+    const goalDays = new Set(APP.sessions.filter(s => s.childIndices.includes(i)).map(dayKey));
+    const goals = [...goalDays].filter(d => childGoalHitOnDay(i, d)).length;
+    list.appendChild(el('div', { className: 'child-summary' }, [
+      el('div', { className: 'cs-avatar', style: 'background:' + avatarBg(i) + ';' }, [avatarContent(c, i)]),
+      el('div', { className: 'cs-info' }, [
+        el('div', { className: 'cs-name', text: c.name }),
+        el('div', { className: 'cs-stats', text: formatMinutes(totalMin) + ' outdoors total · ' + goals + ' goal' + (goals !== 1 ? 's' : '') + ' hit' })
+      ]),
+      el('div', { className: 'cs-streak', text: '🔥 ' + calcStreak(i) })
+    ]));
+  });
 }
- 
+
 function renderSessionHistory() {
   const list = document.getElementById('session-history-list');
+  clearEl(list);
   if (!APP.sessions.length) {
-    list.innerHTML = `<div style="text-align:center;color:var(--soft);font-size:0.85rem;font-weight:600;padding:20px;">No sessions yet — head outside to get started! ☀️</div>`;
+    list.appendChild(el('div', {
+      style: 'text-align:center;color:var(--soft);font-size:0.85rem;font-weight:600;padding:20px;',
+      text: 'No sessions yet — head outside to get started! ☀️'
+    }));
     return;
   }
   const sorted = [...APP.sessions].reverse().slice(0, 10);
-  list.innerHTML = sorted.map(s => {
+  sorted.forEach(s => {
     const date = new Date(s.date);
     const dateStr = date.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
     const timeStr = date.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
-    const dur = Math.floor(s.elapsedSeconds / 60);
+    const dur = Math.floor((s.elapsedSeconds || 0) / 60);
     const names = s.childIndices.map(i => APP.children[i]?.name || '?').join(' & ');
-    const badgeCls = s.goalReached ? '' : 'partial';
-    const badgeTxt = s.goalReached ? '✅ Goal Hit' : `${Math.round(s.vitdAccumulated)} IU`;
-    return `
-      <div class="history-item">
-        <div class="history-icon">☀️</div>
-        <div class="history-info">
-          <div class="history-title">${names} · ${dur}m outdoors</div>
-          <div class="history-meta">${dateStr} at ${timeStr} · UV ${s.uvIndex} · ${s.location}</div>
-        </div>
-        <div class="history-badge ${badgeCls}">${badgeTxt}</div>
-      </div>`;
-  }).join('');
+    const results = sessionChildResults(s);
+    const hitCount = results.filter(r => r.goalReached).length;
+    let badgeTxt;
+    if (hitCount === results.length && hitCount > 0) badgeTxt = '✅ Goal Hit';
+    else if (hitCount > 0) badgeTxt = '✅ ' + hitCount + '/' + results.length + ' goals';
+    else badgeTxt = Math.round(results.reduce((sum, r) => sum + r.vitd, 0) / Math.max(1, results.length)) + ' IU';
+    list.appendChild(el('div', { className: 'history-item' }, [
+      el('div', { className: 'history-icon', text: '☀️' }),
+      el('div', { className: 'history-info' }, [
+        el('div', { className: 'history-title', text: names + ' · ' + dur + 'm outdoors' }),
+        el('div', { className: 'history-meta', text: dateStr + ' at ' + timeStr + ' · UV ' + s.uvIndex + ' · ' + (s.location || '') })
+      ]),
+      el('div', { className: 'history-badge' + (hitCount === results.length && hitCount > 0 ? '' : ' partial'), text: badgeTxt })
+    ]));
+  });
 }
- 
+
 // ============================================================
 // INIT
 // ============================================================
+// Settings: what happens when a child reaches their goal ('auto' = 60-second prompt, 'keep' = no prompt)
+function setSessionEndMode(mode, persist) {
+  APP.sessionEndMode = mode;
+  if (persist) storeSet('stk_session_end_mode', mode);
+  const optAuto = document.getElementById('session-end-opt-auto');
+  const optKeep = document.getElementById('session-end-opt-keep');
+  const activeOpt = mode === 'auto' ? optAuto : optKeep;
+  const inactiveOpt = mode === 'auto' ? optKeep : optAuto;
+  if (activeOpt) {
+    activeOpt.style.borderColor = 'var(--sky-dark)';
+    activeOpt.style.background = '#EEF6FF';
+    const dot = activeOpt.querySelector('div');
+    dot.style.cssText = 'width:20px;height:20px;border-radius:50%;background:var(--sky-dark);display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:800;flex-shrink:0;';
+    dot.textContent = '✓';
+  }
+  if (inactiveOpt) {
+    inactiveOpt.style.borderColor = '#DDE6F5';
+    inactiveOpt.style.background = 'white';
+    const dot = inactiveOpt.querySelector('div');
+    dot.style.cssText = 'width:20px;height:20px;border-radius:50%;border:2px solid #DDE6F5;flex-shrink:0;';
+    dot.textContent = '';
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+// Async work only: storage, saved data and location. All button wiring
+// happens synchronously in wireButtonsSync below, exactly once.
 async function appInit() {
-  // Wrap everything in try/catch so a single error never kills the whole app
+  let hasProfiles = false;
   try {
     await storeInit();
     await loadSessions();
-    await loadProfiles();
+    hasProfiles = await loadProfiles();
+  } catch(e) {
+    console.warn('Storage init error:', e);
+  }
+  try {
     initLocation();
   } catch(e) {
-    console.warn('Storage/location init error:', e);
+    console.warn('Location init error:', e);
   }
- 
-  // ── Wire ALL buttons via addEventListener ──
-  // iOS Safari on GitHub Pages blocks ALL inline onclick handlers.
-  // Every interaction must be wired here.
- 
-  // Welcome screen
-  const btnGetStarted = document.getElementById('btn-get-started');
-  if (btnGetStarted) btnGetStarted.addEventListener('click', () => goTo('screen-onboard'));
- 
-  // Onboarding — save profiles
-  const btnSaveProfiles = document.getElementById('btn-save-profiles');
-  if (btnSaveProfiles) btnSaveProfiles.addEventListener('click', saveProfiles);
- 
-  // Onboarding — profile type toggles (Child/Adult) via event delegation on whole document
-  document.addEventListener('click', e => {
-    const typeBtn = e.target.closest('[data-profile-type]');
-    if (typeBtn) {
-      const idx = parseInt(typeBtn.getAttribute('data-profile-idx'));
-      const type = typeBtn.getAttribute('data-profile-type');
-      setProfileType(idx, type);
-      return;
-    }
- 
-    // Fitzpatrick buttons
-    const fitzBtn = e.target.closest('[data-fitz-val]');
-    if (fitzBtn) {
-      const idx = parseInt(fitzBtn.getAttribute('data-fitz-idx'));
-      const val = parseInt(fitzBtn.getAttribute('data-fitz-val'));
-      selectFitz(idx, fitzBtn, val);
-      return;
-    }
- 
-    // Clothing buttons
-    const clothingBtn = e.target.closest('[data-clothing-factor]');
-    if (clothingBtn) {
-      selectClothing(clothingBtn, parseFloat(clothingBtn.getAttribute('data-clothing-factor')));
-      return;
-    }
- 
-    // SPF buttons
-    const spfBtn = e.target.closest('[data-spf-factor]');
-    if (spfBtn) {
-      selectSPF(spfBtn, parseFloat(spfBtn.getAttribute('data-spf-factor')));
-      return;
-    }
-  });
- 
-  // Sunscreen reminder dismiss
-  const btnDismissSunscreen = document.getElementById('btn-dismiss-sunscreen');
-  if (btnDismissSunscreen) btnDismissSunscreen.addEventListener('click', () => {
-    const banner = document.getElementById('sunscreen-reminder');
-    if (banner) banner.style.display = 'none';
-  });
- 
-  // Photo file inputs
-  const fileInput0 = document.getElementById('file-0');
-  if (fileInput0) fileInput0.addEventListener('change', e => handlePhoto(0, e));
-  const fileInput1 = document.getElementById('file-1');
-  if (fileInput1) fileInput1.addEventListener('change', e => handlePhoto(1, e));
- 
-  // Photo circles
-  const photoCircle0 = document.getElementById('photo-circle-0');
-  if (photoCircle0) photoCircle0.addEventListener('click', () => document.getElementById('file-0').click());
-  const photoCircle1 = document.getElementById('photo-circle-1');
-  if (photoCircle1) photoCircle1.addEventListener('click', () => document.getElementById('file-1').click());
- 
-  // Home screen
-  const btnHeadout = document.getElementById('btn-headout');
-  if (btnHeadout) btnHeadout.addEventListener('click', () => goTo('screen-whosout'));
-  const btnViewDash = document.getElementById('btn-view-dash');
-  if (btnViewDash) btnViewDash.addEventListener('click', () => goTo('screen-dash'));
- 
-  // Who's out modal background tap to dismiss
-  const modalBg = document.getElementById('modal-bg');
-  if (modalBg) modalBg.addEventListener('click', () => goTo('screen-home'));
-  const btnWhosContinue = document.getElementById('btn-whos-continue');
-  if (btnWhosContinue) btnWhosContinue.addEventListener('click', () => goTo('screen-setup'));
- 
-  // Session setup
-  const btnSetupBack = document.getElementById('btn-setup-back');
-  if (btnSetupBack) btnSetupBack.addEventListener('click', () => goTo('screen-home'));
-  const btnStartSession = document.getElementById('btn-start-session');
-  if (btnStartSession) btnStartSession.addEventListener('click', startSession);
- 
-  // Session screen pause / end
-  const btnPause = document.getElementById('btn-pause');
-  if (btnPause) btnPause.addEventListener('click', () => {
-    if (APP.session && APP.session.paused) resumeSessionFromPause();
-    else pauseSession();
-  });
-  const btnEndSession = document.getElementById('btn-end-session');
-  if (btnEndSession) btnEndSession.addEventListener('click', endSessionManual);
- 
-  // Celebration screen
-  const btnExtendSession = document.getElementById('btn-extend-session');
-  if (btnExtendSession) btnExtendSession.addEventListener('click', extendSession);
-  const btnFinishSession = document.getElementById('btn-finish-session');
-  if (btnFinishSession) btnFinishSession.addEventListener('click', finishSession);
- 
-  // Dashboard
-  const btnDashBack = document.getElementById('btn-dash-back');
-  if (btnDashBack) btnDashBack.addEventListener('click', () => goTo('screen-home'));
- 
-  // Location modal
-  const locChangeBtn = document.getElementById('loc-change-btn');
-  if (locChangeBtn) locChangeBtn.addEventListener('click', promptManualLocation);
-  const locGpsBtn = document.getElementById('loc-gps-btn');
-  if (locGpsBtn) locGpsBtn.addEventListener('click', applyGPSLocation);
-  const locSearchBtn = document.getElementById('loc-search-btn');
-  if (locSearchBtn) locSearchBtn.addEventListener('click', applyManualLocation);
-  const locCancelBtn = document.getElementById('loc-cancel-btn');
-  if (locCancelBtn) locCancelBtn.addEventListener('click', closeLocModal);
-  const locInput = document.getElementById('loc-input');
-  if (locInput) locInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyManualLocation(); });
- 
-  // Settings screen
-  const btnSettingsBack = document.getElementById('btn-settings-back');
-  if (btnSettingsBack) btnSettingsBack.addEventListener('click', () => goTo('screen-home'));
-  const optAuto = document.getElementById('session-end-opt-auto');
-  const optKeep = document.getElementById('session-end-opt-keep');
-  function setSessionEndMode(mode) {
-    APP.sessionEndMode = mode;
-    storeSet('stk_session_end_mode', mode);
-    const activeOpt = mode === 'auto' ? optAuto : optKeep;
-    const inactiveOpt = mode === 'auto' ? optKeep : optAuto;
-    if (activeOpt) { activeOpt.style.borderColor = 'var(--sky-dark)'; activeOpt.style.background = '#EEF6FF'; activeOpt.querySelector('div').style.cssText = 'width:20px;height:20px;border-radius:50%;background:var(--sky-dark);display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:800;flex-shrink:0;'; activeOpt.querySelector('div').textContent = '✓'; }
-    if (inactiveOpt) { inactiveOpt.style.borderColor = '#DDE6F5'; inactiveOpt.style.background = 'white'; inactiveOpt.querySelector('div').style.cssText = 'width:20px;height:20px;border-radius:50%;border:2px solid #DDE6F5;flex-shrink:0;'; inactiveOpt.querySelector('div').textContent = ''; }
-  }
-  if (optAuto) optAuto.addEventListener('click', () => setSessionEndMode('auto'));
-  if (optKeep) optKeep.addEventListener('click', () => setSessionEndMode('keep'));
- 
-  // Notification banner button
-  const btnNotifEnable = document.getElementById('btn-notif-enable');
-  if (btnNotifEnable) btnNotifEnable.addEventListener('click', requestNotifications);
- 
-  // Bottom nav
-  const navHome = document.getElementById('nav-home');
-  if (navHome) navHome.addEventListener('click', () => goTo('screen-home'));
-  const navSession = document.getElementById('nav-session');
-  if (navSession) navSession.addEventListener('click', () => goTo('screen-whosout'));
-  const navDash = document.getElementById('nav-dash');
-  if (navDash) navDash.addEventListener('click', () => goTo('screen-dash'));
-  const navItems = document.querySelectorAll('.nav-item');
-  if (navItems.length >= 4) navItems[3].addEventListener('click', () => goTo('screen-settings'));
- 
-  // Load saved preferences
   try {
     const savedMode = await storeLoad('stk_session_end_mode');
-    if (savedMode) APP.sessionEndMode = savedMode;
-    const savedProfiles = await storeLoad('stk_profiles');
-    if (savedProfiles) goTo('screen-home');
+    if (savedMode === 'auto' || savedMode === 'keep') setSessionEndMode(savedMode, false);
   } catch(e) {
     console.warn('Preference load error:', e);
   }
+  // Returning users skip the welcome screen (unless they already tapped past it)
+  const welcome = document.getElementById('screen-welcome');
+  if (hasProfiles && welcome && welcome.classList.contains('active')) goTo('screen-home');
 }
- 
-// ── SYNCHRONOUS SAFETY NET ──
-// Wire critical navigation buttons immediately at script load,
-// completely independent of async appInit. This guarantees buttons
-// work even if storage/location init fails or throws.
+
+// ── SYNCHRONOUS BUTTON WIRING ──
+// Runs at script load, independent of async appInit, so buttons work even if
+// storage/location init is slow or fails. This is the ONLY place buttons are
+// wired; wiring them again elsewhere makes each tap fire twice (which broke
+// Pause, End and Done in earlier versions).
 (function wireButtonsSync() {
   function safeOn(id, fn) {
     const el = document.getElementById(id);
@@ -2122,8 +2213,10 @@ async function appInit() {
   safeOn('btn-get-started', function() { goTo('screen-onboard'); });
   // Onboarding
   safeOn('btn-save-profiles', function() { saveProfiles(); });
+  safeOn('photo-0', function() { var f = document.getElementById('file-0'); if (f) f.click(); });
+  safeOn('photo-1', function() { var f = document.getElementById('file-1'); if (f) f.click(); });
   // Home
-  safeOn('btn-headout', function() { goTo('screen-whosout'); });
+  safeOn('btn-headout', function() { goToSessionOrStart(); });
   safeOn('btn-view-dash', function() { goTo('screen-dash'); });
   // Who's out
   safeOn('modal-bg', function() { goTo('screen-home'); });
@@ -2142,7 +2235,11 @@ async function appInit() {
   safeOn('btn-finish-session', function() { finishSession(); });
   // Dashboard
   safeOn('btn-dash-back', function() { goTo('screen-home'); });
+  // Settings
   safeOn('btn-settings-back', function() { goTo('screen-home'); });
+  safeOn('btn-edit-profiles', function() { goTo('screen-onboard'); });
+  safeOn('session-end-opt-auto', function() { setSessionEndMode('auto', true); });
+  safeOn('session-end-opt-keep', function() { setSessionEndMode('keep', true); });
   // Location modal
   safeOn('loc-change-btn', function() { promptManualLocation(); });
   safeOn('loc-gps-btn', function() { applyGPSLocation(); });
@@ -2155,30 +2252,19 @@ async function appInit() {
   });
   // Nav
   safeOn('nav-home', function() { goTo('screen-home'); });
-  safeOn('nav-session', function() { goTo('screen-whosout'); });
+  safeOn('nav-session', function() { goToSessionOrStart(); });
   safeOn('nav-dash', function() { goTo('screen-dash'); });
-  // Notification enable
-  safeOn('btn-notif-enable', function() { requestNotifications(); });
-  // Photo circles
-  safeOn('photo-circle-0', function() {
-    var f = document.getElementById('file-0'); if (f) f.click();
-  });
-  safeOn('photo-circle-1', function() {
-    var f = document.getElementById('file-1'); if (f) f.click();
-  });
-  // Nav settings (4th item)
-  var navItems = document.querySelectorAll('.nav-item');
-  if (navItems.length >= 4) navItems[3].addEventListener('click', function() { goTo('screen-settings'); });
-  // Event delegation for clothing, spf, fitz, profile type
+  safeOn('nav-settings', function() { goTo('screen-settings'); });
+  // Event delegation for clothing, spf, fitz, profile type (rendered dynamically)
   document.addEventListener('click', function(e) {
     var typeBtn = e.target.closest('[data-profile-type]');
     if (typeBtn) {
-      setProfileType(parseInt(typeBtn.getAttribute('data-profile-idx')), typeBtn.getAttribute('data-profile-type'));
+      setProfileType(parseInt(typeBtn.getAttribute('data-profile-idx'), 10), typeBtn.getAttribute('data-profile-type'));
       return;
     }
     var fitzBtn = e.target.closest('[data-fitz-val]');
     if (fitzBtn) {
-      selectFitz(parseInt(fitzBtn.getAttribute('data-fitz-idx')), fitzBtn, parseInt(fitzBtn.getAttribute('data-fitz-val')));
+      selectFitz(parseInt(fitzBtn.getAttribute('data-fitz-idx'), 10), fitzBtn, parseInt(fitzBtn.getAttribute('data-fitz-val'), 10));
       return;
     }
     var clothingBtn = e.target.closest('[data-clothing-factor]');
@@ -2186,6 +2272,9 @@ async function appInit() {
     var spfBtn = e.target.closest('[data-spf-factor]');
     if (spfBtn) { selectSPF(spfBtn, parseFloat(spfBtn.getAttribute('data-spf-factor'))); return; }
   });
+  // Who's out list rows (re-rendered each visit, so delegated from the stable container)
+  var whoList = document.getElementById('who-list');
+  if (whoList) whoList.addEventListener('click', whoListClickHandler);
   // File inputs
   var f0 = document.getElementById('file-0');
   if (f0) f0.addEventListener('change', function(e) { handlePhoto(0, e); });
@@ -2195,31 +2284,22 @@ async function appInit() {
   var locInput = document.getElementById('loc-input');
   if (locInput) locInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') applyManualLocation(); });
 })();
- 
+
 // Visible error display for debugging
-window.addEventListener('error', function(e) {
+function showDebugError(text) {
   var dbg = document.getElementById('debug-error');
-  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'Error: ' + e.message + ' (line ' + e.lineno + ')'; }
+  if (dbg) { dbg.style.display = 'block'; dbg.textContent = text; }
+}
+window.addEventListener('error', function(e) {
+  showDebugError('JS error: ' + e.message + ' (line ' + e.lineno + ')');
 });
 window.addEventListener('unhandledrejection', function(e) {
-  var dbg = document.getElementById('debug-error');
-  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'Promise error: ' + String(e.reason); }
+  showDebugError('Promise error: ' + String(e.reason));
 });
- 
-appInit().catch(e => {
+
+appInit().catch(function(e) {
   console.warn('appInit error:', e);
-  const dbg = document.getElementById('debug-error');
-  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'Init error: ' + e.message + ' | ' + e.stack; }
-});
- 
-// Also catch any uncaught errors
-window.addEventListener('error', e => {
-  const dbg = document.getElementById('debug-error');
-  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'JS error: ' + e.message + ' at line ' + e.lineno; }
-});
-window.addEventListener('unhandledrejection', e => {
-  const dbg = document.getElementById('debug-error');
-  if (dbg) { dbg.style.display = 'block'; dbg.textContent = 'Promise error: ' + e.reason; }
+  showDebugError('Init error: ' + e.message);
 });
 </script>
 </body>
