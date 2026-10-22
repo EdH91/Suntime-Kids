@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2A1F14">
+<meta name="description" content="Record stories and messages for the people you love most.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Heirloom">
+<title>Heirloom</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- 1. PIN gate -->
+<section id="screen-pin" class="screen dark">
+  <div class="pin-wrap">
+    <div class="pin-brand">
+      <h1 class="wordmark">Heirloom</h1>
+      <p class="tagline">Stories worth keeping.</p>
+    </div>
+    <p class="pin-hint" id="pin-hint">Enter your PIN</p>
+    <div class="pin-dots" id="pin-dots" aria-live="polite"><span></span><span></span><span></span><span></span></div>
+    <div class="keypad" id="keypad">
+      <button type="button" data-key="1">1</button>
+      <button type="button" data-key="2">2</button>
+      <button type="button" data-key="3">3</button>
+      <button type="button" data-key="4">4</button>
+      <button type="button" data-key="5">5</button>
+      <button type="button" data-key="6">6</button>
+      <button type="button" data-key="7">7</button>
+      <button type="button" data-key="8">8</button>
+      <button type="button" data-key="9">9</button>
+      <button type="button" data-key="del" class="key-fn" aria-label="Delete"><span class="ic" data-icon="backspace"></span></button>
+      <button type="button" data-key="0">0</button>
+      <button type="button" data-key="ok" class="key-fn key-ok" aria-label="Confirm"><span class="ic" data-icon="arrowR"></span></button>
+    </div>
+    <button type="button" class="link-btn light" id="pin-add-contrib">Add contributor</button>
+  </div>
+</section>
+
+<!-- 2. Onboarding -->
+<section id="screen-onboard" class="screen parchment">
+  <div class="pad onboard">
+    <p class="wordmark dark-ink">Heirloom</p>
+    <div class="ob-steps"><span class="ob-step active" id="ob-dot1"></span><span class="ob-step" id="ob-dot2"></span></div>
+    <div id="ob-step1">
+      <h1 class="h-serif">Who are these stories for?</h1>
+      <p class="sub">Add your first child. You can add more later in Settings.</p>
+      <label class="field"><span class="field-label">Name</span><input id="ob-child-name" type="text" autocomplete="off" maxlength="40" placeholder="Their first name"></label>
+      <label class="field"><span class="field-label">Date of birth</span><input id="ob-child-dob" type="date"></label>
+      <div class="field">
+        <span class="field-label">Photo (optional)</span>
+        <label class="photo-pick">
+          <input type="file" id="ob-child-photo" accept="image/*" class="vh">
+          <span class="photo-pick-preview" id="ob-child-photo-preview"><span class="ic" data-icon="image"></span></span>
+          <span>Choose a photo</span>
+        </label>
+      </div>
+      <button type="button" class="btn btn-gold btn-block" id="ob-next">Continue</button>
+    </div>
+    <div id="ob-step2" hidden>
+      <h1 class="h-serif">Now, about you</h1>
+      <p class="sub">Your name is how your recordings will be signed. Your PIN opens Heirloom on this device.</p>
+      <label class="field"><span class="field-label">Your name</span><input id="ob-name" type="text" autocomplete="off" maxlength="40" placeholder="Dad, Mom, Grandma Rose"></label>
+      <label class="field"><span class="field-label">4-digit PIN</span><input id="ob-pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="new-password"></label>
+      <label class="field"><span class="field-label">Confirm PIN</span><input id="ob-pin2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="new-password"></label>
+      <button type="button" class="btn btn-gold btn-block" id="ob-finish">Start keeping stories</button>
+      <button type="button" class="link-btn block" id="ob-back">Back</button>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Home -->
+<section id="screen-home" class="screen home">
+  <div class="zone-a" id="zone-a">
+    <div class="bg-layers" id="bg-layers"></div>
+    <div class="bg-overlay"></div>
+    <header class="home-header">
+      <span class="wordmark sm">Heirloom</span>
+      <div class="hdr-right">
+        <button type="button" class="child-sel" id="child-sel"><span id="child-sel-name"></span><span class="ic" id="child-sel-chev" data-icon="chevD"></span></button>
+        <button type="button" class="icon-btn glass-btn" id="btn-settings" aria-label="Settings"><span class="ic" data-icon="gear"></span></button>
+        <button type="button" class="avatar" id="btn-avatar" aria-label="Switch contributor"><span id="avatar-initial"></span></button>
+      </div>
+    </header>
+    <div class="zone-a-content">
+      <div class="bg-dots" id="bg-dots"></div>
+      <button type="button" class="gift-banner glass" id="gift-banner" hidden>
+        <span class="ic gold" data-icon="gift"></span>
+        <span class="gift-text"><span class="gift-label">Ready to gift</span><span class="gift-title" id="gift-title"></span></span>
+        <span class="ic" data-icon="chevR"></span>
+      </button>
+      <div class="featured glass" id="featured" role="button" tabindex="0"></div>
+    </div>
+  </div>
+  <div class="zone-b">
+    <div class="zb-head">
+      <h2 class="h-serif">All recordings</h2>
+      <button type="button" class="btn btn-gold btn-sm" id="btn-record">＋ Record</button>
+    </div>
+    <div class="pills" id="filter-pills"></div>
+    <div class="entry-list" id="entry-list"></div>
+  </div>
+</section>
+
+<!-- 4.1 Choose a prompt -->
+<section id="screen-prompt" class="screen parchment">
+  <div class="topbar">
+    <button type="button" class="icon-btn" id="prompt-close" aria-label="Cancel"><span class="ic" data-icon="close"></span></button>
+    <span class="step-label">Step 1 of 4</span>
+    <button type="button" class="link-btn" id="prompt-skip">Skip prompt</button>
+  </div>
+  <div class="pad">
+    <h1 class="h-serif">What would you like to share?</h1>
+    <div id="prompt-grid"></div>
+  </div>
+  <div class="sticky-foot"><button type="button" class="btn btn-gold btn-block" id="prompt-continue" disabled>Continue</button></div>
+</section>
+
+<!-- 4.2 Record -->
+<section id="screen-record" class="screen dark rec">
+  <div class="topbar">
+    <button type="button" class="icon-btn light" id="rec-close" aria-label="Cancel"><span class="ic" data-icon="close"></span></button>
+    <span class="step-label light">Step 2 of 4</span>
+    <div class="mode-toggle" id="mode-toggle">
+      <button type="button" data-mode="video" class="active" aria-label="Video">🎥</button>
+      <button type="button" data-mode="audio" aria-label="Audio only">🎙</button>
+    </div>
+  </div>
+  <div class="rec-stage">
+    <p class="rec-prompt" id="rec-prompt"></p>
+    <video id="rec-live" class="rec-live" playsinline muted autoplay hidden></video>
+    <div id="rec-preview" class="rec-preview" hidden></div>
+  </div>
+  <div class="rec-controls" id="rec-controls">
+    <div class="rec-status" id="rec-status"><span class="rec-dot"></span><span id="rec-time">0:00</span><span class="rec-limit" id="rec-limit">/ 1:00</span></div>
+    <div class="dur-pills" id="dur-pills">
+      <button type="button" data-min="1" class="active">1 min</button>
+      <button type="button" data-min="3">3 min</button>
+      <button type="button" data-min="5">5 min</button>
+    </div>
+    <button type="button" class="rec-btn" id="rec-btn" aria-label="Start recording"><span class="rec-btn-inner"><span class="ic" id="rec-btn-icon" data-icon="video"></span></span></button>
+    <p class="rec-hint" id="rec-hint">Tap to start recording</p>
+  </div>
+  <div class="rec-after" id="rec-after" hidden>
+    <button type="button" class="btn btn-ghost-light" id="rec-redo">Re-record</button>
+    <button type="button" class="btn btn-gold" id="rec-continue">Continue</button>
+  </div>
+</section>
+
+<!-- 4.3 Photos -->
+<section id="screen-photos" class="screen parchment">
+  <div class="topbar">
+    <button type="button" class="icon-btn" id="photos-back" aria-label="Back"><span class="ic" data-icon="chevL"></span></button>
+    <span class="step-label">Step 3 of 4</span>
+    <span class="topbar-spacer"></span>
+  </div>
+  <div class="pad">
+    <h1 class="h-serif">Add photos to this memory</h1>
+    <p class="sub">Optional. Photos travel with the recording when you gift it.</p>
+    <label class="drop-target">
+      <input type="file" id="photo-input" accept="image/*" multiple class="vh">
+      <span class="ic gold lg" data-icon="image"></span>
+      <span class="drop-title">Tap to choose photos</span>
+      <span class="drop-sub">From your camera roll or files</span>
+    </label>
+    <div class="thumb-row" id="photo-thumbs"></div>
+  </div>
+  <div class="sticky-foot two">
+    <button type="button" class="btn btn-ghost" id="photos-skip">Skip</button>
+    <button type="button" class="btn btn-gold" id="photos-continue">Continue</button>
+  </div>
+</section>
+
+<!-- 4.4 Seal it (also used for Edit) -->
+<section id="screen-seal" class="screen parchment">
+  <div class="topbar">
+    <button type="button" class="icon-btn" id="seal-back" aria-label="Back"><span class="ic" data-icon="chevL"></span></button>
+    <span class="step-label" id="seal-step">Step 4 of 4</span>
+    <span class="topbar-spacer"></span>
+  </div>
+  <div class="pad">
+    <h1 class="h-serif" id="seal-heading">Seal it</h1>
+    <label class="field"><span class="field-label">Title</span><input id="seal-title" type="text" maxlength="90"></label>
+    <div class="field"><span class="field-label">Category</span><div class="pills wrap" id="seal-cats"></div></div>
+    <label class="field"><span class="field-label">For</span><select id="seal-for"></select></label>
+    <div class="field">
+      <span class="field-label">Time-lock</span>
+      <div class="tabs" id="lock-tabs">
+        <button type="button" data-tab="date" class="active">By date</button>
+        <button type="button" data-tab="milestone">By milestone</button>
+      </div>
+      <div class="lock-pane" id="lock-date-pane">
+        <label class="field"><span class="field-label small">Opens on</span><input id="seal-date" type="date"></label>
+      </div>
+      <div class="lock-pane" id="lock-ms-pane" hidden>
+        <div class="pills wrap" id="ms-grid"></div>
+      </div>
+      <label class="check-row"><input type="checkbox" id="seal-unsealed"><span>Leave unsealed (available now)</span></label>
+    </div>
+  </div>
+  <div class="sticky-foot"><button type="button" class="btn btn-gold btn-block" id="seal-save">Save recording</button></div>
+</section>
+
+<!-- 5. Entry detail -->
+<section id="screen-detail" class="screen parchment">
+  <div class="topbar">
+    <button type="button" class="icon-btn" id="detail-back" aria-label="Back"><span class="ic" data-icon="chevL"></span></button>
+    <span class="topbar-spacer"></span>
+    <button type="button" class="icon-btn" id="detail-menu" aria-label="More"><span class="ic" data-icon="more"></span></button>
+  </div>
+  <div class="pad" id="detail-body"></div>
+</section>
+
+<!-- 8. Settings -->
+<section id="screen-settings" class="screen parchment">
+  <div class="topbar">
+    <button type="button" class="icon-btn" id="settings-back" aria-label="Back"><span class="ic" data-icon="chevL"></span></button>
+    <span class="step-label">Settings</span>
+    <span class="topbar-spacer"></span>
+  </div>
+  <div class="pad" id="settings-body"></div>
+</section>
+
+<!-- 7. Contributor add / edit -->
+<section id="screen-contrib" class="screen parchment">
+  <div class="topbar">
+    <button type="button" class="icon-btn" id="contrib-back" aria-label="Back"><span class="ic" data-icon="chevL"></span></button>
+    <span class="step-label" id="contrib-step">Contributor</span>
+    <span class="topbar-spacer"></span>
+  </div>
+  <div class="pad" id="contrib-body"></div>
+</section>
+
+<!-- Child add / edit -->
+<section id="screen-child" class="screen parchment">
+  <div class="topbar">
+    <button type="button" class="icon-btn" id="child-back" aria-label="Back"><span class="ic" data-icon="chevL"></span></button>
+    <span class="step-label" id="child-step">Child</span>
+    <span class="topbar-spacer"></span>
+  </div>
+  <div class="pad" id="child-body"></div>
+</section>
+
+<!-- Overlays -->
+<div class="sheet-wrap" id="sheet" hidden>
+  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+  <div class="sheet-panel" id="sheet-panel" role="dialog" aria-modal="true"></div>
+</div>
+<div class="modal-wrap" id="modal" hidden>
+  <div class="modal-box" id="modal-box" role="alertdialog" aria-modal="true"></div>
+</div>
+<div class="viewer" id="viewer" hidden>
+  <img id="viewer-img" alt="">
+  <button type="button" class="icon-btn light viewer-close" id="viewer-close" aria-label="Close"><span class="ic" data-icon="close"></span></button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<noscript><p class="noscript">Heirloom needs JavaScript to run.</p></noscript>
+
+<script src="app.js"></script>
+</body>
+</html>
