@@ -96,13 +96,9 @@
     background: var(--yellow);
     justify-content: center; align-items: center; text-align: center; padding: 40px 28px; gap: 0;
   }
-  .welcome-sun {
-    width: 120px; height: 120px; background: var(--coral); border: var(--line);
-    border-radius: 50%; margin: 0 auto 28px; display: flex; align-items: center; justify-content: center;
-    font-size: 3rem; box-shadow: var(--shadow);
-    animation: pulse-sun 3s ease-in-out infinite;
-  }
-  @keyframes pulse-sun { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+  .welcome-sun { width: 200px; height: 200px; margin: 0 auto 20px; animation: pulse-sun 3s ease-in-out infinite; }
+  .welcome-sun svg { width: 100%; height: 100%; overflow: visible; }
+  @keyframes pulse-sun { 0%,100%{transform:rotate(4deg)} 50%{transform:rotate(12deg)} }
   .welcome-title { font-family: var(--font-display); font-size:2.7rem; white-space:nowrap; font-weight:400; color: var(--ink); line-height:1; margin-bottom:12px; text-shadow:3px 3px 0 #fff; }
   .welcome-title span { color: var(--ink); }
   .welcome-sub { color: var(--ink); font-size:1.05rem; font-weight:600; margin-bottom:40px; line-height:1.4; }
@@ -193,13 +189,13 @@
   .setup-header h2 { font-family: var(--font-display); font-size:2.2rem; font-weight:400; line-height:1.05; margin-bottom:6px; color:var(--ink); }
   .setup-header p { font-size:0.95rem; font-weight:600; color:var(--ink); }
   .setup-body { padding:16px 20px 24px; display:flex; flex-direction:column; gap:20px; }
-  .clothing-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; }
+  .clothing-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
   .clothing-btn { min-width:0; border-radius:16px; border:3px solid var(--lilac); padding:10px 4px; min-height:64px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; background:#fff; color:var(--ink); }
   .clothing-btn:active { transform:scale(0.95); }
   .clothing-btn.selected { border-color:var(--ink); background:var(--mint); box-shadow:var(--shadow-sm); }
   .clothing-btn.selected .clothing-label { color:var(--ink); }
   .clothing-icon { font-size:1.6rem; }
-  .clothing-label { font-size:0.68rem; font-weight:800; color:var(--ink); text-align:center; line-height:1.2; }
+  .clothing-label { font-size:0.78rem; font-weight:800; color:var(--ink); text-align:center; line-height:1.2; }
   .spf-grid { display:flex; gap:8px; }
   .spf-btn { flex:1; border-radius:16px; border:3px solid var(--lilac); padding:12px 6px; min-height:56px; cursor:pointer; text-align:center; background:#fff; color:var(--ink); }
   .spf-btn.selected { border-color:var(--ink); background:var(--mint); box-shadow:var(--shadow-sm); }
@@ -335,6 +331,25 @@
   .type-toggle { display: flex; background: var(--lilac); border: 2px solid var(--ink); border-radius: 999px; padding: 3px; gap: 2px; }
   .type-toggle button { min-height: 44px; padding: 0 14px; background: transparent; color: var(--ink); border: 2px solid transparent; border-radius: 999px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
   .type-toggle button.on { background: var(--mint); border-color: var(--ink); font-weight: 800; }
+
+  /* ---- ICONS (inline SVG sprite, stroke follows text color) ---- */
+  .ic { width:1.15em; height:1.15em; stroke:currentColor; fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; vertical-align:-0.2em; margin-right:0.35em; flex-shrink:0; }
+  .ic.solo { margin-right:0; }
+  .stat-ic, .trend-ic { width:1.6rem; height:1.6rem; display:block; margin:0 auto 4px; }
+  .trend-ic { margin:0 0 6px; }
+  .celebrate-star { width:5.5rem; height:5.5rem; fill:var(--yellow); stroke:var(--ink); stroke-width:1.6; margin:0; }
+  .nav-icon .ic { width:1.5rem; height:1.5rem; margin:0; display:block; }
+  .link-btn { background:none; border:none; color:var(--ink); font-size:0.85rem; font-weight:700; text-decoration:underline; min-height:44px; padding:0 12px; cursor:pointer; }
+  .child-avatar, .cs-avatar, .session-avatar { font-family:var(--font-display); color:var(--ink); }
+  .ic-badge { width:34px; height:34px; border-radius:50%; border:var(--line); background:var(--tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:0.9rem; }
+  .ic-badge.done { background:var(--mint); }
+  .who-check .ic { width:1.2rem; height:1.2rem; stroke-width:3.4; }
+  .opt-dot .ic { width:0.95rem; height:0.95rem; stroke-width:3.4; }
+  .history-icon { width:40px; height:40px; border-radius:50%; background:var(--yellow); border:2.5px solid var(--ink); display:flex; align-items:center; justify-content:center; }
+  .cov-dots { display:flex; justify-content:center; gap:4px; margin-top:6px; }
+  .cov-dots i { width:9px; height:9px; border-radius:50%; border:2px solid var(--ink); box-sizing:border-box; display:block; }
+  .cov-dots i.f { background:var(--ink); }
+  .clothing-btn { justify-content:center; }
   .overlay { display: none; position: absolute; inset: 0; background: rgba(23,23,28,0.62); z-index: 200; }
   .modal-card { background: var(--yellow); border: var(--line); border-radius: 28px; padding: 24px 22px; width: 100%; box-shadow: var(--shadow); }
   .modal-card.sheet { border-radius: 34px 34px 0 0; border-bottom: none; padding: 14px 24px 28px; }
@@ -348,11 +363,12 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.2 1 2 2 2-.5-3-.5-5 1-8z"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></symbol><symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol><symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol><symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M12 9v6M9 12h6"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol><symbol id="i-gps" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></symbol><symbol id="i-thermo" viewBox="0 0 24 24"><path d="M10 4a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6.1L12 16.6 6.6 19.6l1.2-6.1L3.3 9.3l6.1-.7z"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol><symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol></defs></svg>
 <div class="phone">
   <!-- Status bar -->
   <div class="status-bar">
     <span id="clock">9:41</span>
-    <span id="status-loc">📍 Locating…</span>
+    <span id="status-loc"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Locating…</span>
     <span>●●●●</span>
   </div>
  
@@ -361,17 +377,18 @@
   <div id="debug-error" style="display:none;position:absolute;top:0;left:0;right:0;background:rgba(200,0,0,0.9);color:white;padding:10px 14px;font-size:0.75rem;font-weight:700;z-index:999;word-break:break-all;"></div>
 
   <div class="screen active" id="screen-welcome">
-    <div class="welcome-sun">☀️</div>
+    <div class="welcome-sun" role="img" aria-label="SunTimeKids sun logo"><svg viewBox="-14 -14 248 248"><g fill="#17171C" stroke="#17171C" stroke-width="14" stroke-linejoin="round"><rect x="30" y="30" width="160" height="160"/><rect x="30" y="30" width="160" height="160" transform="rotate(22.5 110 110)"/><rect x="30" y="30" width="160" height="160" transform="rotate(45 110 110)"/><rect x="30" y="30" width="160" height="160" transform="rotate(67.5 110 110)"/></g><g fill="#FF6A4D"><rect x="30" y="30" width="160" height="160"/><rect x="30" y="30" width="160" height="160" transform="rotate(22.5 110 110)"/><rect x="30" y="30" width="160" height="160" transform="rotate(45 110 110)"/><rect x="30" y="30" width="160" height="160" transform="rotate(67.5 110 110)"/></g><circle cx="110" cy="110" r="44" fill="#fff" stroke="#17171C" stroke-width="5"/><text x="110" y="124" text-anchor="middle" font-family="Bagel Fat One, sans-serif" font-size="40" fill="#17171C">UV</text></svg></div>
     <h1 class="welcome-title">SunTimeKids</h1>
     <p class="welcome-sub">Track healthy sunlight for your<br>children — simply and smartly.</p>
-    <div class="welcome-badge">📍 Uses your real location · Live UV data</div>
+    <div class="welcome-badge"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Uses your real location · Live UV data</div>
     <button class="btn-primary" style="max-width:280px;" id="btn-get-started">Get Started →</button>
+    <button class="link-btn" style="margin-top:12px;" id="btn-legal-welcome">Legal notices &amp; disclaimer</button>
   </div>
  
   <!-- ===== ONBOARDING ===== -->
   <div class="screen" id="screen-onboard">
     <div class="onboard-header">
-      <h2>👶 Add Your Children</h2>
+      <h2>Add your children</h2>
       <p>Set up profiles — takes under a minute</p>
     </div>
     <div class="onboard-body">
@@ -384,7 +401,7 @@
 
       <div id="onboard-error" role="alert" class="note-box" style="display:none;border-color:var(--coral);background:#fff;color:#A02020;font-weight:800;"></div>
  
-      <div class="privacy-note">🔒 All data stored on your device only. No account required. COPPA compliant.</div>
+      <div class="privacy-note"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>All data stored on your device only. No account required. COPPA compliant.</div>
       <button class="btn-primary" id="btn-save-profiles">Save Profiles & Continue →</button>
     </div>
   </div>
@@ -392,7 +409,7 @@
   <!-- ===== HOME ===== -->
   <div class="screen" id="screen-home">
     <div class="home-header">
-      <div class="home-greeting" id="home-greeting">Good morning ☀️</div>
+      <div class="home-greeting" id="home-greeting">Good morning</div>
       <div class="home-title">Ready to head outside?</div>
       <div class="uv-pill">
         <div class="uv-dot"></div>
@@ -402,31 +419,31 @@
     <div class="home-body">
       <div id="notif-banner-wrap"></div>
       <div id="loc-row" class="loc-banner" style="justify-content:space-between;">
-        <span style="font-size:0.8rem;font-weight:700;color:var(--ink);" id="loc-label">📍 Detecting location…</span>
+        <span style="font-size:0.8rem;font-weight:700;color:var(--ink);" id="loc-label"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Detecting location…</span>
         <button id="loc-change-btn" class="pill-btn">Change</button>
       </div>
       <div id="child-cards"></div>
       <button class="btn-headout" id="btn-headout">
-        <span style="font-size:1.8rem;">🌤️</span> We're Heading Out!
+        <svg class="ic" style="width:1.3em;height:1.3em" aria-hidden="true"><use href="#i-sun"/></svg>We're Heading Out!
       </button>
       <div class="stats-row">
         <div class="stat-card">
-          <span class="stat-icon">🔥</span>
+          <svg class="ic stat-ic" aria-hidden="true"><use href="#i-flame"/></svg>
           <div class="stat-val" id="stat-streak">0</div>
           <div class="stat-label">Day streak</div>
         </div>
         <div class="stat-card">
-          <span class="stat-icon">⏱️</span>
+          <svg class="ic stat-ic" aria-hidden="true"><use href="#i-timer"/></svg>
           <div class="stat-val" id="stat-weektime">0m</div>
           <div class="stat-label">This week</div>
         </div>
         <div class="stat-card">
-          <span class="stat-icon">🎯</span>
+          <svg class="ic stat-ic" aria-hidden="true"><use href="#i-target"/></svg>
           <div class="stat-val" id="stat-goals">0/0</div>
           <div class="stat-label">Goals hit</div>
         </div>
       </div>
-      <button class="btn-nav" id="btn-view-dash">📊 View Dashboard & History</button>
+      <button class="btn-nav" id="btn-view-dash"><svg class="ic" aria-hidden="true"><use href="#i-chart"/></svg>View Dashboard & History</button>
     </div>
   </div>
  
@@ -435,7 +452,7 @@
     <div class="modal-bg" id="modal-bg"></div>
     <div class="modal-sheet">
       <div class="sheet-handle"></div>
-      <div class="sheet-title">Who's heading out? 🌤️</div>
+      <div class="sheet-title">Who's heading out?</div>
       <div class="sheet-sub">Select the children joining this session</div>
       <div id="who-list"></div>
       <button class="btn-primary" style="margin-top:8px;" id="btn-whos-continue">Continue →</button>
@@ -445,17 +462,17 @@
   <!-- ===== SESSION SETUP ===== -->
   <div class="screen" id="screen-setup">
     <div class="setup-header">
-      <h2>☀️ Quick Setup</h2>
+      <h2>Quick setup</h2>
       <p>How are the kids dressed today?</p>
     </div>
     <div class="setup-body">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">☀️ Live UV Index</span>
+          <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">Live UV index</span>
           <span style="font-family:var(--font-display);font-size:1.5rem;color:var(--ink);" id="uv-setup">–</span>
         </div>
         <div style="display:flex;justify-content:space-between;">
-          <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">📍 Location</span>
+          <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">Location</span>
           <span style="font-size:0.8rem;font-weight:700;color:var(--ink);" id="setup-loc">Detecting…</span>
         </div>
       </div>
@@ -477,7 +494,7 @@
         <div style="font-size:0.8rem;font-weight:700;background:var(--coral);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:2px 10px;">UV <span id="session-uv-header">–</span></div>
       </div>
       <div class="session-timer" id="session-timer" style="font-family:var(--font-display);font-size:3.4rem;color:#fff;text-shadow:3px 3px 0 var(--ink);letter-spacing:1px;line-height:1.05;">00:00</div>
-      <div class="bg-notice" id="bg-notice" style="margin:8px 0 0;font-size:0.72rem;">⏸ Tracks time when you switch away — tap to check progress</div>
+      <div class="bg-notice" id="bg-notice" style="margin:8px 0 0;font-size:0.72rem;">Tracks time when you switch away — tap to check progress</div>
     </div>
  
     <!-- Swipeable child cards -->
@@ -489,39 +506,39 @@
     <div id="session-dots" class="sess-foot" style="display:flex;justify-content:center;gap:10px;padding:8px 0;"></div>
  
     <!-- Sunscreen reminder banner (hidden by default) -->
-    <div id="sunscreen-reminder" style="display:none;background:var(--coral);color:var(--ink);border-top:var(--line);border-bottom:var(--line);padding:10px 16px;font-size:0.85rem;font-weight:800;text-align:center;flex-shrink:0;">🧴 Time to reapply sunscreen! <button id="btn-dismiss-sunscreen" class="pill-btn" style="background:#fff;margin-left:8px;">Got it</button></div>
+    <div id="sunscreen-reminder" style="display:none;background:var(--coral);color:var(--ink);border-top:var(--line);border-bottom:var(--line);padding:10px 16px;font-size:0.85rem;font-weight:800;text-align:center;flex-shrink:0;">Time to reapply sunscreen! <button id="btn-dismiss-sunscreen" class="pill-btn" style="background:#fff;margin-left:8px;">Got it</button></div>
     <!-- Controls -->
     <div class="sess-foot" style="display:flex;gap:14px;padding:12px 20px 22px;">
-      <button id="btn-pause" class="sess-btn alt">⏸ Pause</button>
-      <button id="btn-end-session" class="sess-btn">⏹ End</button>
+      <button id="btn-pause" class="sess-btn alt"><svg class="ic" aria-hidden="true"><use href="#i-pause"/></svg>Pause</button>
+      <button id="btn-end-session" class="sess-btn"><svg class="ic" aria-hidden="true"><use href="#i-stop"/></svg>End</button>
     </div>
   </div>
  
   <!-- ===== CELEBRATION ===== -->
   <div class="screen" id="screen-celebrate">
     <div class="confetti-wrap">
-      <span class="celebrate-emoji">🌟</span>
+      <span class="celebrate-emoji"><svg class="ic solo celebrate-star" aria-hidden="true"><use href="#i-star"/></svg></span>
       <div class="confetti" style="left:20%;top:10%;background:#FFD23F;animation-delay:0s;animation-duration:1.8s;"></div>
       <div class="confetti" style="left:70%;top:5%;background:#3B5BFF;animation-delay:0.3s;animation-duration:2.1s;"></div>
       <div class="confetti" style="left:45%;top:15%;background:#5FDCA8;animation-delay:0.6s;animation-duration:1.6s;"></div>
       <div class="confetti" style="left:85%;top:20%;background:#fff;animation-delay:0.9s;animation-duration:2.3s;"></div>
       <div class="confetti" style="left:10%;top:25%;background:#17171C;animation-delay:1.2s;animation-duration:1.9s;"></div>
     </div>
-    <h2 class="celebrate-title" id="cel-title">Goal Reached! ☀️</h2>
+    <h2 class="celebrate-title" id="cel-title">Goal reached!</h2>
     <p class="celebrate-sub" id="cel-sub">Daily vitamin D goal achieved</p>
     <div class="celebrate-stats">
       <div class="cel-stat"><div class="cel-stat-val" id="cel-vitd">400 IU</div><div class="cel-stat-label">Vit D Today</div></div>
       <div class="cel-stat"><div class="cel-stat-val" id="cel-duration">–</div><div class="cel-stat-label">Time Outside</div></div>
-      <div class="cel-stat"><div class="cel-stat-val" id="cel-streak">🔥 1</div><div class="cel-stat-label">Day Streak</div></div>
+      <div class="cel-stat"><div class="cel-stat-val" id="cel-streak"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg>1</div><div class="cel-stat-label">Day Streak</div></div>
     </div>
-    <button class="btn-extend" id="btn-extend-session">▶ Keep Playing Outside</button>
-    <button class="btn-done" id="btn-finish-session">✓ We're Done for Today</button>
+    <button class="btn-extend" id="btn-extend-session"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg>Keep playing outside</button>
+    <button class="btn-done" id="btn-finish-session"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>We're done for today</button>
   </div>
  
   <!-- ===== DASHBOARD ===== -->
   <div class="screen" id="screen-dash">
     <div class="dash-header">
-      <h2>📊 Dashboard</h2>
+      <h2>Dashboard</h2>
       <p id="dash-subtitle">Your sunlight tracking summary</p>
     </div>
     <div class="dash-body">
@@ -551,7 +568,7 @@
   <!-- ===== SETTINGS ===== -->
   <div class="screen" id="screen-settings">
     <div class="page-head">
-      <h2>⚙️ Settings</h2>
+      <h2>Settings</h2>
       <p>App preferences</p>
     </div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
@@ -561,7 +578,7 @@
         <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:6px;">When daily vitamin D goal is reached</div>
         <div style="font-size:0.8rem;color:var(--soft);font-weight:600;margin-bottom:14px;">Choose what happens automatically when your child hits their goal</div>
         <div id="session-end-opt-auto" class="opt-row on">
-          <div class="opt-dot">✓</div>
+          <div class="opt-dot"><svg class="ic solo" aria-hidden="true"><use href="#i-check"/></svg></div>
           <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Show 60-second prompt</div><div style="font-size:0.78rem;color:var(--soft);font-weight:600;">Ask whether to keep going or end session</div></div>
         </div>
         <div id="session-end-opt-keep" class="opt-row">
@@ -574,30 +591,51 @@
       <div class="card" style="padding:20px;">
         <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:4px;">SunTimeKids v2.5</div>
         <div style="font-size:0.78rem;color:var(--soft);font-weight:600;margin-bottom:16px;">UV exposure tracker for children</div>
-        <div class="note-box" style="background:var(--tint);">
-          <strong style="display:block;margin-bottom:4px;">⚕️ Medical Disclaimer</strong>
-          SunTimeKids provides general guidance only. Vitamin D synthesis estimates are based on published research models and are not a substitute for personalised medical advice. Individual results vary based on genetics, health status, and environmental conditions. Consult your paediatrician regarding your child's specific vitamin D and sun exposure needs. The app does not diagnose, treat, or prevent any medical condition.
-        </div>
+        <button class="btn-nav" id="btn-legal-settings"><svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg>Legal notices &amp; disclaimer</button>
       </div>
  
       <div class="block-label">Privacy</div>
       <div class="card" style="padding:20px;">
-        <div style="font-size:0.82rem;font-weight:600;color:var(--ink);line-height:1.6;">🔒 All data including child profiles, photos, and session history is stored locally on your device only. No data is ever sent to any server. No account is required. SunTimeKids is designed to be fully COPPA compliant.</div>
+        <div style="font-size:0.82rem;font-weight:600;color:var(--ink);line-height:1.6;">All data including child profiles, photos, and session history is stored locally on your device only. No data is ever sent to any server. No account is required. SunTimeKids is designed to be fully COPPA compliant.</div>
       </div>
  
-      <button class="btn-nav" style="margin-top:8px;" id="btn-edit-profiles">✏️ Edit Profiles</button>
+      <button class="btn-nav" style="margin-top:8px;" id="btn-edit-profiles"><svg class="ic" aria-hidden="true"><use href="#i-pencil"/></svg>Edit profiles</button>
       <button class="btn-nav" id="btn-settings-back">← Back to Home</button>
     </div>
   </div>
  
+  <!-- ===== LEGAL NOTICES ===== -->
+  <!-- TODO(copy): final legal wording, terms of use and privacy policy -->
+  <div class="screen" id="screen-legal">
+    <div class="page-head">
+      <h2>Legal notices</h2>
+      <p>Please read before relying on this app</p>
+    </div>
+    <div style="padding:16px 20px 24px;display:flex;flex-direction:column;gap:16px;">
+      <div class="card">
+        <div style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:8px;"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg>Medical disclaimer</div>
+        <div style="font-size:0.85rem;font-weight:600;line-height:1.6;">SunTimeKids provides general guidance only. Vitamin D synthesis estimates are based on published research models and are not a substitute for personalised medical advice. Individual results vary based on genetics, health status, and environmental conditions. Consult your paediatrician regarding your child's specific vitamin D and sun exposure needs. The app does not diagnose, treat, or prevent any medical condition.</div>
+      </div>
+      <div class="card">
+        <div style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:8px;"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Privacy</div>
+        <div style="font-size:0.85rem;font-weight:600;line-height:1.6;">Child profiles, photos and session history stay on this device. Nothing is sent to a server and no account is needed.</div>
+      </div>
+      <div class="card">
+        <div style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:8px;"><svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg>Terms and privacy policy</div>
+        <div style="font-size:0.85rem;font-weight:600;line-height:1.6;color:var(--soft);">Full terms of use and privacy policy are coming soon.</div>
+      </div>
+      <button class="btn-nav" id="btn-legal-back">← Back</button>
+    </div>
+  </div>
+
   <!-- Location modal (replaces prompt() which iOS blocks) -->
   <div id="loc-modal" class="overlay" style="align-items:center;justify-content:center;padding:28px;">
     <div class="modal-card">
-      <div class="modal-title">📍 Change Location</div>
+      <div class="modal-title">Change location</div>
       <div class="modal-text">Enter a city name or tap the GPS button to use your current location</div>
       <input id="loc-input" class="modal-input" type="text" placeholder="e.g. Nashville, TN" aria-label="City name">
-      <button id="loc-gps-btn" class="modal-btn blue">📡 Use My Current GPS Location</button>
-      <button id="loc-search-btn" class="modal-btn mint">🔍 Search City</button>
+      <button id="loc-gps-btn" class="modal-btn blue"><svg class="ic" aria-hidden="true"><use href="#i-gps"/></svg>Use my current GPS location</button>
+      <button id="loc-search-btn" class="modal-btn mint"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>Search city</button>
       <button id="loc-cancel-btn" class="modal-btn">Cancel</button>
     </div>
   </div>
@@ -609,17 +647,17 @@
       <div style="width:48px;height:6px;border-radius:999px;background:var(--ink);margin:0 auto 18px;" aria-hidden="true"></div>
       <div id="upgrade-title" class="modal-title" style="text-align:center;">More kids, more sun!</div>
       <div class="modal-text" style="text-align:center;">SunTimeKids is free for up to 2 children. Premium will add profiles for your whole family.</div>
-      <button class="modal-btn" id="btn-upgrade-action" disabled>🔒 Premium coming soon</button>
+      <button class="modal-btn" id="btn-upgrade-action" disabled><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Premium coming soon</button>
       <button class="modal-btn" style="border:none;background:none;text-decoration:underline;" id="btn-upgrade-close">Not now</button>
     </div>
   </div>
  
   <!-- Bottom nav -->
   <div class="bottom-nav" id="bottom-nav" style="display:none;">
-    <div class="nav-item" id="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
-    <div class="nav-item" id="nav-session"><span class="nav-icon">🌤️</span><span class="nav-label">Session</span></div>
-    <div class="nav-item" id="nav-dash"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></div>
-    <div class="nav-item" id="nav-settings"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></div>
+    <div class="nav-item" id="nav-home"><span class="nav-icon"><svg class="ic solo" aria-hidden="true"><use href="#i-home"/></svg></span><span class="nav-label">Home</span></div>
+    <div class="nav-item" id="nav-session"><span class="nav-icon"><svg class="ic solo" aria-hidden="true"><use href="#i-timer"/></svg></span><span class="nav-label">Session</span></div>
+    <div class="nav-item" id="nav-dash"><span class="nav-icon"><svg class="ic solo" aria-hidden="true"><use href="#i-chart"/></svg></span><span class="nav-label">Dashboard</span></div>
+    <div class="nav-item" id="nav-settings"><span class="nav-icon"><svg class="ic solo" aria-hidden="true"><use href="#i-sliders"/></svg></span><span class="nav-label">Settings</span></div>
   </div>
 </div>
  
@@ -688,14 +726,32 @@ function clearEl(node) {
   while (node.firstChild) node.removeChild(node.firstChild);
 }
 
-// Default avatar emoji per profile slot (used when there is no photo)
-const DEFAULT_AVATARS = ['👦', '👦'];
-
-function defaultAvatar(idx) {
-  return DEFAULT_AVATARS[idx] || '🙂';
+// Inline SVG icons (symbols live in the sprite at the top of body)
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function icon(name, cls) {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('class', 'ic' + (cls ? ' ' + cls : ''));
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS(SVG_NS, 'use');
+  use.setAttribute('href', '#i-' + name);
+  svg.appendChild(use);
+  return svg;
+}
+// Replace a node's content with an optional icon followed by text
+function setIconText(node, name, text) {
+  clearEl(node);
+  if (name) node.appendChild(icon(name, text ? '' : 'solo'));
+  if (text) node.appendChild(document.createTextNode(text));
 }
 
-// Avatar contents: photo if present, otherwise the default emoji
+// Avatar shown when there is no photo: the first letter of the name
+function defaultAvatar(idx) {
+  const c = APP.children[idx];
+  const name = c && c.name ? c.name.trim() : '';
+  return name ? name.charAt(0).toUpperCase() : '?';
+}
+
+// Avatar contents: photo if present, otherwise the initial
 function avatarContent(child, idx) {
   if (child.photo) return el('img', { src: child.photo, alt: child.name });
   return document.createTextNode(defaultAvatar(idx));
@@ -722,7 +778,7 @@ function updateClock() {
   document.getElementById('clock').textContent = h + ':' + m;
   const greet = now.getHours() < 12 ? 'Good morning' : now.getHours() < 17 ? 'Good afternoon' : 'Good evening';
   const greetEl = document.getElementById('home-greeting');
-  if (greetEl) greetEl.textContent = greet + ' ☀️';
+  if (greetEl) greetEl.textContent = greet;
 }
 updateClock();
 setInterval(updateClock, 15000);
@@ -761,8 +817,8 @@ function formatCoords(lat, lng) {
 
 function setLocLabel(text) {
   const el = document.getElementById('loc-label');
-  if (el) el.textContent = '📍 ' + text;
-  document.getElementById('status-loc').textContent = '📍 ' + text;
+  if (el) setIconText(el, 'pin', text);
+  setIconText(document.getElementById('status-loc'), 'pin', text);
 }
  
 function promptManualLocation() {
@@ -917,7 +973,7 @@ function maybeShowNotifBanner() {
   const btn = el('button', { id: 'btn-notif-enable', text: 'Enable' });
   btn.addEventListener('click', requestNotifications);
   wrap.appendChild(el('div', { className: 'notif-banner', style: 'margin-bottom:10px;' },
-    ['🔔 Get goal alerts even when app is backgrounded', btn]));
+    [icon('bell'), 'Get goal alerts even when app is backgrounded', btn]));
 }
  
 // ============================================================
@@ -947,6 +1003,11 @@ function goTo(id) {
   if (id === 'screen-dash') renderDash();
   if (id === 'screen-session') resumeSessionUI();
   if (id === 'screen-onboard') populateOnboarding();
+}
+
+function openLegal(from) {
+  APP.legalReturn = from;
+  goTo('screen-legal');
 }
 
 // "Head out" while a session is already running returns to it instead of starting over
@@ -996,7 +1057,7 @@ function setPhotoPreview(idx) {
   if (!circle) return;
   clearEl(circle);
   const photo = APP.children[idx].photo;
-  circle.appendChild(photo ? el('img', { src: photo, alt: 'photo' }) : document.createTextNode('📷'));
+  circle.appendChild(photo ? el('img', { src: photo, alt: 'photo' }) : icon('camera', 'solo'));
 }
 
 // ---- Profile limits (free vs Premium) ----
@@ -1018,8 +1079,8 @@ const PROFILE_TYPE_BTN_STYLE = '';
 function buildProfileCard(i) {
   const c = APP.children[i];
   const typeToggle = el('div', { id: 'type-toggle-' + i, className: 'type-toggle', role: 'group', 'aria-label': 'Profile type' }, [
-    el('button', { id: 'type-child-' + i, 'data-profile-idx': i, 'data-profile-type': 'child', style: PROFILE_TYPE_BTN_STYLE, text: '👦 Child' }),
-    el('button', { id: 'type-adult-' + i, 'data-profile-idx': i, 'data-profile-type': 'adult', style: PROFILE_TYPE_BTN_STYLE, text: '🧑 Adult' })
+    el('button', { id: 'type-child-' + i, 'data-profile-idx': i, 'data-profile-type': 'child', style: PROFILE_TYPE_BTN_STYLE, text: 'Child' }),
+    el('button', { id: 'type-adult-' + i, 'data-profile-idx': i, 'data-profile-type': 'adult', style: PROFILE_TYPE_BTN_STYLE, text: 'Adult' })
   ]);
   const header = el('div', { style: 'display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;' }, [
     el('div', { className: 'profile-tag', style: 'background:' + PROFILE_TAG_COLORS[i % PROFILE_TAG_COLORS.length] + ';', text: 'PROFILE ' + (i + 1) }),
@@ -1044,7 +1105,7 @@ function buildProfileCard(i) {
     }, [el('div', { className: 'fitz-swatch', style: 'background:' + color + ';' }), el('span', { text: FITZ_NUMERALS[k] })]);
   }));
   const photoRow = el('div', { className: 'photo-row' }, [
-    el('div', { className: 'photo-circle', id: 'photo-' + i, 'data-photo-idx': i, text: '📷' }),
+    el('div', { className: 'photo-circle', id: 'photo-' + i, 'data-photo-idx': i, role: 'button', tabindex: '0', 'aria-label': 'Add photo for profile ' + (i + 1) }, [icon('camera', 'solo')]),
     el('input', { type: 'file', id: 'file-' + i, accept: 'image/*', 'data-file-idx': i, style: 'display:none' }),
     el('div', { className: 'photo-hint' }, [el('strong', { text: 'Tap to add photo' }), 'Stored on-device only'])
   ]);
@@ -1092,7 +1153,7 @@ function updateAddChildUI() {
     btn.textContent = '+ Add another child';
     note.textContent = isPremium() ? n + ' of ' + MAX_PROFILES + ' profiles' : n + ' of ' + FREE_PROFILE_LIMIT + ' free profiles used';
   } else {
-    btn.textContent = '🔒 Add another child (Premium)';
+    setIconText(btn, 'lock', 'Add another child (Premium)');
     note.textContent = 'The free plan includes up to ' + FREE_PROFILE_LIMIT + ' children';
   }
   APP.children.forEach((c, i) => {
@@ -1221,7 +1282,7 @@ function renderChildCards() {
         el('div', { className: 'child-meta', text: 'Vitamin D: ' + Math.round(todayVitD) + ' / ' + c.goal + ' IU today' }),
         el('div', { className: 'vit-bar-wrap' }, [el('div', { className: 'vit-bar', style: 'width:' + pct + '%' })])
       ]),
-      el('div', { style: 'font-size:1.2rem;', text: pct >= 100 ? '✅' : '☀️' })
+      el('div', { className: 'ic-badge' + (pct >= 100 ? ' done' : '') }, [icon(pct >= 100 ? 'check' : 'sun', 'solo')])
     ]));
   });
 }
@@ -1249,7 +1310,7 @@ function renderWhosList() {
         el('div', { style: 'font-family:var(--font-display);font-size:1.4rem;line-height:1.1;color:var(--ink);', text: c.name }),
         el('div', { style: 'font-size:0.8rem;color:var(--soft);font-weight:600;', text: 'Age ' + c.age + ' · Skin type ' + c.fitz })
       ]),
-      el('div', { className: 'who-check', text: sel ? '✓' : '' })
+      el('div', { className: 'who-check' }, sel ? [icon('check', 'solo')] : [])
     ]));
   });
   // Row clicks are handled by whoListClickHandler, delegated from #who-list in wireButtonsSync
@@ -1264,20 +1325,20 @@ function whoListClickHandler(e) {
     if (APP.selectedChildren.length > 1) {
       APP.selectedChildren.splice(idx, 1);
       row.classList.remove('selected');
-      row.querySelector('.who-check').textContent = '';
+      clearEl(row.querySelector('.who-check'));
     }
   } else {
     APP.selectedChildren.push(i);
     row.classList.add('selected');
-    row.querySelector('.who-check').textContent = '✓';
+    setIconText(row.querySelector('.who-check'), 'check');
   }
 }
  
 // ============================================================
 // SESSION SETUP
 // ============================================================
-const CLOTHING_OPTIONS = [['🩱','Swimsuit',1.0],['🩳','Tank+Shorts',0.7],['👕','Tee+Shorts',0.55],['👖','Tee+Pants',0.35],['🧥','Full Cover',0.2]];
-const SPF_OPTIONS = [['🚫','None',1.0],['🧴','SPF 15',0.45],['🧴','SPF 30',0.28],['🧴','SPF 50+',0.2]];
+const CLOTHING_OPTIONS = [[1,'Swimsuit',1.0],[2,'Tank+Shorts',0.7],[3,'Tee+Shorts',0.55],[4,'Tee+Pants',0.35],[5,'Full Cover',0.2]];
+const SPF_OPTIONS = [['None',1.0],['SPF 15',0.45],['SPF 30',0.28],['SPF 50+',0.2]];
 
 function renderPerChildSetup() {
   const container = document.getElementById('per-child-setup');
@@ -1292,7 +1353,7 @@ function renderPerChildSetup() {
     const heading = el('div', { style: 'font-family:var(--font-display);font-size:1.5rem;color:var(--ink);margin-bottom:10px;' }, [
       c.photo
         ? el('img', { src: c.photo, alt: '', style: 'width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;' })
-        : defaultAvatar(ci) + ' ',
+        : null,
       c.name
     ]);
 
@@ -1301,17 +1362,18 @@ function renderPerChildSetup() {
       CLOTHING_OPTIONS.map(o => el('button', {
         className: 'clothing-btn' + (o[2] === setup.clothingFactor ? ' selected' : ''),
         'data-child-idx': ci, 'data-clothing-factor': o[2]
-      }, [el('span', { className: 'clothing-icon', text: o[0] }), el('span', { className: 'clothing-label', text: o[1].replace('+', '+\u200b') })])));
+      }, [el('span', { className: 'clothing-label', text: o[1].replace('+', '+\u200b') }),
+          el('span', { className: 'cov-dots', 'aria-label': 'Coverage ' + o[0] + ' of 5' }, [1, 2, 3, 4, 5].map(n => el('i', { className: n <= o[0] ? 'f' : null })))])));
 
     const spfGrid = el('div', { className: 'spf-grid', id: 'spf-' + ci },
       SPF_OPTIONS.map(o => el('button', {
-        className: 'spf-btn' + (o[2] === setup.spfFactor ? ' selected' : ''),
-        'data-child-idx': ci, 'data-spf-factor': o[2]
-      }, [el('span', { className: 'spf-icon', text: o[0] }), el('span', { className: 'spf-label', text: o[1] })])));
+        className: 'spf-btn' + (o[1] === setup.spfFactor ? ' selected' : ''),
+        'data-child-idx': ci, 'data-spf-factor': o[1]
+      }, [el('span', { className: 'spf-label', text: o[0] })])));
 
     container.appendChild(el('div', {
       className: 'card', style: 'margin-bottom:16px;'
-    }, [heading, el('div', { style: subTitle, text: '👕 Clothing' }), clothingGrid, el('div', { style: subTitle, text: '🧴 Sunscreen' }), spfGrid]));
+    }, [heading, el('div', { style: subTitle, text: 'Clothing' }), clothingGrid, el('div', { style: subTitle, text: 'Sunscreen' }), spfGrid]));
   });
 }
 
@@ -1399,7 +1461,7 @@ function renderSessionCards() {
  
     // Avatar
     var avatar = document.createElement('div');
-    avatar.style.cssText = 'width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid #17171C;margin-bottom:8px;';
+    avatar.style.cssText = 'width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid #17171C;margin-bottom:8px;font-family:var(--font-display);color:#17171C;';
     if (c.photo) {
       var img = document.createElement('img');
       img.src = c.photo;
@@ -1499,7 +1561,7 @@ function renderSessionCards() {
  
     var burnTitle = document.createElement('div');
     burnTitle.style.cssText = 'font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#17171C;margin-bottom:6px;';
-    burnTitle.textContent = '🔴 Burn Risk';
+    burnTitle.textContent = 'Burn risk';
     burnSection.appendChild(burnTitle);
  
     var burnBg = document.createElement('div');
@@ -1638,17 +1700,17 @@ function sessionAverageUV(elapsed) {
 
 function sessionNoticeText() {
   return currentUV() < 1
-    ? '🌙 UV is very low right now, so little vitamin D will be made'
+    ? 'UV is very low right now, so little vitamin D will be made'
     : DEFAULT_BG_NOTICE;
 }
 
 const SUNSCREEN_REMINDER_SECS = 90 * 60;
-const DEFAULT_BG_NOTICE = '⏸ Tracks time when you switch away — tap to check progress';
+const DEFAULT_BG_NOTICE = 'Tracks time when you switch away — tap to check progress';
 
 // A previous session may have ended while paused or with the sunscreen banner up
 function resetSessionControls() {
   const btn = document.getElementById('btn-pause');
-  if (btn) btn.textContent = '⏸ Pause';
+  if (btn) setIconText(btn, 'pause', 'Pause');
   const timerEl = document.getElementById('session-timer');
   if (timerEl) { timerEl.style.opacity = '1'; timerEl.textContent = '00:00'; }
   const notice = document.getElementById('bg-notice');
@@ -1678,9 +1740,9 @@ function pauseSession() {
   APP.session.paused = true;
   stopTick();
   const btn = document.getElementById('btn-pause');
-  if (btn) btn.textContent = '▶ Resume';
+  if (btn) setIconText(btn, 'play', 'Resume');
   document.getElementById('session-timer').style.opacity = '0.5';
-  document.getElementById('bg-notice').textContent = '⏸ Session paused — tap Resume when back outside';
+  document.getElementById('bg-notice').textContent = 'Session paused — tap Resume when back outside';
 }
 
 function resumeSessionFromPause() {
@@ -1688,7 +1750,7 @@ function resumeSessionFromPause() {
   APP.session.startTime = Date.now();
   APP.session.paused = false;
   const btn = document.getElementById('btn-pause');
-  if (btn) btn.textContent = '⏸ Pause';
+  if (btn) setIconText(btn, 'pause', 'Pause');
   document.getElementById('session-timer').style.opacity = '1';
   document.getElementById('bg-notice').textContent = sessionNoticeText();
   startTick();
@@ -1852,7 +1914,7 @@ function triggerCelebration(sliderIdx) {
   clearEl(titleEl);
   titleEl.appendChild(document.createTextNode(c.name));
   titleEl.appendChild(document.createElement('br'));
-  titleEl.appendChild(document.createTextNode('hit their goal! ☀️'));
+  titleEl.appendChild(document.createTextNode('hit their goal!'));
 
   let subText = others.length > 0
     ? 'Goal reached after ' + timeStr + ' · ' + others.join(' & ') + ' still going!'
@@ -1861,14 +1923,14 @@ function triggerCelebration(sliderIdx) {
   document.getElementById('cel-sub').textContent = subText;
   document.getElementById('cel-vitd').textContent = Math.round(cs.goal) + ' IU';
   document.getElementById('cel-duration').textContent = timeStr;
-  document.getElementById('cel-streak').textContent = '🔥 ' + Math.max(1, calcStreak(cs.childIndex) + (childGoalHitOnDay(cs.childIndex, new Date().toDateString()) ? 0 : 1));
+  setIconText(document.getElementById('cel-streak'), 'flame', String(Math.max(1, calcStreak(cs.childIndex) + (childGoalHitOnDay(cs.childIndex, new Date().toDateString()) ? 0 : 1))));
 
   const extendBtn = document.getElementById('btn-extend-session');
   const finishBtn = document.getElementById('btn-finish-session');
-  if (extendBtn) extendBtn.textContent = '▶ Keep Playing Outside';
-  if (finishBtn) finishBtn.textContent = others.length > 0
-    ? '✓ Done for ' + c.name + ' — keep tracking ' + others.join(' & ')
-    : '✓ We are Done for Today';
+  if (extendBtn) setIconText(extendBtn, 'play', 'Keep playing outside');
+  if (finishBtn) setIconText(finishBtn, 'check', others.length > 0
+    ? 'Done for ' + c.name + ' — keep tracking ' + others.join(' & ')
+    : 'We are done for today');
 
   showNotification('🌟 SunTimeKids', c.name + ' reached their daily vitamin D goal!');
   playGoalChime();
@@ -2240,13 +2302,13 @@ function renderTrendGrid() {
   const grid = document.getElementById('trend-grid');
   clearEl(grid);
   [
-    ['⏱️', formatMinutes(weekMin), 'Outdoor time (7 days)'],
-    ['🎯', goals.hit + '/' + goals.total, 'Goals hit this week'],
-    ['🔥', streak + ' day' + (streak !== 1 ? 's' : ''), 'Current streak'],
-    ['🌡️', String(uv), 'Live UV · ' + APP.locationName.split(',')[0]]
+    ['timer', formatMinutes(weekMin), 'Outdoor time (7 days)'],
+    ['target', goals.hit + '/' + goals.total, 'Goals hit this week'],
+    ['flame', streak + ' day' + (streak !== 1 ? 's' : ''), 'Current streak'],
+    ['thermo', String(uv), 'Live UV · ' + APP.locationName.split(',')[0]]
   ].forEach(t => {
     grid.appendChild(el('div', { className: 'trend-card' }, [
-      el('span', { className: 'trend-icon', text: t[0] }),
+      icon(t[0], 'trend-ic'),
       el('div', { className: 'trend-val', text: t[1] }),
       el('div', { className: 'trend-label', text: t[2] })
     ]));
@@ -2268,7 +2330,7 @@ function renderDashChildren() {
         el('div', { className: 'cs-name', text: c.name }),
         el('div', { className: 'cs-stats', text: formatMinutes(totalMin) + ' outdoors total · ' + goals + ' goal' + (goals !== 1 ? 's' : '') + ' hit' })
       ]),
-      el('div', { className: 'cs-streak', text: '🔥 ' + calcStreak(i) })
+      el('div', { className: 'cs-streak' }, [icon('flame'), String(calcStreak(i))])
     ]));
   });
 }
@@ -2279,7 +2341,7 @@ function renderSessionHistory() {
   if (!APP.sessions.length) {
     list.appendChild(el('div', {
       style: 'text-align:center;color:var(--soft);font-size:0.85rem;font-weight:600;padding:20px;',
-      text: 'No sessions yet — head outside to get started! ☀️'
+      text: 'No sessions yet. Head outside to get started!'
     }));
     return;
   }
@@ -2293,22 +2355,22 @@ function renderSessionHistory() {
     const results = sessionChildResults(s);
     const hitCount = results.filter(r => r.goalReached).length;
     let badgeTxt;
-    if (hitCount === results.length && hitCount > 0) badgeTxt = '✅ Goal Hit';
-    else if (hitCount > 0) badgeTxt = '✅ ' + hitCount + '/' + results.length + ' goals';
+    if (hitCount === results.length && hitCount > 0) badgeTxt = 'Goal hit';
+    else if (hitCount > 0) badgeTxt = hitCount + '/' + results.length + ' goals';
     else badgeTxt = Math.round(results.reduce((sum, r) => sum + r.vitd, 0) / Math.max(1, results.length)) + ' IU';
     list.appendChild(el('div', { className: 'history-item' }, [
-      el('div', { className: 'history-icon', text: '☀️' }),
+      el('div', { className: 'history-icon' }, [icon('sun', 'solo')]),
       el('div', { className: 'history-info' }, [
         el('div', { className: 'history-title', text: names + ' · ' + dur + 'm outdoors' }),
         el('div', { className: 'history-meta', text: dateStr + ' at ' + timeStr + ' · UV ' + s.uvIndex + ' · ' + (s.location || '') })
       ]),
-      el('div', { className: 'history-badge' + (hitCount === results.length && hitCount > 0 ? '' : ' partial'), text: badgeTxt })
+      el('div', { className: 'history-badge' + (hitCount === results.length && hitCount > 0 ? '' : ' partial') }, [hitCount > 0 ? icon('check') : null, badgeTxt])
     ]));
   });
 }
 
 // ============================================================
-// INIT
+// SETTINGS
 // ============================================================
 // Settings: what happens when a child reaches their goal ('auto' = 60-second prompt, 'keep' = no prompt)
 function setSessionEndMode(mode, persist) {
@@ -2321,39 +2383,12 @@ function setSessionEndMode(mode, persist) {
   if (activeOpt) {
     activeOpt.classList.add('on');
     const dot = activeOpt.querySelector('.opt-dot');
-    if (dot) dot.textContent = '✓';
+    if (dot) setIconText(dot, 'check');
   }
   if (inactiveOpt) {
     inactiveOpt.classList.remove('on');
     const dot = inactiveOpt.querySelector('.opt-dot');
-    if (dot) dot.textContent = '';
-  }
-}
-
-// ============================================================
-// INIT
-// ============================================================
-// Settings: what happens when a child reaches their goal ('auto' = 60-second prompt, 'keep' = no prompt)
-function setSessionEndMode(mode, persist) {
-  APP.sessionEndMode = mode;
-  if (persist) storeSet('stk_session_end_mode', mode);
-  const optAuto = document.getElementById('session-end-opt-auto');
-  const optKeep = document.getElementById('session-end-opt-keep');
-  const activeOpt = mode === 'auto' ? optAuto : optKeep;
-  const inactiveOpt = mode === 'auto' ? optKeep : optAuto;
-  if (activeOpt) {
-    activeOpt.style.borderColor = 'var(--sky-dark)';
-    activeOpt.style.background = '#EEF6FF';
-    const dot = activeOpt.querySelector('div');
-    dot.style.cssText = 'width:20px;height:20px;border-radius:50%;background:var(--sky-dark);display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:800;flex-shrink:0;';
-    dot.textContent = '✓';
-  }
-  if (inactiveOpt) {
-    inactiveOpt.style.borderColor = '#DDE6F5';
-    inactiveOpt.style.background = 'white';
-    const dot = inactiveOpt.querySelector('div');
-    dot.style.cssText = 'width:20px;height:20px;border-radius:50%;border:2px solid #DDE6F5;flex-shrink:0;';
-    dot.textContent = '';
+    if (dot) clearEl(dot);
   }
 }
 
@@ -2400,6 +2435,10 @@ async function appInit() {
   }
   // Welcome
   safeOn('btn-get-started', function() { goTo('screen-onboard'); });
+  // Legal notices (remember where to return to)
+  safeOn('btn-legal-welcome', function() { openLegal('screen-welcome'); });
+  safeOn('btn-legal-settings', function() { openLegal('screen-settings'); });
+  safeOn('btn-legal-back', function() { goTo(APP.legalReturn || 'screen-welcome'); });
   // Onboarding
   safeOn('btn-save-profiles', function() { saveProfiles(); });
   safeOn('btn-add-child', function() { addChildClicked(); });
@@ -2474,6 +2513,14 @@ async function appInit() {
   var whoList = document.getElementById('who-list');
   if (whoList) whoList.addEventListener('click', whoListClickHandler);
   // File inputs
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var pb = e.target && e.target.closest ? e.target.closest('[data-photo-idx]') : null;
+    if (!pb) return;
+    e.preventDefault();
+    var pf = document.getElementById('file-' + pb.getAttribute('data-photo-idx'));
+    if (pf) pf.click();
+  });
   document.addEventListener('change', function(e) {
     var fi = e.target && e.target.getAttribute ? e.target.getAttribute('data-file-idx') : null;
     if (fi !== null) handlePhoto(parseInt(fi, 10), e);

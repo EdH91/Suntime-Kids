@@ -37,7 +37,8 @@ The app uses `goTo(id)` to toggle the `.active` class between named `<div id="sc
 | `screen-session` | Active tracking session (swipeable per-child cards) |
 | `screen-celebrate` | Goal reached prompt for one child |
 | `screen-dash` | Week chart, trends, per-child summary, history |
-| `screen-settings` | Goal-reached behaviour, disclaimer, privacy |
+| `screen-settings` | Goal-reached behaviour, link to legal notices, privacy |
+| `screen-legal` | Medical disclaimer, privacy summary, placeholder for terms (opened from Welcome or Settings; returns via `APP.legalReturn`) |
 
 ---
 
@@ -110,6 +111,8 @@ The function `wireButtonsSync()` runs as an IIFE at script load (before `appInit
 ### 2. No string concatenation in DOM rendering
 
 Use `document.createElement` for all dynamic DOM construction. **Never use `innerHTML` with JS variables or template literals that include untrusted/dynamic content.** This avoids both CSP violations and XSS surface. (Child names are user input; location names come from the geocoding API.)
+
+Icons are inline SVG symbols in the sprite at the top of `<body>` (no emoji in the UI). In HTML use `<svg class="ic"><use href="#i-name"/></svg>`; in JS use `icon(name, cls)` and `setIconText(node, name, text)`. Add new icons as `<symbol>` entries in the sprite. OS notifications still use emoji.
 
 Use the `el(tag, props, children)` helper for concise construction (`text` sets `textContent`, `style` sets `cssText`), plus `clearEl(node)` to empty a container. `renderSessionCards()` shows the long-form `createElement` style.
 
