@@ -7,40 +7,47 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SunTimeKids">
 <meta name="mobile-web-app-capable" content="yes">
-<title>SunTimeKids v2.5</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<title>SunTimeKids</title>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Lexend:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+  /* Sticker Book design system: yellow ground, thick ink outlines, hard offset shadows.
+     Legacy variable names (--sky, --sun, ...) are kept and remapped so older inline styles follow the new palette. */
   :root {
-    --font-display: 'Baloo 2', cursive;
-    --sun: #FFB800; --sun-deep: #FF8C00;
-    --sky: #5BC8F5; --sky-dark: #1A7AC4;
-    --grass: #4DC87A; --coral: #FF6060;
-    --ink: #1A2340; --soft: #7A8AAF;
-    --bg: #F0F7FF; --purple: #7C5CBF;
+    --font-display: 'Bagel Fat One', 'Lexend', sans-serif;
+    --yellow: #FFD23F; --ink: #17171C; --blue: #3B5BFF; --coral: #FF6A4D; --mint: #5FDCA8;
+    --lilac: #EDEDF2; --tint: #FFE88A; --soft: #5A5A66;
+    --line: 3px solid var(--ink);
+    --shadow: 5px 5px 0 var(--ink); --shadow-sm: 3px 3px 0 var(--ink);
+    --sun: var(--yellow); --sun-deep: var(--coral);
+    --sky: var(--blue); --sky-dark: var(--blue);
+    --grass: var(--mint);
+    --bg: var(--yellow); --purple: #7B4BD0;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
-    font-family: 'Nunito', sans-serif;
-    background: #C8DFF5;
+    font-family: 'Lexend', sans-serif; color: var(--ink);
+    background: var(--tint);
     display: flex; justify-content: center; align-items: flex-start;
     min-height: 100vh; padding: 20px;
     margin: 0;
   }
+  button, input { font-family: inherit; }
+  button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
   /* Full screen on real mobile, phone shell on desktop */
   @media (max-width: 430px) {
     body { padding: 0; background: var(--bg); align-items: stretch; }
-    .phone { width: 100% !important; min-height: 100vh !important; border-radius: 0 !important; box-shadow: none !important; }
+    .phone { width: 100% !important; min-height: 100vh !important; border-radius: 0 !important; box-shadow: none !important; border: none !important; }
   }
   .phone {
     width: 390px; min-height: 844px;
-    background: var(--bg); border-radius: 48px;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.25), 0 0 0 2px rgba(255,255,255,0.5) inset;
+    background: var(--bg); border-radius: 44px; border: var(--line);
+    box-shadow: 8px 8px 0 var(--ink);
     overflow: hidden; position: relative; display: flex; flex-direction: column;
   }
   .status-bar {
-    background: var(--sky-dark); padding: 12px 28px 8px;
+    background: var(--yellow); padding: 12px 28px 8px;
     display: flex; justify-content: space-between; align-items: center;
-    color: white; font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+    color: var(--ink); font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
   }
   .screen {
     display: none; flex-direction: column; flex: 1;
@@ -49,264 +56,295 @@
   .screen::-webkit-scrollbar { display: none; }
   .screen.active { display: flex; animation: screen-in 0.25s ease-out; }
   @keyframes screen-in { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
- 
+  @media (prefers-reduced-motion: reduce) { .screen.active, .uv-dot, .welcome-sun, .celebrate-emoji, .confetti { animation: none !important; } }
+
   /* ---- SHARED COMPONENTS ---- */
   .btn-primary {
-    background: var(--sun); color: var(--ink); border: none; border-radius: 50px;
-    padding: 16px 40px; font-family: 'Nunito',sans-serif; font-size: 1.05rem;
-    font-weight: 800; cursor: pointer; box-shadow: 0 6px 24px rgba(255,184,0,0.45);
-    transition: transform 0.15s; width: 100%; max-width: 100%;
+    background: var(--blue); color: #fff; border: var(--line); border-radius: 999px;
+    min-height: 64px; padding: 0 32px; font-family: var(--font-display); font-size: 1.4rem;
+    font-weight: 400; cursor: pointer; box-shadow: var(--shadow);
+    transition: transform 0.1s, box-shadow 0.1s; width: 100%; max-width: 100%;
   }
-  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:active { transform: translate(4px,4px); box-shadow: 1px 1px 0 var(--ink); }
   .btn-secondary {
-    background: white; color: var(--sky-dark); border: 2.5px solid var(--sky);
-    border-radius: 50px; padding: 14px 32px; font-family: 'Nunito',sans-serif;
-    font-size: 0.95rem; font-weight: 800; cursor: pointer; width: 100%;
-    transition: transform 0.15s;
+    background: #fff; color: var(--ink); border: 3px dashed var(--ink);
+    border-radius: 999px; min-height: 56px; padding: 0 24px;
+    font-size: 1rem; font-weight: 800; cursor: pointer; width: 100%;
+    transition: transform 0.1s;
   }
-  .btn-secondary:active { transform: scale(0.97); }
+  .btn-secondary:active { transform: scale(0.98); }
   .btn-nav {
-    background: white; color: var(--sky-dark); border: 2px solid #DDE6F5;
-    border-radius: 50px; padding: 14px; font-family: 'Nunito',sans-serif;
+    background: #fff; color: var(--ink); border: var(--line); box-shadow: var(--shadow-sm);
+    border-radius: 999px; min-height: 48px; padding: 0 16px;
     font-size: 0.9rem; font-weight: 800; cursor: pointer; width: 100%;
   }
-  .section-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink); margin-bottom: 10px; }
-  .field-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--soft); margin-bottom: 8px; }
+  .section-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink); margin-bottom: 10px; }
+  .field-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink); margin-bottom: 6px; }
   .field-input {
-    width: 100%; border: 2px solid #DDE6F5; border-radius: 14px; padding: 13px 16px;
-    font-family: 'Nunito',sans-serif; font-size: 0.95rem; font-weight: 700;
-    color: var(--ink); background: white; outline: none; transition: border-color 0.2s;
+    width: 100%; border: var(--line); border-radius: 16px; padding: 0 14px; height: 52px;
+    font-size: 1rem; font-weight: 700;
+    color: var(--ink); background: #fff; outline: none;
   }
-  .field-input:focus { border-color: var(--sky); }
+  .field-input:focus { box-shadow: var(--shadow-sm); }
   .card {
-    background: white; border-radius: 20px; padding: 16px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    background: #fff; border: var(--line); border-radius: 22px; padding: 16px;
+    box-shadow: var(--shadow);
   }
- 
+
   /* ---- WELCOME ---- */
   #screen-welcome {
-    background: linear-gradient(160deg, var(--sky-dark) 0%, #2D9ED8 50%, #5BC8F5 100%);
-    justify-content: center; align-items: center; text-align: center; padding: 40px 32px; gap: 0;
+    background: var(--yellow);
+    justify-content: center; align-items: center; text-align: center; padding: 40px 28px; gap: 0;
   }
   .welcome-sun {
-    width: 110px; height: 110px; background: radial-gradient(circle at 40% 35%, #FFE566, var(--sun) 60%, var(--sun-deep));
-    border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;
-    font-size: 3rem; box-shadow: 0 0 0 16px rgba(255,184,0,0.15), 0 0 0 32px rgba(255,184,0,0.07);
+    width: 120px; height: 120px; background: var(--coral); border: var(--line);
+    border-radius: 50%; margin: 0 auto 28px; display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; box-shadow: var(--shadow);
     animation: pulse-sun 3s ease-in-out infinite;
   }
-  @keyframes pulse-sun { 0%,100%{box-shadow:0 0 0 16px rgba(255,184,0,0.15),0 0 0 32px rgba(255,184,0,0.07)} 50%{box-shadow:0 0 0 22px rgba(255,184,0,0.2),0 0 0 40px rgba(255,184,0,0.05)} }
-  .welcome-title { font-family:'Baloo 2',cursive; font-size:2.8rem; font-weight:800; color:white; line-height:1; margin-bottom:8px; text-shadow:0 2px 12px rgba(0,0,0,0.2); }
-  .welcome-title span { color: var(--sun); }
-  .welcome-sub { color: rgba(255,255,255,0.85); font-size:0.95rem; font-weight:600; margin-bottom:48px; line-height:1.5; }
+  @keyframes pulse-sun { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+  .welcome-title { font-family: var(--font-display); font-size:2.7rem; white-space:nowrap; font-weight:400; color: var(--ink); line-height:1; margin-bottom:12px; text-shadow:3px 3px 0 #fff; }
+  .welcome-title span { color: var(--ink); }
+  .welcome-sub { color: var(--ink); font-size:1.05rem; font-weight:600; margin-bottom:40px; line-height:1.4; }
   .welcome-badge {
-    background: rgba(255,255,255,0.15); border-radius: 50px; padding: 8px 16px;
-    font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 24px;
-    display: inline-block; backdrop-filter: blur(4px);
+    background: #fff; border: var(--line); box-shadow: var(--shadow-sm); border-radius: 999px; padding: 7px 14px;
+    font-size: 0.8rem; font-weight: 700; color: var(--ink); margin-bottom: 24px;
+    display: inline-block; transform: rotate(-2deg);
   }
- 
+
   /* ---- ONBOARDING ---- */
-  .onboard-header { background: linear-gradient(135deg, var(--sky-dark), #2D9ED8); padding: 28px 24px 32px; color: white; }
-  .onboard-header h2 { font-family:'Baloo 2',cursive; font-size:1.6rem; font-weight:800; margin-bottom:4px; }
-  .onboard-header p { font-size:0.85rem; opacity:0.85; font-weight:600; }
-  .onboard-body { padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; }
-  .photo-row { display: flex; align-items: center; gap: 16px; }
+  .onboard-header { background: var(--yellow); padding: 28px 24px 8px; color: var(--ink); }
+  .onboard-header h2 { font-family: var(--font-display); font-size:2.3rem; font-weight:400; line-height:1.05; margin-bottom:6px; }
+  .onboard-header p { font-size:0.95rem; font-weight:600; }
+  .onboard-body { padding: 16px 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+  .photo-row { display: flex; align-items: center; gap: 14px; }
   .photo-circle {
     width: 72px; height: 72px; border-radius: 50%;
-    background: linear-gradient(135deg, #E8F4FF, #D0E8FF);
-    border: 2.5px dashed var(--sky); display: flex; align-items: center; justify-content: center;
+    background: var(--tint);
+    border: 3px dashed var(--ink); display: flex; align-items: center; justify-content: center;
     font-size: 1.8rem; cursor: pointer; flex-shrink: 0; overflow: hidden;
   }
   .photo-circle img { width:100%; height:100%; object-fit:cover; }
   .photo-hint { font-size:0.8rem; font-weight:600; color:var(--soft); line-height:1.5; }
-  .photo-hint strong { color:var(--sky-dark); display:block; font-size:0.85rem; }
-  .fitz-grid { display:flex; gap:8px; justify-content:space-between; }
+  .photo-hint strong { color:var(--ink); display:block; font-size:0.9rem; }
+  .fitz-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px; }
   .fitz-btn {
-    flex:1; border-radius:12px; border:2.5px solid transparent; padding:10px 4px;
+    border-radius:14px; border:3px solid var(--lilac); padding:6px 0 5px; min-height:62px;
     cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px;
-    background:white; transition:border-color 0.15s,transform 0.15s;
+    background:#fff; color: var(--ink);
   }
   .fitz-btn:active { transform:scale(0.95); }
-  .fitz-btn.selected { border-color:var(--sky-dark); box-shadow:0 2px 10px rgba(26,122,196,0.2); }
-  .fitz-swatch { width:36px; height:36px; border-radius:50%; border:2px solid rgba(0,0,0,0.08); }
-  .fitz-btn span { font-size:0.6rem; font-weight:800; color:var(--soft); }
-  .privacy-note { display:flex; align-items:center; gap:8px; background:#F0FFF5; border:1.5px solid var(--grass); border-radius:12px; padding:10px 14px; font-size:0.75rem; font-weight:600; color:#2A7A40; }
- 
+  .fitz-btn.selected { border-color:var(--ink); background:var(--mint); box-shadow:var(--shadow-sm); }
+  .fitz-swatch { width:30px; height:30px; border-radius:50%; border:2.5px solid var(--ink); }
+  .fitz-btn span { font-size:0.75rem; font-weight:700; color:var(--ink); }
+  .fitz-btn.selected span { font-weight:800; }
+  .privacy-note { display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.8rem; font-weight:600; color:var(--ink); text-align:center; }
+
   /* ---- HOME ---- */
-  .home-header { background:linear-gradient(135deg,var(--sky-dark) 0%,#2D9ED8 100%); padding:24px 24px 48px; color:white; position:relative; overflow:hidden; }
-  .home-header::after { content:''; position:absolute; bottom:-20px; left:0; right:0; height:40px; background:var(--bg); border-radius:50% 50% 0 0/100% 100% 0 0; }
-  .home-greeting { font-size:0.85rem; opacity:0.8; font-weight:600; }
-  .home-title { font-family:'Baloo 2',cursive; font-size:1.5rem; font-weight:800; margin-bottom:16px; }
-  .uv-pill { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.2); border-radius:50px; padding:8px 16px; font-size:0.82rem; font-weight:700; backdrop-filter:blur(4px); }
-  .uv-dot { width:10px; height:10px; border-radius:50%; background:var(--sun); animation:pulse-uv 2s infinite; }
+  .home-header { background:var(--yellow); padding:24px 24px 12px; color:var(--ink); position:relative; }
+  .home-greeting { font-size:0.9rem; font-weight:600; }
+  .home-title { font-family: var(--font-display); font-size:2.2rem; font-weight:400; line-height:1.05; margin-bottom:14px; }
+  .uv-pill { display:inline-flex; align-items:center; gap:8px; background:#fff; border:var(--line); box-shadow:var(--shadow-sm); border-radius:999px; padding:7px 14px; font-size:0.85rem; font-weight:700; }
+  .uv-dot { width:12px; height:12px; border-radius:50%; background:var(--coral); border:2px solid var(--ink); animation:pulse-uv 2s infinite; }
   @keyframes pulse-uv { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  .home-body { padding:8px 20px 24px; display:flex; flex-direction:column; gap:14px; }
-  .child-card { background:white; border-radius:20px; padding:16px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
-  .child-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; border:3px solid white; box-shadow:0 2px 8px rgba(255,184,0,0.3); overflow:hidden; }
+  .home-body { padding:12px 20px 24px; display:flex; flex-direction:column; gap:16px; }
+  .child-card { background:#fff; border:var(--line); border-radius:22px; padding:14px 16px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow); }
+  .child-avatar { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; flex-shrink:0; border:var(--line); overflow:hidden; }
   .child-avatar img { width:100%; height:100%; object-fit:cover; }
-  .child-info { flex:1; }
-  .child-name { font-weight:800; font-size:0.95rem; color:var(--ink); }
-  .child-meta { font-size:0.75rem; color:var(--soft); font-weight:600; }
-  .vit-bar-wrap { margin-top:6px; background:#EEF3FF; border-radius:50px; height:8px; overflow:hidden; }
-  .vit-bar { height:100%; border-radius:50px; background:linear-gradient(90deg,var(--grass),#7BE89A); transition:width 0.5s; }
+  .child-info { flex:1; min-width:0; }
+  .child-name { font-family: var(--font-display); font-weight:400; font-size:1.4rem; color:var(--ink); line-height:1.1; }
+  .child-meta { font-size:0.8rem; color:var(--soft); font-weight:600; }
+  .vit-bar-wrap { margin-top:8px; background:var(--lilac); border:2.5px solid var(--ink); border-radius:999px; height:16px; overflow:hidden; }
+  .vit-bar { height:100%; background:var(--mint); border-right:2.5px solid var(--ink); transition:width 0.5s; }
   .btn-headout {
-    background:linear-gradient(135deg,var(--sun),var(--sun-deep)); color:white; border:none;
-    border-radius:24px; padding:20px; font-family:'Baloo 2',cursive; font-size:1.3rem; font-weight:800;
-    cursor:pointer; box-shadow:0 8px 28px rgba(255,140,0,0.45); transition:transform 0.15s;
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    text-shadow:0 1px 4px rgba(0,0,0,0.15); width:100%;
+    background:var(--blue); color:#fff; border:var(--line);
+    border-radius:999px; min-height:72px; padding:0 20px; font-family: var(--font-display); font-size:1.7rem; font-weight:400;
+    cursor:pointer; box-shadow:var(--shadow); transition:transform 0.1s, box-shadow 0.1s;
+    display:flex; align-items:center; justify-content:center; gap:10px; width:100%;
   }
-  .btn-headout:active { transform:scale(0.97); }
+  .btn-headout:active { transform:translate(4px,4px); box-shadow:1px 1px 0 var(--ink); }
   .stats-row { display:flex; gap:12px; }
-  .stat-card { flex:1; background:white; border-radius:16px; padding:14px 12px; text-align:center; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
+  .stat-card { flex:1; background:#fff; border:var(--line); border-radius:18px; padding:12px 8px; text-align:center; box-shadow:var(--shadow-sm); }
   .stat-icon { font-size:1.4rem; display:block; margin-bottom:4px; }
-  .stat-val { font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:800; color:var(--ink); }
-  .stat-label { font-size:0.67rem; font-weight:700; color:var(--soft); text-transform:uppercase; letter-spacing:0.5px; }
- 
+  .stat-val { font-family: var(--font-display); font-size:1.4rem; font-weight:400; color:var(--ink); }
+  .stat-label { font-size:0.7rem; font-weight:700; color:var(--soft); text-transform:uppercase; letter-spacing:0.5px; }
+
   /* ---- LOCATION BANNER ---- */
   .loc-banner {
-    background: #FFF8E8; border: 1.5px solid var(--sun); border-radius: 14px;
-    padding: 10px 14px; font-size: 0.78rem; font-weight: 700; color: #7A5500;
+    background: #fff; border: var(--line); border-radius: 16px;
+    padding: 10px 14px; font-size: 0.8rem; font-weight: 700; color: var(--ink);
     display: flex; align-items: center; gap: 8px;
   }
- 
+
   /* ---- WHO'S GOING OUT ---- */
-  #screen-whosout { justify-content: flex-end; }
-  .modal-bg { flex:1; background:rgba(26,35,64,0.3); backdrop-filter:blur(2px); }
-  .modal-sheet { background:white; border-radius:28px 28px 0 0; padding:24px 24px 40px; box-shadow:0 -8px 32px rgba(0,0,0,0.12); }
-  .sheet-handle { width:40px; height:4px; background:#DDE6F5; border-radius:2px; margin:0 auto 20px; }
-  .sheet-title { font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:800; color:var(--ink); margin-bottom:4px; }
-  .sheet-sub { font-size:0.82rem; color:var(--soft); font-weight:600; margin-bottom:20px; }
-  .who-child { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:16px; border:2.5px solid #EEF3FF; margin-bottom:10px; cursor:pointer; transition:border-color 0.15s,background 0.15s; background:#FAFCFF; }
-  .who-child.selected { border-color:var(--sky-dark); background:#EEF6FF; }
-  .who-check { width:26px; height:26px; border-radius:50%; border:2.5px solid #DDE6F5; display:flex; align-items:center; justify-content:center; margin-left:auto; font-size:0.9rem; transition:background 0.15s,border-color 0.15s; flex-shrink:0; }
-  .who-child.selected .who-check { background:var(--sky-dark); border-color:var(--sky-dark); color:white; }
- 
+  #screen-whosout { justify-content: flex-end; background: var(--blue); }
+  .modal-bg { flex:1; background:transparent; }
+  .modal-sheet { background:var(--yellow); border-top:var(--line); border-radius:34px 34px 0 0; padding:12px 20px 32px; }
+  .sheet-handle { width:48px; height:6px; background:var(--ink); border-radius:999px; margin:0 auto 20px; }
+  .sheet-title { font-family: var(--font-display); font-size:2.1rem; font-weight:400; line-height:1.05; color:var(--ink); margin-bottom:6px; }
+  .sheet-sub { font-size:0.95rem; color:var(--ink); font-weight:600; margin-bottom:18px; }
+  .who-child { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:22px; border:var(--line); margin-bottom:12px; cursor:pointer; background:var(--tint); }
+  .who-child.selected { background:#fff; box-shadow:var(--shadow); }
+  .who-check { width:40px; height:40px; border-radius:50%; border:var(--line); background:#fff; display:flex; align-items:center; justify-content:center; margin-left:auto; font-size:1.1rem; font-weight:800; flex-shrink:0; }
+  .who-child.selected .who-check { background:var(--mint); color:var(--ink); }
+
   /* ---- SESSION SETUP ---- */
-  .setup-header { background:linear-gradient(135deg,#1A2340,#2A3A60); padding:24px 24px 32px; color:white; }
-  .setup-header h2 { font-family:'Baloo 2',cursive; font-size:1.5rem; font-weight:800; margin-bottom:4px; color:white; }
-  .setup-header p { font-size:0.82rem; font-weight:600; color:rgba(255,255,255,0.85); }
-  .setup-body { padding:20px; display:flex; flex-direction:column; gap:20px; }
-  .clothing-grid { display:flex; gap:8px; justify-content:space-between; }
-  .clothing-btn { flex:1; border-radius:14px; border:2.5px solid #DDE6F5; padding:10px 4px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; background:white; transition:border-color 0.15s,background 0.15s; }
+  .setup-header { background:var(--yellow); padding:24px 24px 8px; color:var(--ink); }
+  .setup-header h2 { font-family: var(--font-display); font-size:2.2rem; font-weight:400; line-height:1.05; margin-bottom:6px; color:var(--ink); }
+  .setup-header p { font-size:0.95rem; font-weight:600; color:var(--ink); }
+  .setup-body { padding:16px 20px 24px; display:flex; flex-direction:column; gap:20px; }
+  .clothing-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; }
+  .clothing-btn { min-width:0; border-radius:16px; border:3px solid var(--lilac); padding:10px 4px; min-height:64px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; background:#fff; color:var(--ink); }
   .clothing-btn:active { transform:scale(0.95); }
-  .clothing-btn.selected { border-color:var(--grass); background:#D4F7E0; box-shadow:0 0 0 2px var(--grass); }
-  .clothing-btn.selected .clothing-label { color:var(--grass); }
+  .clothing-btn.selected { border-color:var(--ink); background:var(--mint); box-shadow:var(--shadow-sm); }
+  .clothing-btn.selected .clothing-label { color:var(--ink); }
   .clothing-icon { font-size:1.6rem; }
-  .clothing-label { font-size:0.58rem; font-weight:800; color:var(--soft); text-align:center; line-height:1.2; }
+  .clothing-label { font-size:0.68rem; font-weight:800; color:var(--ink); text-align:center; line-height:1.2; }
   .spf-grid { display:flex; gap:8px; }
-  .spf-btn { flex:1; border-radius:14px; border:2.5px solid #DDE6F5; padding:12px 6px; cursor:pointer; text-align:center; background:white; transition:border-color 0.15s,background 0.15s; }
-  .spf-btn.selected { border-color:var(--sky-dark); background:#D0EEFF; box-shadow:0 0 0 2px var(--sky-dark); }
-  .spf-btn.selected .spf-label { color:var(--sky-dark); font-weight:900; }
+  .spf-btn { flex:1; border-radius:16px; border:3px solid var(--lilac); padding:12px 6px; min-height:56px; cursor:pointer; text-align:center; background:#fff; color:var(--ink); }
+  .spf-btn.selected { border-color:var(--ink); background:var(--mint); box-shadow:var(--shadow-sm); }
+  .spf-btn.selected .spf-label { color:var(--ink); font-weight:900; }
   .spf-icon { font-size:1.3rem; display:block; margin-bottom:3px; }
-  .spf-label { font-size:0.65rem; font-weight:800; color:var(--ink); }
- 
+  .spf-label { font-size:0.75rem; font-weight:800; color:var(--ink); }
+
   /* ---- ACTIVE SESSION ---- */
-  #screen-session { background:linear-gradient(160deg,#0A4A7A 0%,#1A7AC4 40%,#2D9ED8 100%); color:white; }
+  #screen-session { background:var(--blue); color:#fff; }
   .session-top { padding:24px 24px 16px; text-align:center; }
   .session-children { display:flex; justify-content:center; margin-bottom:12px; }
-  .session-avatar { width:56px; height:56px; border-radius:50%; border:3px solid rgba(255,255,255,0.5); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:linear-gradient(135deg,#FFE0A0,#FFB800); margin:0 -4px; }
+  .session-avatar { width:56px; height:56px; border-radius:50%; border:var(--line); overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:1.8rem; background:var(--tint); margin:0 -4px; }
   .session-avatar img { width:100%; height:100%; object-fit:cover; }
-  .session-label { font-size:0.82rem; opacity:0.8; font-weight:600; margin-bottom:2px; }
-  .session-timer { font-family:'Baloo 2',cursive; font-size:3rem; font-weight:800; letter-spacing:2px; text-shadow:0 2px 12px rgba(0,0,0,0.2); }
-  .bg-notice { background:rgba(255,255,255,0.12); border-radius:12px; padding:8px 16px; font-size:0.72rem; font-weight:700; opacity:0.85; margin:0 24px 8px; text-align:center; }
+  .session-label { font-size:0.85rem; font-weight:700; margin-bottom:2px; }
+  .session-timer { font-family: var(--font-display); font-size:4rem; font-weight:400; letter-spacing:1px; color:#fff; text-shadow:3px 3px 0 var(--ink); }
+  .bg-notice { background:#fff; color:var(--ink); border:var(--line); border-radius:14px; padding:8px 16px; font-size:0.75rem; font-weight:700; margin:0 24px 8px; text-align:center; }
   .progress-ring-wrap { display:flex; justify-content:center; padding:8px 0 16px; position:relative; }
   .progress-ring-wrap svg { transform:rotate(-90deg); }
   .progress-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-  .progress-pct { font-family:'Baloo 2',cursive; font-size:2.2rem; font-weight:800; color:white; }
-  .progress-sub { font-size:0.72rem; opacity:0.75; font-weight:600; }
+  .progress-pct { font-family: var(--font-display); font-size:2.6rem; font-weight:400; color:#fff; text-shadow:2px 2px 0 var(--ink); }
+  .progress-sub { font-size:0.78rem; font-weight:700; color:#fff; }
   .live-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; padding:0 20px 16px; }
-  .live-stat { background:rgba(255,255,255,0.12); border-radius:16px; padding:12px 8px; text-align:center; backdrop-filter:blur(4px); }
+  .live-stat { background:#fff; color:var(--ink); border:var(--line); box-shadow:var(--shadow-sm); border-radius:18px; padding:10px 6px; text-align:center; }
   .live-stat-icon { font-size:1.3rem; display:block; margin-bottom:4px; }
-  .live-stat-val { font-family:'Baloo 2',cursive; font-size:1.1rem; font-weight:800; }
-  .live-stat-label { font-size:0.6rem; opacity:0.7; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
-  .burn-section { margin:0 20px 16px; background:rgba(255,255,255,0.1); border-radius:16px; padding:14px 16px; }
-  .burn-title { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; opacity:0.7; margin-bottom:8px; }
-  .burn-bar-bg { background:rgba(255,255,255,0.2); border-radius:50px; height:10px; overflow:hidden; }
-  .burn-bar { height:100%; border-radius:50px; transition:width 1s; }
-  .burn-safe { background:linear-gradient(90deg,#4DC87A,#7BE89A); }
-  .burn-warn { background:linear-gradient(90deg,#FFB800,#FF8C00); }
-  .burn-danger { background:linear-gradient(90deg,#FF6060,#FF3030); }
+  .live-stat-val { font-family: var(--font-display); font-size:1.2rem; font-weight:400; }
+  .live-stat-label { font-size:0.65rem; color:var(--soft); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  .burn-section { margin:0 20px 16px; background:#fff; color:var(--ink); border:var(--line); box-shadow:4px 4px 0 var(--ink); border-radius:18px; padding:12px 14px; }
+  .burn-title { font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .burn-bar-bg { background:var(--lilac); border:2.5px solid var(--ink); border-radius:999px; height:18px; overflow:hidden; }
+  .burn-bar { height:100%; transition:width 1s; border-right:2.5px solid var(--ink); }
+  .burn-safe { background:var(--mint); }
+  .burn-warn { background:var(--yellow); }
+  .burn-danger { background:var(--coral); }
   .burn-labels { display:flex; justify-content:space-between; margin-top:4px; }
-  .burn-labels span { font-size:0.6rem; opacity:0.6; font-weight:700; }
-  .btn-end { margin:0 20px 24px; background:rgba(255,255,255,0.15); color:white; border:2px solid rgba(255,255,255,0.3); border-radius:50px; padding:14px; font-family:'Nunito',sans-serif; font-size:0.9rem; font-weight:800; cursor:pointer; width:calc(100% - 40px); }
- 
+  .burn-labels span { font-size:0.7rem; color:var(--soft); font-weight:700; }
+  .btn-end { margin:0 20px 24px; background:#fff; color:var(--ink); border:var(--line); box-shadow:4px 4px 0 var(--ink); border-radius:999px; min-height:60px; font-family: var(--font-display); font-size:1.4rem; cursor:pointer; width:calc(100% - 40px); }
+
   /* ---- CELEBRATION ---- */
-  #screen-celebrate { background:linear-gradient(160deg,#FF5500 0%,#FF8C00 30%,#FFB800 70%,#FFD700 100%); justify-content:center; align-items:center; text-align:center; padding:40px 32px; }
+  #screen-celebrate { background:var(--coral); color:var(--ink); justify-content:center; align-items:center; text-align:center; padding:40px 28px; }
   .confetti-wrap { position:relative; margin-bottom:20px; }
   .celebrate-emoji { font-size:5rem; display:block; animation:cel-bounce 0.8s ease-in-out infinite alternate; }
   @keyframes cel-bounce { from{transform:scale(1) rotate(-5deg)} to{transform:scale(1.1) rotate(5deg)} }
-  .confetti { position:absolute; width:12px; height:12px; border-radius:3px; animation:confetti-fall 1.6s ease-in-out infinite; }
+  .confetti { position:absolute; width:14px; height:14px; border-radius:4px; border:2.5px solid var(--ink); animation:confetti-fall 1.6s ease-in-out infinite; }
   @keyframes confetti-fall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(60px) rotate(360deg);opacity:0} }
-  .celebrate-title { font-family:'Baloo 2',cursive; font-size:1.9rem; font-weight:800; color:white; text-shadow:0 2px 8px rgba(0,0,0,0.15); margin-bottom:8px; }
-  .celebrate-sub { color:rgba(255,255,255,0.85); font-size:0.88rem; font-weight:600; margin-bottom:28px; line-height:1.5; }
+  .celebrate-title { font-family: var(--font-display); font-size:2.4rem; font-weight:400; color:var(--ink); text-shadow:3px 3px 0 #fff; margin-bottom:8px; line-height:1.05; }
+  .celebrate-sub { color:var(--ink); font-size:1rem; font-weight:600; margin-bottom:24px; line-height:1.4; }
   .celebrate-stats { display:flex; gap:12px; width:100%; margin-bottom:24px; }
-  .cel-stat { flex:1; background:rgba(255,255,255,0.35); border-radius:16px; padding:14px 8px; backdrop-filter:blur(4px); border:2px solid rgba(255,255,255,0.5); }
-  .cel-stat-val { font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:800; color:white; }
-  .cel-stat-label { font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.8); text-transform:uppercase; }
-  .btn-extend { background:white; color:var(--sun-deep); border:none; border-radius:50px; padding:16px 32px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:800; cursor:pointer; width:100%; margin-bottom:12px; box-shadow:0 6px 20px rgba(0,0,0,0.15); transition:transform 0.15s; }
-  .btn-extend:active { transform:scale(0.97); }
-  .btn-done { background:rgba(255,255,255,0.2); color:white; border:2px solid rgba(255,255,255,0.4); border-radius:50px; padding:14px 32px; font-family:'Nunito',sans-serif; font-size:0.95rem; font-weight:800; cursor:pointer; width:100%; }
- 
+  .cel-stat { flex:1; background:#fff; border:var(--line); box-shadow:var(--shadow-sm); border-radius:18px; padding:12px 8px; }
+  .cel-stat-val { font-family: var(--font-display); font-size:1.5rem; font-weight:400; color:var(--ink); }
+  .cel-stat-label { font-size:0.7rem; font-weight:700; color:var(--soft); text-transform:uppercase; }
+  .btn-extend { background:var(--blue); color:#fff; border:var(--line); border-radius:999px; min-height:64px; padding:0 24px; font-family: var(--font-display); font-size:1.3rem; cursor:pointer; width:100%; margin-bottom:12px; box-shadow:var(--shadow); transition:transform 0.1s, box-shadow 0.1s; }
+  .btn-extend:active { transform:translate(4px,4px); box-shadow:1px 1px 0 var(--ink); }
+  .btn-done { background:#fff; color:var(--ink); border:var(--line); box-shadow:var(--shadow-sm); border-radius:999px; min-height:56px; padding:0 24px; font-size:1rem; font-weight:800; cursor:pointer; width:100%; }
+
   /* ---- DASHBOARD ---- */
-  .dash-header { background:linear-gradient(135deg,var(--ink),#2A3A60); padding:24px 24px 36px; color:white; }
-  .dash-header h2 { font-family:'Baloo 2',cursive; font-size:1.5rem; font-weight:800; margin-bottom:4px; }
-  .dash-header p { font-size:0.82rem; opacity:0.7; font-weight:600; }
+  .dash-header { background:var(--yellow); padding:24px 24px 8px; color:var(--ink); }
+  .dash-header h2 { font-family: var(--font-display); font-size:2.2rem; font-weight:400; line-height:1.05; margin-bottom:6px; }
+  .dash-header p { font-size:0.95rem; font-weight:600; }
   .dash-body { padding:12px 20px 32px; display:flex; flex-direction:column; gap:16px; }
-  .dash-section-title { font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--soft); margin-bottom:10px; }
-  .week-chart { background:white; border-radius:20px; padding:18px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+  .dash-section-title { font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--ink); margin-bottom:10px; }
+  .week-chart { background:#fff; border:var(--line); border-radius:22px; padding:18px; box-shadow:var(--shadow); }
   .week-bars { display:flex; align-items:flex-end; gap:8px; height:80px; margin-bottom:8px; }
   .week-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end; }
-  .week-bar { width:100%; border-radius:6px 6px 0 0; min-height:4px; }
-  .week-bar.goal { background:linear-gradient(180deg,var(--grass),#38A85C); }
-  .week-bar.partial { background:linear-gradient(180deg,var(--sky),var(--sky-dark)); }
-  .week-bar.none { background:#EEF3FF; min-height:4px; height:4px !important; }
-  .week-day { font-size:0.62rem; font-weight:800; color:var(--soft); flex:1; text-align:center; }
-  .week-day.today { color:var(--sky-dark); }
+  .week-bar { width:100%; border:2.5px solid var(--ink); border-radius:8px 8px 0 0; min-height:4px; }
+  .week-bar.goal { background:var(--mint); }
+  .week-bar.partial { background:var(--tint); }
+  .week-bar.none { background:var(--lilac); min-height:4px; height:4px !important; }
+  .week-day { font-size:0.7rem; font-weight:800; color:var(--soft); flex:1; text-align:center; }
+  .week-day.today { color:var(--ink); text-decoration:underline; }
   .trend-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .trend-card { background:white; border-radius:18px; padding:16px 14px; box-shadow:0 3px 12px rgba(0,0,0,0.05); }
+  .trend-card { background:#fff; border:var(--line); border-radius:20px; padding:14px; box-shadow:var(--shadow-sm); }
   .trend-icon { font-size:1.5rem; display:block; margin-bottom:6px; }
-  .trend-val { font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:800; color:var(--ink); }
-  .trend-label { font-size:0.7rem; font-weight:700; color:var(--soft); }
-  .trend-change { font-size:0.72rem; font-weight:800; margin-top:4px; }
-  .trend-up { color:var(--grass); } .trend-down { color:var(--coral); }
- 
+  .trend-val { font-family: var(--font-display); font-size:1.5rem; font-weight:400; color:var(--ink); }
+  .trend-label { font-size:0.75rem; font-weight:700; color:var(--soft); }
+  .trend-change { font-size:0.75rem; font-weight:800; margin-top:4px; }
+  .trend-up { color:#14804F; } .trend-down { color:#B8321A; }
+
   /* ---- SESSION HISTORY ---- */
   .history-item {
-    background: white; border-radius:16px; padding:14px 16px;
-    box-shadow:0 3px 12px rgba(0,0,0,0.05); margin-bottom:10px;
+    background: #fff; border:var(--line); border-radius:20px; padding:12px 14px;
+    box-shadow:var(--shadow-sm); margin-bottom:12px;
     display:flex; align-items:center; gap:12px;
   }
   .history-icon { font-size:1.8rem; flex-shrink:0; }
-  .history-info { flex:1; }
-  .history-title { font-weight:800; font-size:0.88rem; color:var(--ink); }
-  .history-meta { font-size:0.75rem; color:var(--soft); font-weight:600; margin-top:2px; }
-  .history-badge { background:linear-gradient(135deg,var(--sun),var(--sun-deep)); color:white; border-radius:50px; padding:4px 10px; font-size:0.7rem; font-weight:800; flex-shrink:0; }
-  .history-badge.partial { background:linear-gradient(135deg,var(--sky),var(--sky-dark)); }
- 
+  .history-info { flex:1; min-width:0; }
+  .history-title { font-weight:800; font-size:0.9rem; color:var(--ink); }
+  .history-meta { font-size:0.78rem; color:var(--soft); font-weight:600; margin-top:2px; }
+  .history-badge { background:var(--mint); color:var(--ink); border:2px solid var(--ink); border-radius:999px; padding:3px 10px; font-size:0.75rem; font-weight:800; flex-shrink:0; }
+  .history-badge.partial { background:var(--tint); }
+
   /* ---- CHILD SUMMARY ---- */
-  .child-summary { background:white; border-radius:20px; padding:16px; box-shadow:0 3px 12px rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; margin-bottom:10px; }
-  .cs-avatar { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; overflow:hidden; }
+  .child-summary { background:#fff; border:var(--line); border-radius:22px; padding:14px 16px; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:14px; margin-bottom:12px; }
+  .cs-avatar { width:48px; height:48px; border-radius:50%; border:var(--line); display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; overflow:hidden; }
   .cs-avatar img { width:100%; height:100%; object-fit:cover; }
-  .cs-info { flex:1; }
-  .cs-name { font-weight:800; font-size:0.9rem; color:var(--ink); }
-  .cs-stats { font-size:0.75rem; color:var(--soft); font-weight:600; margin-top:2px; }
-  .cs-streak { background:linear-gradient(135deg,var(--sun),var(--sun-deep)); color:white; border-radius:50px; padding:4px 10px; font-size:0.72rem; font-weight:800; }
- 
+  .cs-info { flex:1; min-width:0; }
+  .cs-name { font-family: var(--font-display); font-size:1.2rem; color:var(--ink); }
+  .cs-stats { font-size:0.78rem; color:var(--soft); font-weight:600; margin-top:2px; }
+  .cs-streak { background:var(--coral); color:var(--ink); border:2px solid var(--ink); border-radius:999px; padding:3px 10px; font-size:0.75rem; font-weight:800; }
+
   /* ---- BOTTOM NAV ---- */
-  .bottom-nav { display:flex; background:white; border-top:1.5px solid #EEF3FF; padding:10px 0 16px; flex-shrink:0; }
-  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px; }
+  .bottom-nav { display:flex; background:#fff; border-top:var(--line); padding:8px 0 14px; flex-shrink:0; }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px; min-height:48px; }
   .nav-icon { font-size:1.3rem; }
-  .nav-label { font-size:0.6rem; font-weight:800; color:var(--soft); text-transform:uppercase; letter-spacing:0.5px; }
-  .nav-item.active .nav-label { color:var(--sky-dark); }
-  .nav-item.active .nav-icon { filter: drop-shadow(0 0 4px rgba(26,122,196,0.4)); }
- 
+  .nav-label { font-size:0.65rem; font-weight:800; color:var(--soft); text-transform:uppercase; letter-spacing:0.5px; }
+  .nav-item.active .nav-label { color:var(--ink); }
+  .nav-item.active .nav-icon { background:var(--yellow); border:2.5px solid var(--ink); border-radius:999px; padding:0 10px; box-shadow:2px 2px 0 var(--ink); }
+
   /* ---- NOTIF PERMISSION BANNER ---- */
   .notif-banner {
-    background:#F0FFF5; border:1.5px solid var(--grass); border-radius:14px;
-    padding:12px 14px; font-size:0.78rem; font-weight:700; color:#2A7A40;
+    background:#fff; border:var(--line); border-radius:16px;
+    padding:12px 14px; font-size:0.8rem; font-weight:700; color:var(--ink);
     display:flex; align-items:center; justify-content:space-between; gap:8px;
   }
-  .notif-banner button { background:var(--grass); color:white; border:none; border-radius:50px; padding:6px 14px; font-family:'Nunito',sans-serif; font-size:0.75rem; font-weight:800; cursor:pointer; flex-shrink:0; }
+  .notif-banner button { background:var(--mint); color:var(--ink); border:2.5px solid var(--ink); border-radius:999px; min-height:40px; padding:0 14px; font-size:0.8rem; font-weight:800; cursor:pointer; flex-shrink:0; }
+
+  /* ---- LATE ADDITIONS: session chrome, modals, settings ---- */
+  .page-head { background: var(--yellow); padding: 24px 24px 8px; color: var(--ink); flex-shrink: 0; }
+  .page-head h2 { font-family: var(--font-display); font-size: 2.2rem; font-weight: 400; line-height: 1.05; margin-bottom: 6px; }
+  .page-head p { font-size: 0.95rem; font-weight: 600; }
+  .block-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink); }
+  .note-box { background: #fff; border: var(--line); border-radius: 16px; padding: 12px 14px; font-size: 0.78rem; font-weight: 600; color: var(--ink); line-height: 1.6; }
+  .pill-btn { background: var(--mint); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 999px; min-height: 40px; padding: 0 14px; font-size: 0.8rem; font-weight: 800; cursor: pointer; }
+  .opt-row { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 18px; border: var(--line); background: var(--tint); margin-bottom: 8px; cursor: pointer; min-height: 56px; }
+  .opt-row.on { background: #fff; box-shadow: var(--shadow-sm); }
+  .opt-dot { width: 26px; height: 26px; border-radius: 50%; border: var(--line); background: #fff; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; }
+  .opt-row.on .opt-dot { background: var(--mint); }
+  .sess-head { background: var(--blue); padding: 16px 20px 12px; flex-shrink: 0; color: #fff; }
+  .sess-foot { background: var(--blue); flex-shrink: 0; }
+  .sess-btn { flex: 1; background: #fff; color: var(--ink); border: var(--line); box-shadow: 4px 4px 0 var(--ink); border-radius: 999px; min-height: 60px; font-family: var(--font-display); font-size: 1.3rem; cursor: pointer; }
+  .sess-btn.alt { background: var(--yellow); }
+  .profile-card { background: #fff; border: var(--line); border-radius: 22px; padding: 16px; box-shadow: var(--shadow); }
+  .profile-tag { border: 2px solid var(--ink); border-radius: 999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.5px; color: var(--ink); }
+  .type-toggle { display: flex; background: var(--lilac); border: 2px solid var(--ink); border-radius: 999px; padding: 3px; gap: 2px; }
+  .type-toggle button { min-height: 44px; padding: 0 14px; background: transparent; color: var(--ink); border: 2px solid transparent; border-radius: 999px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+  .type-toggle button.on { background: var(--mint); border-color: var(--ink); font-weight: 800; }
+  .overlay { display: none; position: absolute; inset: 0; background: rgba(23,23,28,0.62); z-index: 200; }
+  .modal-card { background: var(--yellow); border: var(--line); border-radius: 28px; padding: 24px 22px; width: 100%; box-shadow: var(--shadow); }
+  .modal-card.sheet { border-radius: 34px 34px 0 0; border-bottom: none; padding: 14px 24px 28px; }
+  .modal-title { font-family: var(--font-display); font-size: 1.9rem; font-weight: 400; line-height: 1.1; color: var(--ink); margin-bottom: 8px; }
+  .modal-text { font-size: 0.95rem; color: var(--ink); font-weight: 600; line-height: 1.45; margin-bottom: 18px; }
+  .modal-btn { width: 100%; min-height: 52px; border-radius: 999px; border: var(--line); font-size: 0.95rem; font-weight: 800; cursor: pointer; margin-bottom: 10px; background: #fff; color: var(--ink); }
+  .modal-btn.blue { background: var(--blue); color: #fff; box-shadow: var(--shadow-sm); }
+  .modal-btn.mint { background: var(--mint); box-shadow: var(--shadow-sm); }
+  .modal-btn:disabled { background: #fff; color: var(--soft); cursor: not-allowed; box-shadow: none; }
+  .modal-input { width: 100%; border: var(--line); border-radius: 16px; padding: 0 14px; height: 52px; font-size: 1rem; font-weight: 700; color: var(--ink); background: #fff; outline: none; margin-bottom: 12px; }
 </style>
 </head>
 <body>
@@ -324,7 +362,7 @@
 
   <div class="screen active" id="screen-welcome">
     <div class="welcome-sun">☀️</div>
-    <h1 class="welcome-title">Sun<span>Time</span><br>Kids</h1>
+    <h1 class="welcome-title">SunTimeKids</h1>
     <p class="welcome-sub">Track healthy sunlight for your<br>children — simply and smartly.</p>
     <div class="welcome-badge">📍 Uses your real location · Live UV data</div>
     <button class="btn-primary" style="max-width:280px;" id="btn-get-started">Get Started →</button>
@@ -341,10 +379,10 @@
 
       <div>
         <button class="btn-secondary" id="btn-add-child">+ Add another child</button>
-        <div id="add-child-note" style="margin-top:8px;font-size:0.72rem;font-weight:600;color:var(--soft);text-align:center;"></div>
+        <div id="add-child-note" style="margin-top:8px;font-size:0.8rem;font-weight:600;color:var(--ink);text-align:center;"></div>
       </div>
 
-      <div id="onboard-error" role="alert" style="display:none;background:#FFF0F0;border:1.5px solid var(--coral);border-radius:12px;padding:10px 14px;font-size:0.78rem;font-weight:700;color:#A02020;"></div>
+      <div id="onboard-error" role="alert" class="note-box" style="display:none;border-color:var(--coral);background:#fff;color:#A02020;font-weight:800;"></div>
  
       <div class="privacy-note">🔒 All data stored on your device only. No account required. COPPA compliant.</div>
       <button class="btn-primary" id="btn-save-profiles">Save Profiles & Continue →</button>
@@ -363,9 +401,9 @@
     </div>
     <div class="home-body">
       <div id="notif-banner-wrap"></div>
-      <div id="loc-row" style="background:#FFF8E8;border:1.5px solid #FFB800;border-radius:14px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <span style="font-size:0.78rem;font-weight:700;color:#7A5500;" id="loc-label">📍 Detecting location…</span>
-        <button id="loc-change-btn" style="background:#4DC87A;color:white;border:none;border-radius:50px;padding:6px 14px;font-family:Nunito,sans-serif;font-size:0.75rem;font-weight:800;cursor:pointer;">Change</button>
+      <div id="loc-row" class="loc-banner" style="justify-content:space-between;">
+        <span style="font-size:0.8rem;font-weight:700;color:var(--ink);" id="loc-label">📍 Detecting location…</span>
+        <button id="loc-change-btn" class="pill-btn">Change</button>
       </div>
       <div id="child-cards"></div>
       <button class="btn-headout" id="btn-headout">
@@ -414,7 +452,7 @@
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">☀️ Live UV Index</span>
-          <span style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:var(--ink);" id="uv-setup">–</span>
+          <span style="font-family:var(--font-display);font-size:1.5rem;color:var(--ink);" id="uv-setup">–</span>
         </div>
         <div style="display:flex;justify-content:space-between;">
           <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">📍 Location</span>
@@ -425,7 +463,7 @@
       <!-- Per-child clothing and SPF inputs populated by JS -->
       <div id="per-child-setup"></div>
  
-      <button class="btn-primary" style="background:linear-gradient(135deg,#FF8C00,#FFB800);color:white;font-size:1.1rem;padding:18px;box-shadow:0 8px 24px rgba(255,140,0,0.5);" id="btn-start-session">▶ Start Session</button>
+      <button class="btn-primary" id="btn-start-session">▶ Start Session</button>
       <button class="btn-secondary" id="btn-setup-back">← Back</button>
     </div>
   </div>
@@ -433,13 +471,13 @@
   <!-- ===== ACTIVE SESSION ===== -->
   <div class="screen" id="screen-session">
     <!-- Session header - shared across all children -->
-    <div style="background:linear-gradient(135deg,#0A4A7A,#1A7AC4);padding:16px 20px 12px;flex-shrink:0;">
+    <div class="sess-head">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <div style="font-size:0.75rem;font-weight:800;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px;">Time Outdoors</div>
-        <div style="font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.6);">UV <span id="session-uv-header">–</span></div>
+        <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;">Time Outdoors</div>
+        <div style="font-size:0.8rem;font-weight:700;background:var(--coral);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:2px 10px;">UV <span id="session-uv-header">–</span></div>
       </div>
-      <div class="session-timer" id="session-timer" style="font-family:'Baloo 2',cursive;font-size:2.6rem;font-weight:800;color:white;letter-spacing:2px;line-height:1;">00:00</div>
-      <div class="bg-notice" id="bg-notice" style="background:rgba(255,255,255,0.1);border-radius:10px;padding:6px 12px;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.8);margin-top:8px;text-align:center;">⏸ Tracks time when you switch away — tap to check progress</div>
+      <div class="session-timer" id="session-timer" style="font-family:var(--font-display);font-size:3.4rem;color:#fff;text-shadow:3px 3px 0 var(--ink);letter-spacing:1px;line-height:1.05;">00:00</div>
+      <div class="bg-notice" id="bg-notice" style="margin:8px 0 0;font-size:0.72rem;">⏸ Tracks time when you switch away — tap to check progress</div>
     </div>
  
     <!-- Swipeable child cards -->
@@ -448,14 +486,14 @@
     </div>
  
     <!-- Dot indicators (shown when 2+ children) -->
-    <div id="session-dots" style="display:flex;justify-content:center;gap:8px;padding:8px 0;background:linear-gradient(135deg,#0A4A7A,#1A7AC4);flex-shrink:0;"></div>
+    <div id="session-dots" class="sess-foot" style="display:flex;justify-content:center;gap:10px;padding:8px 0;"></div>
  
     <!-- Sunscreen reminder banner (hidden by default) -->
-    <div id="sunscreen-reminder" style="display:none;background:#FF8C00;color:white;padding:10px 16px;font-family:Nunito,sans-serif;font-size:0.82rem;font-weight:800;text-align:center;flex-shrink:0;">🧴 Time to reapply sunscreen! <button id="btn-dismiss-sunscreen" style="background:rgba(255,255,255,0.25);border:none;color:white;border-radius:50px;padding:3px 10px;font-family:Nunito,sans-serif;font-size:0.75rem;font-weight:800;cursor:pointer;margin-left:8px;">Got it</button></div>
+    <div id="sunscreen-reminder" style="display:none;background:var(--coral);color:var(--ink);border-top:var(--line);border-bottom:var(--line);padding:10px 16px;font-size:0.85rem;font-weight:800;text-align:center;flex-shrink:0;">🧴 Time to reapply sunscreen! <button id="btn-dismiss-sunscreen" class="pill-btn" style="background:#fff;margin-left:8px;">Got it</button></div>
     <!-- Controls -->
-    <div style="display:flex;gap:10px;padding:12px 20px 16px;background:linear-gradient(135deg,#0A4A7A,#1A7AC4);flex-shrink:0;">
-      <button id="btn-pause" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.4);border-radius:50px;padding:14px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⏸ Pause</button>
-      <button id="btn-end-session" style="flex:1;background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.4);border-radius:50px;padding:14px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⏹ End</button>
+    <div class="sess-foot" style="display:flex;gap:14px;padding:12px 20px 22px;">
+      <button id="btn-pause" class="sess-btn alt">⏸ Pause</button>
+      <button id="btn-end-session" class="sess-btn">⏹ End</button>
     </div>
   </div>
  
@@ -463,11 +501,11 @@
   <div class="screen" id="screen-celebrate">
     <div class="confetti-wrap">
       <span class="celebrate-emoji">🌟</span>
-      <div class="confetti" style="left:20%;top:10%;background:#FFB800;animation-delay:0s;animation-duration:1.8s;"></div>
-      <div class="confetti" style="left:70%;top:5%;background:#FF6060;animation-delay:0.3s;animation-duration:2.1s;"></div>
-      <div class="confetti" style="left:45%;top:15%;background:#4DC87A;animation-delay:0.6s;animation-duration:1.6s;"></div>
-      <div class="confetti" style="left:85%;top:20%;background:#5BC8F5;animation-delay:0.9s;animation-duration:2.3s;"></div>
-      <div class="confetti" style="left:10%;top:25%;background:#7C5CBF;animation-delay:1.2s;animation-duration:1.9s;"></div>
+      <div class="confetti" style="left:20%;top:10%;background:#FFD23F;animation-delay:0s;animation-duration:1.8s;"></div>
+      <div class="confetti" style="left:70%;top:5%;background:#3B5BFF;animation-delay:0.3s;animation-duration:2.1s;"></div>
+      <div class="confetti" style="left:45%;top:15%;background:#5FDCA8;animation-delay:0.6s;animation-duration:1.6s;"></div>
+      <div class="confetti" style="left:85%;top:20%;background:#fff;animation-delay:0.9s;animation-duration:2.3s;"></div>
+      <div class="confetti" style="left:10%;top:25%;background:#17171C;animation-delay:1.2s;animation-duration:1.9s;"></div>
     </div>
     <h2 class="celebrate-title" id="cel-title">Goal Reached! ☀️</h2>
     <p class="celebrate-sub" id="cel-sub">Daily vitamin D goal achieved</p>
@@ -512,37 +550,37 @@
  
   <!-- ===== SETTINGS ===== -->
   <div class="screen" id="screen-settings">
-    <div style="background:linear-gradient(135deg,var(--ink),#2A3A60);padding:24px 24px 36px;color:white;flex-shrink:0;">
-      <h2 style="font-family:'Baloo 2',cursive;font-size:1.5rem;font-weight:800;margin-bottom:4px;">⚙️ Settings</h2>
-      <p style="font-size:0.82rem;opacity:0.7;font-weight:600;">App preferences</p>
+    <div class="page-head">
+      <h2>⚙️ Settings</h2>
+      <p>App preferences</p>
     </div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
  
-      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">Session Behaviour</div>
+      <div class="block-label">Session Behaviour</div>
       <div class="card" style="padding:20px;">
         <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:6px;">When daily vitamin D goal is reached</div>
         <div style="font-size:0.8rem;color:var(--soft);font-weight:600;margin-bottom:14px;">Choose what happens automatically when your child hits their goal</div>
-        <div id="session-end-opt-auto" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:2.5px solid var(--sky-dark);background:#EEF6FF;margin-bottom:8px;cursor:pointer;">
-          <div style="width:20px;height:20px;border-radius:50%;background:var(--sky-dark);display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:800;flex-shrink:0;">✓</div>
-          <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Show 60-second prompt</div><div style="font-size:0.72rem;color:var(--soft);font-weight:600;">Ask whether to keep going or end session</div></div>
+        <div id="session-end-opt-auto" class="opt-row on">
+          <div class="opt-dot">✓</div>
+          <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Show 60-second prompt</div><div style="font-size:0.78rem;color:var(--soft);font-weight:600;">Ask whether to keep going or end session</div></div>
         </div>
-        <div id="session-end-opt-keep" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:2.5px solid #DDE6F5;background:white;cursor:pointer;">
-          <div style="width:20px;height:20px;border-radius:50%;border:2px solid #DDE6F5;flex-shrink:0;"></div>
-          <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Keep tracking automatically</div><div style="font-size:0.72rem;color:var(--soft);font-weight:600;">Continue session without prompting</div></div>
+        <div id="session-end-opt-keep" class="opt-row">
+          <div class="opt-dot"></div>
+          <div><div style="font-weight:800;font-size:0.85rem;color:var(--ink);">Keep tracking automatically</div><div style="font-size:0.78rem;color:var(--soft);font-weight:600;">Continue session without prompting</div></div>
         </div>
       </div>
  
-      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">About</div>
+      <div class="block-label">About</div>
       <div class="card" style="padding:20px;">
         <div style="font-weight:800;font-size:0.9rem;color:var(--ink);margin-bottom:4px;">SunTimeKids v2.5</div>
         <div style="font-size:0.78rem;color:var(--soft);font-weight:600;margin-bottom:16px;">UV exposure tracker for children</div>
-        <div style="background:#FFF8E8;border:1.5px solid #FFB800;border-radius:12px;padding:14px;font-size:0.75rem;font-weight:600;color:#7A5500;line-height:1.6;">
+        <div class="note-box" style="background:var(--tint);">
           <strong style="display:block;margin-bottom:4px;">⚕️ Medical Disclaimer</strong>
           SunTimeKids provides general guidance only. Vitamin D synthesis estimates are based on published research models and are not a substitute for personalised medical advice. Individual results vary based on genetics, health status, and environmental conditions. Consult your paediatrician regarding your child's specific vitamin D and sun exposure needs. The app does not diagnose, treat, or prevent any medical condition.
         </div>
       </div>
  
-      <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--soft);">Privacy</div>
+      <div class="block-label">Privacy</div>
       <div class="card" style="padding:20px;">
         <div style="font-size:0.82rem;font-weight:600;color:var(--ink);line-height:1.6;">🔒 All data including child profiles, photos, and session history is stored locally on your device only. No data is ever sent to any server. No account is required. SunTimeKids is designed to be fully COPPA compliant.</div>
       </div>
@@ -553,28 +591,29 @@
   </div>
  
   <!-- Location modal (replaces prompt() which iOS blocks) -->
-  <div id="loc-modal" style="display:none;position:absolute;inset:0;background:rgba(26,35,64,0.7);z-index:200;align-items:center;justify-content:center;padding:32px;">
-    <div style="background:white;border-radius:24px;padding:28px 24px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-      <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#1A2340;margin-bottom:6px;">📍 Change Location</div>
-      <div style="font-size:0.82rem;color:#7A8AAF;font-weight:600;margin-bottom:16px;">Enter a city name or tap the GPS button to use your current location</div>
-      <input id="loc-input" type="text" placeholder="e.g. Nashville, TN" style="width:100%;border:2px solid #DDE6F5;border-radius:14px;padding:13px 16px;font-family:Nunito,sans-serif;font-size:0.95rem;font-weight:700;color:#1A2340;outline:none;margin-bottom:12px;">
-      <button id="loc-gps-btn" style="width:100%;background:#1A7AC4;color:white;border:none;border-radius:14px;padding:13px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;margin-bottom:8px;">📡 Use My Current GPS Location</button>
-      <button id="loc-search-btn" style="width:100%;background:#FFB800;color:#1A2340;border:none;border-radius:14px;padding:13px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;margin-bottom:8px;">🔍 Search City</button>
-      <button id="loc-cancel-btn" style="width:100%;background:white;color:#7A8AAF;border:2px solid #DDE6F5;border-radius:14px;padding:12px;font-family:Nunito,sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">Cancel</button>
+  <div id="loc-modal" class="overlay" style="align-items:center;justify-content:center;padding:28px;">
+    <div class="modal-card">
+      <div class="modal-title">📍 Change Location</div>
+      <div class="modal-text">Enter a city name or tap the GPS button to use your current location</div>
+      <input id="loc-input" class="modal-input" type="text" placeholder="e.g. Nashville, TN" aria-label="City name">
+      <button id="loc-gps-btn" class="modal-btn blue">📡 Use My Current GPS Location</button>
+      <button id="loc-search-btn" class="modal-btn mint">🔍 Search City</button>
+      <button id="loc-cancel-btn" class="modal-btn">Cancel</button>
     </div>
   </div>
  
   <!-- Premium upgrade prompt. Placeholder: no billing exists yet, so the action button is disabled. -->
   <!-- TODO(copy): final wording and pricing -->
-  <div id="upgrade-modal" style="display:none;position:absolute;inset:0;background:rgba(26,35,64,0.7);z-index:200;align-items:flex-end;justify-content:center;">
-    <div role="dialog" aria-modal="true" aria-labelledby="upgrade-title" style="background:white;border-radius:28px 28px 0 0;padding:28px 24px 36px;width:100%;box-shadow:0 -8px 32px rgba(0,0,0,0.2);">
-      <div id="upgrade-title" style="font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:#1A2340;margin-bottom:6px;">Track more children with Premium</div>
-      <div style="font-size:0.85rem;color:#7A8AAF;font-weight:600;line-height:1.5;margin-bottom:18px;">SunTimeKids is free for up to 2 children. Premium will add profiles for your whole family.</div>
-      <button class="btn-primary" id="btn-upgrade-action" disabled style="opacity:0.6;cursor:not-allowed;">Premium coming soon</button>
-      <button class="btn-nav" style="margin-top:10px;" id="btn-upgrade-close">Not now</button>
+  <div id="upgrade-modal" class="overlay" style="align-items:flex-end;justify-content:center;">
+    <div role="dialog" aria-modal="true" aria-labelledby="upgrade-title" class="modal-card sheet">
+      <div style="width:48px;height:6px;border-radius:999px;background:var(--ink);margin:0 auto 18px;" aria-hidden="true"></div>
+      <div id="upgrade-title" class="modal-title" style="text-align:center;">More kids, more sun!</div>
+      <div class="modal-text" style="text-align:center;">SunTimeKids is free for up to 2 children. Premium will add profiles for your whole family.</div>
+      <button class="modal-btn" id="btn-upgrade-action" disabled>🔒 Premium coming soon</button>
+      <button class="modal-btn" style="border:none;background:none;text-decoration:underline;" id="btn-upgrade-close">Not now</button>
     </div>
   </div>
-
+ 
   <!-- Bottom nav -->
   <div class="bottom-nav" id="bottom-nav" style="display:none;">
     <div class="nav-item" id="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
@@ -663,14 +702,7 @@ function avatarContent(child, idx) {
 }
 
 // One background per profile slot; cycles if there are more profiles than colors
-const AVATAR_BGS = [
-  'linear-gradient(135deg,#FFE0A0,#FFB800)',
-  'linear-gradient(135deg,#A0E0FF,#5BC8F5)',
-  'linear-gradient(135deg,#B8F0C8,#4DC87A)',
-  'linear-gradient(135deg,#FFC0C0,#FF6060)',
-  'linear-gradient(135deg,#D8C8F5,#7C5CBF)',
-  'linear-gradient(135deg,#FFD9A8,#FF8C00)'
-];
+const AVATAR_BGS = ['#5FDCA8', '#FF6A4D', '#FFE88A', '#B79CFF', '#FFD23F', '#9FC0FF'];
 
 function avatarBg(idx) {
   return AVATAR_BGS[idx % AVATAR_BGS.length];
@@ -977,27 +1009,28 @@ function newBlankProfile() {
   return { name: '', age: null, fitz: 3, photo: null, goal: 400, isAdult: false, draft: true };
 }
 
+const PROFILE_TAG_COLORS = ['#5FDCA8', '#FF6A4D', '#FFD23F', '#B79CFF', '#FFE88A', '#9FC0FF'];
 const FITZ_SWATCHES = ['#FDDBB4', '#F5C89A', '#E0A87C', '#C07A4A', '#7A4A28', '#3A2010'];
 const FITZ_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
-const PROFILE_TYPE_BTN_STYLE = 'background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;';
+const PROFILE_TYPE_BTN_STYLE = '';
 
 // Build one profile card for APP.children[i]. Ids match the helpers below (name-i, age-i, fitz-i, photo-i, file-i).
 function buildProfileCard(i) {
   const c = APP.children[i];
-  const typeToggle = el('div', { id: 'type-toggle-' + i, style: 'display:flex;background:#EEF3FF;border-radius:50px;padding:3px;gap:2px;' }, [
+  const typeToggle = el('div', { id: 'type-toggle-' + i, className: 'type-toggle', role: 'group', 'aria-label': 'Profile type' }, [
     el('button', { id: 'type-child-' + i, 'data-profile-idx': i, 'data-profile-type': 'child', style: PROFILE_TYPE_BTN_STYLE, text: '👦 Child' }),
     el('button', { id: 'type-adult-' + i, 'data-profile-idx': i, 'data-profile-type': 'adult', style: PROFILE_TYPE_BTN_STYLE, text: '🧑 Adult' })
   ]);
   const header = el('div', { style: 'display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;' }, [
-    el('div', { style: 'font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;', text: 'Profile ' + (i + 1) }),
+    el('div', { className: 'profile-tag', style: 'background:' + PROFILE_TAG_COLORS[i % PROFILE_TAG_COLORS.length] + ';', text: 'PROFILE ' + (i + 1) }),
     typeToggle
   ]);
   const nameRow = el('div', { style: 'display:flex;gap:12px;margin-bottom:12px;' }, [
     el('div', { style: 'flex:1;' }, [
       el('div', { className: 'field-label', text: 'Name' }),
-      el('input', { className: 'field-input', id: 'name-' + i, type: 'text', placeholder: 'Child name', maxlength: '30', value: c.name || null })
+      el('input', { className: 'field-input', id: 'name-' + i, type: 'text', placeholder: 'Name', maxlength: '30', value: c.name || null })
     ]),
-    el('div', { style: 'width:80px;' }, [
+    el('div', { style: 'width:92px;' }, [
       el('div', { className: 'field-label', id: 'age-label-' + i, text: 'Age' }),
       el('input', { className: 'field-input', id: 'age-' + i, type: 'number', placeholder: 'Age', min: '0', max: '99', value: c.age == null ? null : c.age })
     ])
@@ -1018,10 +1051,10 @@ function buildProfileCard(i) {
   // Remove is only offered for the newest unsaved card (see updateAddChildUI), so saved history is never reindexed
   const removeBtn = el('button', {
     id: 'remove-' + i, 'data-remove-idx': i, 'aria-label': 'Remove profile ' + (i + 1),
-    style: 'display:none;margin-top:12px;background:none;border:none;color:#A02020;font-family:Nunito,sans-serif;font-size:0.78rem;font-weight:800;cursor:pointer;padding:6px 0;',
+    style: 'display:none;margin-top:12px;min-height:44px;background:none;border:none;color:#A02020;font-size:0.9rem;font-weight:800;text-decoration:underline;cursor:pointer;',
     text: 'Remove this profile'
   });
-  return el('div', { id: 'profile-card-' + i, style: 'background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;' }, [
+  return el('div', { id: 'profile-card-' + i, className: 'profile-card' }, [
     header, nameRow,
     el('div', { className: 'field-label', text: 'Skin Tone' }), fitzGrid,
     el('div', { style: 'margin-top:12px;' }, [el('div', { className: 'field-label', text: 'Photo (optional)' }), photoRow]),
@@ -1119,16 +1152,10 @@ function syncSelection() {
  
 function setProfileType(idx, type) {
   APP.children[idx].isAdult = (type === 'adult');
-  // Update toggle button styles
   const childBtn = document.getElementById('type-child-' + idx);
   const adultBtn = document.getElementById('type-adult-' + idx);
-  if (type === 'adult') {
-    if (childBtn) { childBtn.style.background = 'transparent'; childBtn.style.color = 'var(--soft)'; }
-    if (adultBtn) { adultBtn.style.background = 'var(--sky-dark)'; adultBtn.style.color = 'white'; }
-  } else {
-    if (childBtn) { childBtn.style.background = 'var(--sky-dark)'; childBtn.style.color = 'white'; }
-    if (adultBtn) { adultBtn.style.background = 'transparent'; adultBtn.style.color = 'var(--soft)'; }
-  }
+  if (childBtn) { childBtn.classList.toggle('on', type !== 'adult'); childBtn.setAttribute('aria-pressed', type !== 'adult' ? 'true' : 'false'); }
+  if (adultBtn) { adultBtn.classList.toggle('on', type === 'adult'); adultBtn.setAttribute('aria-pressed', type === 'adult' ? 'true' : 'false'); }
 }
  
 function getVitDGoal(age, isAdult) {
@@ -1217,10 +1244,10 @@ function renderWhosList() {
   APP.children.forEach((c, i) => {
     const sel = APP.selectedChildren.includes(i);
     list.appendChild(el('div', { className: 'who-child' + (sel ? ' selected' : ''), 'data-child-idx': i }, [
-      el('div', { className: 'child-avatar', style: 'width:44px;height:44px;font-size:1.3rem;background:' + avatarBg(i) + ';' }, [avatarContent(c, i)]),
+      el('div', { className: 'child-avatar', style: 'width:52px;height:52px;font-size:1.4rem;background:' + avatarBg(i) + ';' }, [avatarContent(c, i)]),
       el('div', null, [
-        el('div', { style: 'font-weight:800;font-size:0.9rem;color:var(--ink);', text: c.name }),
-        el('div', { style: 'font-size:0.75rem;color:var(--soft);font-weight:600;', text: 'Age ' + c.age + ' · Fitzpatrick Type ' + c.fitz })
+        el('div', { style: 'font-family:var(--font-display);font-size:1.4rem;line-height:1.1;color:var(--ink);', text: c.name }),
+        el('div', { style: 'font-size:0.8rem;color:var(--soft);font-weight:600;', text: 'Age ' + c.age + ' · Skin type ' + c.fitz })
       ]),
       el('div', { className: 'who-check', text: sel ? '✓' : '' })
     ]));
@@ -1260,11 +1287,9 @@ function renderPerChildSetup() {
     const c = APP.children[ci];
     if (!APP.childSetups[ci]) APP.childSetups[ci] = { clothingFactor: 1.0, spfFactor: 1.0 };
     const setup = APP.childSetups[ci];
-    const bg = ci === 0 ? '#FFF8E8' : '#EEF6FF';
-    const borderColor = ci === 0 ? '#FFB800' : '#4AB8F5';
-    const subTitle = 'font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--soft);margin-bottom:8px;';
+    const subTitle = 'font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink);margin-bottom:8px;';
 
-    const heading = el('div', { style: 'font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--ink);margin-bottom:10px;' }, [
+    const heading = el('div', { style: 'font-family:var(--font-display);font-size:1.5rem;color:var(--ink);margin-bottom:10px;' }, [
       c.photo
         ? el('img', { src: c.photo, alt: '', style: 'width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;' })
         : defaultAvatar(ci) + ' ',
@@ -1276,7 +1301,7 @@ function renderPerChildSetup() {
       CLOTHING_OPTIONS.map(o => el('button', {
         className: 'clothing-btn' + (o[2] === setup.clothingFactor ? ' selected' : ''),
         'data-child-idx': ci, 'data-clothing-factor': o[2]
-      }, [el('span', { className: 'clothing-icon', text: o[0] }), el('span', { className: 'clothing-label', text: o[1] })])));
+      }, [el('span', { className: 'clothing-icon', text: o[0] }), el('span', { className: 'clothing-label', text: o[1].replace('+', '+\u200b') })])));
 
     const spfGrid = el('div', { className: 'spf-grid', id: 'spf-' + ci },
       SPF_OPTIONS.map(o => el('button', {
@@ -1285,7 +1310,7 @@ function renderPerChildSetup() {
       }, [el('span', { className: 'spf-icon', text: o[0] }), el('span', { className: 'spf-label', text: o[1] })])));
 
     container.appendChild(el('div', {
-      style: 'background:' + bg + ';border:2px solid ' + borderColor + ';border-radius:16px;padding:14px 16px;margin-bottom:12px;'
+      className: 'card', style: 'margin-bottom:16px;'
     }, [heading, el('div', { style: subTitle, text: '👕 Clothing' }), clothingGrid, el('div', { style: subTitle, text: '🧴 Sunscreen' }), spfGrid]));
   });
 }
@@ -1365,9 +1390,7 @@ function renderSessionCards() {
  
   APP.childSessions.forEach(function(cs, sliderIdx) {
     var c = APP.children[cs.childIndex];
-    var bg = cs.childIndex === 0
-      ? 'linear-gradient(135deg,#FFE0A0,#FFB800)'
-      : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+    var bg = avatarBg(cs.childIndex);
  
     // Outer card
     var card = document.createElement('div');
@@ -1376,7 +1399,7 @@ function renderSessionCards() {
  
     // Avatar
     var avatar = document.createElement('div');
-    avatar.style.cssText = 'width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid rgba(255,255,255,0.5);margin-bottom:8px;';
+    avatar.style.cssText = 'width:64px;height:64px;border-radius:50%;background:' + bg + ';display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;border:3px solid #17171C;margin-bottom:8px;';
     if (c.photo) {
       var img = document.createElement('img');
       img.src = c.photo;
@@ -1390,7 +1413,7 @@ function renderSessionCards() {
  
     // Name
     var nameEl = document.createElement('div');
-    nameEl.style.cssText = 'font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:white;margin-bottom:12px;';
+    nameEl.style.cssText = 'font-family:var(--font-display);font-size:1.7rem;color:white;margin-bottom:10px;';
     nameEl.textContent = c.name;
     card.appendChild(nameEl);
  
@@ -1407,16 +1430,23 @@ function renderSessionCards() {
     var trackCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
     trackCircle.setAttribute('cx','75'); trackCircle.setAttribute('cy','75');
     trackCircle.setAttribute('r','62'); trackCircle.setAttribute('fill','none');
-    trackCircle.setAttribute('stroke','rgba(255,255,255,0.15)');
-    trackCircle.setAttribute('stroke-width','11');
+    trackCircle.setAttribute('stroke','#FFFFFF');
+    trackCircle.setAttribute('stroke-width','14');
     svg.appendChild(trackCircle);
+    [['r','69'],['r','55']].forEach(function(o) {
+      var edge = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      edge.setAttribute('cx','75'); edge.setAttribute('cy','75'); edge.setAttribute('r',o[1]);
+      edge.setAttribute('fill', o[1] === '55' ? '#FFD23F' : 'none');
+      edge.setAttribute('stroke','#17171C'); edge.setAttribute('stroke-width','3');
+      svg.appendChild(edge);
+    });
  
     var progressCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
     progressCircle.setAttribute('cx','75'); progressCircle.setAttribute('cy','75');
     progressCircle.setAttribute('r','62'); progressCircle.setAttribute('fill','none');
-    progressCircle.setAttribute('stroke','#FFB800');
+    progressCircle.setAttribute('stroke','#5FDCA8');
     progressCircle.setAttribute('stroke-width','11');
-    progressCircle.setAttribute('stroke-linecap','round');
+    progressCircle.setAttribute('stroke-linecap','butt');
     progressCircle.setAttribute('stroke-dasharray','390');
     progressCircle.setAttribute('stroke-dashoffset','390');
     progressCircle.id = 'arc-' + sliderIdx;
@@ -1428,12 +1458,12 @@ function renderSessionCards() {
  
     var pctEl = document.createElement('div');
     pctEl.id = 'pct-' + sliderIdx;
-    pctEl.style.cssText = 'font-family:var(--font-display);font-size:1.9rem;font-weight:800;color:white;';
+    pctEl.style.cssText = 'font-family:var(--font-display);font-size:2rem;color:#17171C;';
     pctEl.textContent = '0%';
     ringCenter.appendChild(pctEl);
  
     var subEl = document.createElement('div');
-    subEl.style.cssText = 'font-size:0.65rem;color:rgba(255,255,255,0.7);font-weight:700;';
+    subEl.style.cssText = 'font-size:0.65rem;color:#17171C;font-weight:700;';
     subEl.textContent = 'Vitamin D Goal';
     ringCenter.appendChild(subEl);
     ringWrap.appendChild(ringCenter);
@@ -1445,13 +1475,13 @@ function renderSessionCards() {
  
     function makeStat(idSuffix, value, label) {
       var stat = document.createElement('div');
-      stat.style.cssText = 'flex:1;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 6px;text-align:center;';
+      stat.style.cssText = 'flex:1;background:#fff;color:#17171C;border:3px solid #17171C;box-shadow:3px 3px 0 #17171C;border-radius:16px;padding:8px 4px;text-align:center;';
       var val = document.createElement('div');
       val.id = idSuffix;
-      val.style.cssText = 'font-family:var(--font-display);font-size:1rem;font-weight:800;color:white;';
+      val.style.cssText = 'font-family:var(--font-display);font-size:1.1rem;color:#17171C;';
       val.textContent = value;
       var lbl = document.createElement('div');
-      lbl.style.cssText = 'font-size:0.6rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;';
+      lbl.style.cssText = 'font-size:0.65rem;color:#5A5A66;font-weight:700;text-transform:uppercase;';
       lbl.textContent = label;
       stat.appendChild(val);
       stat.appendChild(lbl);
@@ -1465,18 +1495,18 @@ function renderSessionCards() {
  
     // Burn risk
     var burnSection = document.createElement('div');
-    burnSection.style.cssText = 'width:100%;background:rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;';
+    burnSection.style.cssText = 'width:100%;background:#fff;color:#17171C;border:3px solid #17171C;box-shadow:4px 4px 0 #17171C;border-radius:18px;padding:10px 14px;';
  
     var burnTitle = document.createElement('div');
-    burnTitle.style.cssText = 'font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:6px;';
+    burnTitle.style.cssText = 'font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#17171C;margin-bottom:6px;';
     burnTitle.textContent = '🔴 Burn Risk';
     burnSection.appendChild(burnTitle);
  
     var burnBg = document.createElement('div');
-    burnBg.style.cssText = 'background:rgba(255,255,255,0.2);border-radius:50px;height:8px;overflow:hidden;';
+    burnBg.style.cssText = 'background:#EDEDF2;border:2.5px solid #17171C;border-radius:999px;height:18px;overflow:hidden;';
     var burnBar = document.createElement('div');
     burnBar.id = 'burn-' + sliderIdx;
-    burnBar.style.cssText = 'height:100%;border-radius:50px;width:3%;background:linear-gradient(90deg,#4DC87A,#7BE89A);transition:width 1s;';
+    burnBar.style.cssText = 'height:100%;width:3%;background:#5FDCA8;border-right:2.5px solid #17171C;transition:width 1s;';
     burnBg.appendChild(burnBar);
     burnSection.appendChild(burnBg);
  
@@ -1484,7 +1514,7 @@ function renderSessionCards() {
     burnLabels.style.cssText = 'display:flex;justify-content:space-between;margin-top:3px;';
     ['Safe','Caution','High Risk'].forEach(function(lbl) {
       var s = document.createElement('span');
-      s.style.cssText = 'font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:700;';
+      s.style.cssText = 'font-size:0.7rem;color:#5A5A66;font-weight:700;';
       s.textContent = lbl;
       burnLabels.appendChild(s);
     });
@@ -1501,7 +1531,7 @@ function renderSessionCards() {
       APP.childSessions.forEach(function(_, i) {
         var dot = document.createElement('div');
         dot.id = 'dot-' + i;
-        dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:' + (i===0?'white':'rgba(255,255,255,0.35)') + ';transition:background 0.2s;';
+        dot.style.cssText = 'width:12px;height:12px;box-sizing:border-box;border-radius:50%;border:2px solid ' + (i===0?'#17171C':'#fff') + ';background:' + (i===0?'#FFD23F':'transparent') + ';';
         dotsEl.appendChild(dot);
       });
     } else {
@@ -1529,7 +1559,7 @@ function setActiveChild(idx) {
   if (slider) slider.style.transform = 'translateX(-' + (idx * 100) + '%)';
   APP.childSessions.forEach((_, i) => {
     const dot = document.getElementById('dot-' + i);
-    if (dot) dot.style.background = i === idx ? 'white' : 'rgba(255,255,255,0.35)';
+    if (dot) { dot.style.background = i === idx ? '#FFD23F' : 'transparent'; dot.style.borderColor = i === idx ? '#17171C' : '#fff'; }
   });
 }
  
@@ -1708,10 +1738,10 @@ function showInAppSunscreenReminder() {
 
 function burnGradient(burn) {
   return burn < 40
-    ? 'linear-gradient(90deg,#4DC87A,#7BE89A)'
+    ? '#5FDCA8'
     : burn < 70
-      ? 'linear-gradient(90deg,#FFB800,#FF8C00)'
-      : 'linear-gradient(90deg,#FF6060,#FF3030)';
+      ? '#FFD23F'
+      : '#FF6A4D';
 }
 
 function renderChildProgress(sliderIdx, vitd, pct, burn) {
@@ -2275,6 +2305,29 @@ function renderSessionHistory() {
       el('div', { className: 'history-badge' + (hitCount === results.length && hitCount > 0 ? '' : ' partial'), text: badgeTxt })
     ]));
   });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+// Settings: what happens when a child reaches their goal ('auto' = 60-second prompt, 'keep' = no prompt)
+function setSessionEndMode(mode, persist) {
+  APP.sessionEndMode = mode;
+  if (persist) storeSet('stk_session_end_mode', mode);
+  const optAuto = document.getElementById('session-end-opt-auto');
+  const optKeep = document.getElementById('session-end-opt-keep');
+  const activeOpt = mode === 'auto' ? optAuto : optKeep;
+  const inactiveOpt = mode === 'auto' ? optKeep : optAuto;
+  if (activeOpt) {
+    activeOpt.classList.add('on');
+    const dot = activeOpt.querySelector('.opt-dot');
+    if (dot) dot.textContent = '✓';
+  }
+  if (inactiveOpt) {
+    inactiveOpt.classList.remove('on');
+    const dot = inactiveOpt.querySelector('.opt-dot');
+    if (dot) dot.textContent = '';
+  }
 }
 
 // ============================================================
