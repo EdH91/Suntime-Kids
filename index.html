@@ -337,82 +337,14 @@
       <p>Set up profiles — takes under a minute</p>
     </div>
     <div class="onboard-body">
- 
-      <!-- Profile 1 -->
-      <div style="background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;">Profile 1</div>
-          <div id="type-toggle-0" style="display:flex;background:#EEF3FF;border-radius:50px;padding:3px;gap:2px;">
-            <button id="type-child-0" data-profile-idx="0" data-profile-type="child" style="background:var(--sky-dark);color:white;border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">👦 Child</button>
-            <button id="type-adult-0" data-profile-idx="0" data-profile-type="adult" style="background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">🧑 Adult</button>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;margin-bottom:12px;">
-          <div style="flex:1;">
-            <div class="field-label">Name</div>
-            <input class="field-input" id="name-0" type="text" placeholder="e.g. Alex" value="Alex">
-          </div>
-          <div style="width:80px;">
-            <div class="field-label" id="age-label-0">Age</div>
-            <input class="field-input" id="age-0" type="number" placeholder="6" value="6" min="0" max="99">
-          </div>
-        </div>
-        <div class="field-label">Skin Tone</div>
-        <div class="fitz-grid" id="fitz-0">
-          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="1"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
-          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="2"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
-          <button class="fitz-btn selected" data-fitz-idx="0" data-fitz-val="3"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
-          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="4"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
-          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="5"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
-          <button class="fitz-btn" data-fitz-idx="0" data-fitz-val="6"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
-        </div>
-        <div style="margin-top:12px;">
-          <div class="field-label">Photo (optional)</div>
-          <div class="photo-row">
-            <div class="photo-circle" id="photo-0">📷</div>
-            <input type="file" id="file-0" accept="image/*" style="display:none">
-            <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
-          </div>
-        </div>
+      <div id="profile-cards" style="display:flex;flex-direction:column;gap:20px;"></div>
+
+      <div>
+        <button class="btn-secondary" id="btn-add-child">+ Add another child</button>
+        <div id="add-child-note" style="margin-top:8px;font-size:0.72rem;font-weight:600;color:var(--soft);text-align:center;"></div>
       </div>
- 
-      <!-- Profile 2 -->
-      <div style="background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <div style="font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;">Profile 2</div>
-          <div id="type-toggle-1" style="display:flex;background:#EEF3FF;border-radius:50px;padding:3px;gap:2px;">
-            <button id="type-child-1" data-profile-idx="1" data-profile-type="child" style="background:var(--sky-dark);color:white;border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">👦 Child</button>
-            <button id="type-adult-1" data-profile-idx="1" data-profile-type="adult" style="background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;">🧑 Adult</button>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;margin-bottom:12px;">
-          <div style="flex:1;">
-            <div class="field-label">Name</div>
-            <input class="field-input" id="name-1" type="text" placeholder="e.g. Archie" value="Archie">
-          </div>
-          <div style="width:80px;">
-            <div class="field-label" id="age-label-1">Age</div>
-            <input class="field-input" id="age-1" type="number" placeholder="2" value="2" min="0" max="99">
-          </div>
-        </div>
-        <div class="field-label">Skin Tone</div>
-        <div class="fitz-grid" id="fitz-1">
-          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="1"><div class="fitz-swatch" style="background:#FDDBB4;"></div><span>I</span></button>
-          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="2"><div class="fitz-swatch" style="background:#F5C89A;"></div><span>II</span></button>
-          <button class="fitz-btn selected" data-fitz-idx="1" data-fitz-val="3"><div class="fitz-swatch" style="background:#E0A87C;"></div><span>III</span></button>
-          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="4"><div class="fitz-swatch" style="background:#C07A4A;"></div><span>IV</span></button>
-          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="5"><div class="fitz-swatch" style="background:#7A4A28;"></div><span>V</span></button>
-          <button class="fitz-btn" data-fitz-idx="1" data-fitz-val="6"><div class="fitz-swatch" style="background:#3A2010;"></div><span>VI</span></button>
-        </div>
-        <div style="margin-top:12px;">
-          <div class="field-label">Photo (optional)</div>
-          <div class="photo-row">
-            <div class="photo-circle" id="photo-1">📷</div>
-            <input type="file" id="file-1" accept="image/*" style="display:none">
-            <div class="photo-hint"><strong>Tap to add photo</strong>Stored on-device only</div>
-          </div>
-        </div>
-      </div>
+
+      <div id="onboard-error" role="alert" style="display:none;background:#FFF0F0;border:1.5px solid var(--coral);border-radius:12px;padding:10px 14px;font-size:0.78rem;font-weight:700;color:#A02020;"></div>
  
       <div class="privacy-note">🔒 All data stored on your device only. No account required. COPPA compliant.</div>
       <button class="btn-primary" id="btn-save-profiles">Save Profiles & Continue →</button>
@@ -632,6 +564,17 @@
     </div>
   </div>
  
+  <!-- Premium upgrade prompt. Placeholder: no billing exists yet, so the action button is disabled. -->
+  <!-- TODO(copy): final wording and pricing -->
+  <div id="upgrade-modal" style="display:none;position:absolute;inset:0;background:rgba(26,35,64,0.7);z-index:200;align-items:flex-end;justify-content:center;">
+    <div role="dialog" aria-modal="true" aria-labelledby="upgrade-title" style="background:white;border-radius:28px 28px 0 0;padding:28px 24px 36px;width:100%;box-shadow:0 -8px 32px rgba(0,0,0,0.2);">
+      <div id="upgrade-title" style="font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:#1A2340;margin-bottom:6px;">Track more children with Premium</div>
+      <div style="font-size:0.85rem;color:#7A8AAF;font-weight:600;line-height:1.5;margin-bottom:18px;">SunTimeKids is free for up to 2 children. Premium will add profiles for your whole family.</div>
+      <button class="btn-primary" id="btn-upgrade-action" disabled style="opacity:0.6;cursor:not-allowed;">Premium coming soon</button>
+      <button class="btn-nav" style="margin-top:10px;" id="btn-upgrade-close">Not now</button>
+    </div>
+  </div>
+
   <!-- Bottom nav -->
   <div class="bottom-nav" id="bottom-nav" style="display:none;">
     <div class="nav-item" id="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
@@ -645,16 +588,19 @@
 // ============================================================
 // STATE
 // ============================================================
+// Profile limits. Free users track up to FREE_PROFILE_LIMIT children; Premium raises the cap.
+// There is no billing yet, so APP.premium stays false unless a purchase flow sets it later.
+const FREE_PROFILE_LIMIT = 2;
+const MAX_PROFILES = 8;
+
 const APP = {
-  children: [
-    { name:'Alex', age:6, fitz:3, photo:null, goal:400, isAdult:false },
-    { name:'Archie', age:2, fitz:3, photo:null, goal:400, isAdult:false }
-  ],
-  selectedChildren: [0,1],
+  children: [],                      // filled from storage or the onboarding screen; no pre-filled names
+  selectedChildren: [],
+  premium: false,
   uvIndex: null,
   locationName: 'Essex County, NJ',
   lat: 40.79, lng: -74.21,          // default Essex County
-  childSetups: [{clothingFactor:1.0, spfFactor:1.0}, {clothingFactor:1.0, spfFactor:1.0}],
+  childSetups: [],                   // created per child on demand (see renderPerChildSetup)
   session: null,                     // active session object
   sessions: [],                      // persisted completed sessions
   uvIsEstimate: false,               // true when the UV fetch failed and a fallback is in use
@@ -716,8 +662,18 @@ function avatarContent(child, idx) {
   return document.createTextNode(defaultAvatar(idx));
 }
 
+// One background per profile slot; cycles if there are more profiles than colors
+const AVATAR_BGS = [
+  'linear-gradient(135deg,#FFE0A0,#FFB800)',
+  'linear-gradient(135deg,#A0E0FF,#5BC8F5)',
+  'linear-gradient(135deg,#B8F0C8,#4DC87A)',
+  'linear-gradient(135deg,#FFC0C0,#FF6060)',
+  'linear-gradient(135deg,#D8C8F5,#7C5CBF)',
+  'linear-gradient(135deg,#FFD9A8,#FF8C00)'
+];
+
 function avatarBg(idx) {
-  return idx === 0 ? 'linear-gradient(135deg,#FFE0A0,#FFB800)' : 'linear-gradient(135deg,#A0E0FF,#5BC8F5)';
+  return AVATAR_BGS[idx % AVATAR_BGS.length];
 }
 
 function formatMinutes(min) {
@@ -970,8 +926,9 @@ function goToSessionOrStart() {
 // ONBOARDING
 // ============================================================
 function selectFitz(childIdx, btn, val) {
-  document.querySelectorAll(`#fitz-${childIdx} .fitz-btn`).forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll(`#fitz-${childIdx} .fitz-btn`).forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-pressed', 'false'); });
   btn.classList.add('selected');
+  btn.setAttribute('aria-pressed', 'true');
   APP.children[childIdx].fitz = val;
 }
  
@@ -1010,19 +967,154 @@ function setPhotoPreview(idx) {
   circle.appendChild(photo ? el('img', { src: photo, alt: 'photo' }) : document.createTextNode('📷'));
 }
 
-// Fill the onboarding form from the current profiles so it doubles as "Edit Profiles"
-function populateOnboarding() {
-  APP.children.forEach((c, i) => {
-    const nameEl = document.getElementById('name-' + i);
-    const ageEl = document.getElementById('age-' + i);
-    if (nameEl) nameEl.value = c.name;
-    if (ageEl) ageEl.value = c.age;
-    setProfileType(i, c.isAdult ? 'adult' : 'child');
-    document.querySelectorAll('#fitz-' + i + ' .fitz-btn').forEach(b => {
-      b.classList.toggle('selected', parseInt(b.getAttribute('data-fitz-val')) === c.fitz);
-    });
-    setPhotoPreview(i);
+// ---- Profile limits (free vs Premium) ----
+function isPremium() { return APP.premium === true; }
+function profileLimit() { return isPremium() ? MAX_PROFILES : FREE_PROFILE_LIMIT; }
+function canAddProfile() { return APP.children.length < profileLimit(); }
+
+// A new, empty profile. The draft flag marks it as not yet saved; it is never stored.
+function newBlankProfile() {
+  return { name: '', age: null, fitz: 3, photo: null, goal: 400, isAdult: false, draft: true };
+}
+
+const FITZ_SWATCHES = ['#FDDBB4', '#F5C89A', '#E0A87C', '#C07A4A', '#7A4A28', '#3A2010'];
+const FITZ_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+const PROFILE_TYPE_BTN_STYLE = 'background:transparent;color:var(--soft);border:none;border-radius:50px;padding:4px 12px;font-family:Nunito,sans-serif;font-size:0.7rem;font-weight:800;cursor:pointer;';
+
+// Build one profile card for APP.children[i]. Ids match the helpers below (name-i, age-i, fitz-i, photo-i, file-i).
+function buildProfileCard(i) {
+  const c = APP.children[i];
+  const typeToggle = el('div', { id: 'type-toggle-' + i, style: 'display:flex;background:#EEF3FF;border-radius:50px;padding:3px;gap:2px;' }, [
+    el('button', { id: 'type-child-' + i, 'data-profile-idx': i, 'data-profile-type': 'child', style: PROFILE_TYPE_BTN_STYLE, text: '👦 Child' }),
+    el('button', { id: 'type-adult-' + i, 'data-profile-idx': i, 'data-profile-type': 'adult', style: PROFILE_TYPE_BTN_STYLE, text: '🧑 Adult' })
+  ]);
+  const header = el('div', { style: 'display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;' }, [
+    el('div', { style: 'font-size:0.75rem;font-weight:800;color:var(--sky-dark);text-transform:uppercase;letter-spacing:1px;', text: 'Profile ' + (i + 1) }),
+    typeToggle
+  ]);
+  const nameRow = el('div', { style: 'display:flex;gap:12px;margin-bottom:12px;' }, [
+    el('div', { style: 'flex:1;' }, [
+      el('div', { className: 'field-label', text: 'Name' }),
+      el('input', { className: 'field-input', id: 'name-' + i, type: 'text', placeholder: 'Child name', maxlength: '30', value: c.name || null })
+    ]),
+    el('div', { style: 'width:80px;' }, [
+      el('div', { className: 'field-label', id: 'age-label-' + i, text: 'Age' }),
+      el('input', { className: 'field-input', id: 'age-' + i, type: 'number', placeholder: 'Age', min: '0', max: '99', value: c.age == null ? null : c.age })
+    ])
+  ]);
+  const fitzGrid = el('div', { className: 'fitz-grid', id: 'fitz-' + i }, FITZ_SWATCHES.map((color, k) => {
+    const on = c.fitz === k + 1;
+    return el('button', {
+      className: 'fitz-btn' + (on ? ' selected' : ''),
+      'data-fitz-idx': i, 'data-fitz-val': k + 1,
+      'aria-label': 'Skin type ' + FITZ_NUMERALS[k], 'aria-pressed': on ? 'true' : 'false'
+    }, [el('div', { className: 'fitz-swatch', style: 'background:' + color + ';' }), el('span', { text: FITZ_NUMERALS[k] })]);
+  }));
+  const photoRow = el('div', { className: 'photo-row' }, [
+    el('div', { className: 'photo-circle', id: 'photo-' + i, 'data-photo-idx': i, text: '📷' }),
+    el('input', { type: 'file', id: 'file-' + i, accept: 'image/*', 'data-file-idx': i, style: 'display:none' }),
+    el('div', { className: 'photo-hint' }, [el('strong', { text: 'Tap to add photo' }), 'Stored on-device only'])
+  ]);
+  // Remove is only offered for the newest unsaved card (see updateAddChildUI), so saved history is never reindexed
+  const removeBtn = el('button', {
+    id: 'remove-' + i, 'data-remove-idx': i, 'aria-label': 'Remove profile ' + (i + 1),
+    style: 'display:none;margin-top:12px;background:none;border:none;color:#A02020;font-family:Nunito,sans-serif;font-size:0.78rem;font-weight:800;cursor:pointer;padding:6px 0;',
+    text: 'Remove this profile'
   });
+  return el('div', { id: 'profile-card-' + i, style: 'background:#F8FAFF;border-radius:16px;padding:16px;border:2px solid #DDE6F5;' }, [
+    header, nameRow,
+    el('div', { className: 'field-label', text: 'Skin Tone' }), fitzGrid,
+    el('div', { style: 'margin-top:12px;' }, [el('div', { className: 'field-label', text: 'Photo (optional)' }), photoRow]),
+    removeBtn
+  ]);
+}
+
+function appendProfileCard(i) {
+  document.getElementById('profile-cards').appendChild(buildProfileCard(i));
+  setProfileType(i, APP.children[i].isAdult ? 'adult' : 'child');
+  setPhotoPreview(i);
+}
+
+// Build the form from the current profiles so it doubles as "Edit Profiles".
+// First launch (no profiles yet) starts with one blank card.
+function populateOnboarding() {
+  if (APP.children.length === 0) APP.children.push(newBlankProfile());
+  clearEl(document.getElementById('profile-cards'));
+  APP.children.forEach((c, i) => appendProfileCard(i));
+  hideOnboardError();
+  updateAddChildUI();
+}
+
+// Add-child button state: unlocked, locked behind Premium, or hidden at the maximum
+function updateAddChildUI() {
+  const btn = document.getElementById('btn-add-child');
+  const note = document.getElementById('add-child-note');
+  if (!btn || !note) return;
+  const n = APP.children.length;
+  btn.style.display = '';
+  if (n >= MAX_PROFILES) {
+    btn.style.display = 'none';
+    note.textContent = 'Maximum of ' + MAX_PROFILES + ' profiles';
+  } else if (canAddProfile()) {
+    btn.textContent = '+ Add another child';
+    note.textContent = isPremium() ? n + ' of ' + MAX_PROFILES + ' profiles' : n + ' of ' + FREE_PROFILE_LIMIT + ' free profiles used';
+  } else {
+    btn.textContent = '🔒 Add another child (Premium)';
+    note.textContent = 'The free plan includes up to ' + FREE_PROFILE_LIMIT + ' children';
+  }
+  APP.children.forEach((c, i) => {
+    const rm = document.getElementById('remove-' + i);
+    if (rm) rm.style.display = (i === n - 1 && i > 0 && c.draft) ? 'block' : 'none';
+  });
+}
+
+function addChildClicked() {
+  if (!canAddProfile()) { showUpgrade(); return; }
+  APP.children.push(newBlankProfile());
+  const i = APP.children.length - 1;
+  appendProfileCard(i);
+  updateAddChildUI();
+  hideOnboardError();
+  const nameEl = document.getElementById('name-' + i);
+  if (nameEl) { nameEl.focus(); if (nameEl.scrollIntoView) nameEl.scrollIntoView({ block: 'center' }); }
+}
+
+function removeProfileClicked(i) {
+  const last = APP.children.length - 1;
+  if (i !== last || i === 0 || !APP.children[i].draft) return;
+  APP.children.pop();
+  const card = document.getElementById('profile-card-' + i);
+  if (card) card.remove();
+  updateAddChildUI();
+  hideOnboardError();
+}
+
+function showUpgrade() {
+  const m = document.getElementById('upgrade-modal');
+  if (m) m.style.display = 'flex';
+}
+
+function hideUpgrade() {
+  const m = document.getElementById('upgrade-modal');
+  if (m) m.style.display = 'none';
+}
+
+function showOnboardError(msg, focusId) {
+  const box = document.getElementById('onboard-error');
+  if (box) { box.textContent = msg; box.style.display = 'block'; }
+  const target = focusId ? document.getElementById(focusId) : null;
+  if (target) { target.focus(); if (target.scrollIntoView) target.scrollIntoView({ block: 'center' }); }
+}
+
+function hideOnboardError() {
+  const box = document.getElementById('onboard-error');
+  if (box) box.style.display = 'none';
+}
+
+// Keep the who's-out selection valid after profiles change. Default is everyone.
+function syncSelection() {
+  APP.selectedChildren = APP.selectedChildren.filter(i => i >= 0 && i < APP.children.length);
+  if (APP.selectedChildren.length === 0) APP.selectedChildren = APP.children.map((_, i) => i);
 }
  
 function setProfileType(idx, type) {
@@ -1047,14 +1139,34 @@ function getVitDGoal(age, isAdult) {
 }
  
 function saveProfiles() {
-  for (let i = 0; i < 2; i++) {
+  // Profiles that were saved before this edit are grandfathered even if the free limit is lower
+  const prevCount = APP.children.filter(c => !c.draft).length;
+  if (!isPremium() && APP.children.length > Math.max(FREE_PROFILE_LIMIT, prevCount)) {
+    showUpgrade();
+    return;
+  }
+  // Validate everything first so a bad field never leaves profiles half-updated
+  const values = [];
+  for (let i = 0; i < APP.children.length; i++) {
     const name = document.getElementById('name-' + i).value.trim();
     const ageRaw = parseInt(document.getElementById('age-' + i).value, 10);
-    const age = isNaN(ageRaw) ? APP.children[i].age : Math.max(0, Math.min(99, ageRaw));
-    if (name) APP.children[i].name = name;
-    APP.children[i].age = age;
-    APP.children[i].goal = getVitDGoal(age, APP.children[i].isAdult);
+    if (!name) { showOnboardError('Please enter a name for profile ' + (i + 1) + '.', 'name-' + i); return; }
+    if (isNaN(ageRaw) || ageRaw < 0 || ageRaw > 99) { showOnboardError('Please enter an age from 0 to 99 for ' + name + '.', 'age-' + i); return; }
+    values.push({ name: name, age: ageRaw });
   }
+  values.forEach((v, i) => {
+    const c = APP.children[i];
+    c.name = v.name;
+    c.age = v.age;
+    c.goal = getVitDGoal(v.age, c.isAdult);
+    delete c.draft;
+  });
+  // Newly added children join the who's-out selection by default
+  for (let i = prevCount; i < APP.children.length; i++) {
+    if (!APP.selectedChildren.includes(i)) APP.selectedChildren.push(i);
+  }
+  syncSelection();
+  hideOnboardError();
   saveProfilesToStorage();
   goTo('screen-home');
 }
@@ -1823,13 +1935,36 @@ function saveProfilesToStorage() {
  
 async function loadProfiles() {
   const profiles = await storeLoad('stk_profiles');
-  if (profiles && Array.isArray(profiles)) {
-    profiles.forEach((p, i) => {
-      if (APP.children[i]) Object.assign(APP.children[i], p);
+  if (profiles && Array.isArray(profiles) && profiles.length > 0) {
+    // Rebuild every saved profile (any count up to MAX_PROFILES), cleaning each field so bad data cannot break the math
+    APP.children = profiles.slice(0, MAX_PROFILES).map(p => {
+      p = p || {};
+      const age = parseInt(p.age, 10);
+      const fitz = parseInt(p.fitz, 10);
+      const isAdult = p.isAdult === true;
+      const safeAge = isNaN(age) ? 0 : age;
+      return {
+        name: typeof p.name === 'string' ? p.name : '',
+        age: safeAge,
+        fitz: (fitz >= 1 && fitz <= 6) ? fitz : 3,
+        photo: typeof p.photo === 'string' ? p.photo : null,
+        goal: typeof p.goal === 'number' && p.goal > 0 ? p.goal : getVitDGoal(safeAge, isAdult),
+        isAdult: isAdult
+      };
     });
+    syncSelection();
     return true;
   }
   return false;
+}
+
+// Local testing only: opening the app on localhost with ?premium=1 unlocks Premium without a purchase.
+// It does nothing on the live site.
+function applyDevPremiumOverride() {
+  try {
+    const host = window.location.hostname;
+    if ((host === 'localhost' || host === '127.0.0.1') && /[?&]premium=1(&|$)/.test(window.location.search)) APP.premium = true;
+  } catch(e) {}
 }
  
 // ============================================================
@@ -2176,6 +2311,7 @@ function setSessionEndMode(mode, persist) {
 // happens synchronously in wireButtonsSync below, exactly once.
 async function appInit() {
   let hasProfiles = false;
+  applyDevPremiumOverride();
   try {
     await storeInit();
     await loadSessions();
@@ -2213,8 +2349,9 @@ async function appInit() {
   safeOn('btn-get-started', function() { goTo('screen-onboard'); });
   // Onboarding
   safeOn('btn-save-profiles', function() { saveProfiles(); });
-  safeOn('photo-0', function() { var f = document.getElementById('file-0'); if (f) f.click(); });
-  safeOn('photo-1', function() { var f = document.getElementById('file-1'); if (f) f.click(); });
+  safeOn('btn-add-child', function() { addChildClicked(); });
+  safeOn('btn-upgrade-close', function() { hideUpgrade(); });
+  safeOn('upgrade-modal', function(e) { if (e.target === e.currentTarget) hideUpgrade(); });
   // Home
   safeOn('btn-headout', function() { goToSessionOrStart(); });
   safeOn('btn-view-dash', function() { goTo('screen-dash'); });
@@ -2257,6 +2394,14 @@ async function appInit() {
   safeOn('nav-settings', function() { goTo('screen-settings'); });
   // Event delegation for clothing, spf, fitz, profile type (rendered dynamically)
   document.addEventListener('click', function(e) {
+    var photoBtn = e.target.closest('[data-photo-idx]');
+    if (photoBtn) {
+      var pf = document.getElementById('file-' + photoBtn.getAttribute('data-photo-idx'));
+      if (pf) pf.click();
+      return;
+    }
+    var removeBtn = e.target.closest('[data-remove-idx]');
+    if (removeBtn) { removeProfileClicked(parseInt(removeBtn.getAttribute('data-remove-idx'), 10)); return; }
     var typeBtn = e.target.closest('[data-profile-type]');
     if (typeBtn) {
       setProfileType(parseInt(typeBtn.getAttribute('data-profile-idx'), 10), typeBtn.getAttribute('data-profile-type'));
@@ -2276,10 +2421,10 @@ async function appInit() {
   var whoList = document.getElementById('who-list');
   if (whoList) whoList.addEventListener('click', whoListClickHandler);
   // File inputs
-  var f0 = document.getElementById('file-0');
-  if (f0) f0.addEventListener('change', function(e) { handlePhoto(0, e); });
-  var f1 = document.getElementById('file-1');
-  if (f1) f1.addEventListener('change', function(e) { handlePhoto(1, e); });
+  document.addEventListener('change', function(e) {
+    var fi = e.target && e.target.getAttribute ? e.target.getAttribute('data-file-idx') : null;
+    if (fi !== null) handlePhoto(parseInt(fi, 10), e);
+  });
   // Location input enter key
   var locInput = document.getElementById('loc-input');
   if (locInput) locInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') applyManualLocation(); });

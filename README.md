@@ -42,7 +42,7 @@ The core calculation combines:
 
 - Name, age, Fitzpatrick skin type
 - Optional profile photo — stored on-device only, never uploaded (COPPA compliant)
-- Up to 2 children (expandable)
+- Up to 2 children free; 3-8 with Premium (upgrade prompt is a placeholder, no billing yet)
 - Daily vitamin D goals: 400 IU (age 5+), 300 IU (age 2)
 
 ### Goal Celebration
@@ -123,7 +123,7 @@ Suntime-Kids/
 - [ ] Storage persistence needs live testing on hosted version
 - [ ] Confirm real UV data retrieval on device
 - [ ] Add Settings screen (session end preference, notification preferences)
-- [ ] Add support for more than 2 children
+- [x] Support for more than 2 children (Premium gate, 8 max)
 - [ ] Seasonal UV warnings (low UV months in NJ — Oct through Mar)
 - [ ] Annual summary view in dashboard
 - [ ] Consider provisional patent for UV calculation algorithm
