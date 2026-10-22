@@ -30,7 +30,7 @@ The app uses `goTo(id)` to toggle the `.active` class between named `<div id="sc
 | ID | Purpose |
 |----|---------|
 | `screen-welcome` | First launch / no profiles |
-| `screen-onboard` | Add/edit the two profiles (also reached via Settings → Edit Profiles) |
+| `screen-onboard` | Add/edit profiles, built dynamically into `#profile-cards` (also reached via Settings → Edit Profiles). Free plan: 2 profiles; Premium: up to 8 |
 | `screen-home` | Per-child daily progress cards, weekly stats |
 | `screen-whosout` | Bottom sheet: pick which children are going out |
 | `screen-setup` | Per-child clothing & SPF setup |
@@ -40,6 +40,13 @@ The app uses `goTo(id)` to toggle the `.active` class between named `<div id="sc
 | `screen-settings` | Goal-reached behaviour, disclaimer, privacy |
 
 ---
+
+### Profiles and Premium gate
+
+- Profiles are dynamic: `APP.children` can hold 0 to `MAX_PROFILES` (8). There are no pre-filled names; first launch starts with one blank card.
+- `FREE_PROFILE_LIMIT = 2`. `APP.premium` is false by default. `canAddProfile()` / `showUpgrade()` handle the gate; the upgrade modal has no billing yet.
+- Local testing only: `http://localhost:8765/?premium=1` unlocks Premium (ignored on any other host).
+- Unsaved cards carry `draft: true` and can be removed; saved profiles cannot, because sessions store child indices.
 
 ## Key calculations
 
@@ -217,7 +224,7 @@ Installed home-screen copies of the PWA may keep the old version until the app i
 
 ## Planned next features (v2.6+)
 
-- Freemium gate: enforce 2-profile limit and show upgrade prompt
+- Real billing behind the Premium gate (the 3+ profile limit and upgrade modal are in place; the purchase button is a disabled placeholder). The gate is client-side only, so it is bypassable until billing is verified server-side
 - Cloud backup/sync (Pro tier)
 - Sunscreen reapplication reminder improvements
 - React Native build for App Store submission
