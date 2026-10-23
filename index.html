@@ -350,6 +350,12 @@
   .cov-dots i { width:9px; height:9px; border-radius:50%; border:2px solid var(--ink); box-sizing:border-box; display:block; }
   .cov-dots i.f { background:var(--ink); }
   .clothing-btn { justify-content:center; }
+  .uv-scale { margin-top:12px; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:2px; text-align:center; }
+  .uv-cell { padding:4px 0 2px; border:2px solid transparent; border-radius:14px; }
+  .uv-cell.on { background:var(--yellow); border-color:var(--ink); }
+  .uv-cell svg { width:40px; height:40px; display:block; margin:0 auto; overflow:visible; }
+  .uv-cell span { display:block; font-size:0.7rem; font-weight:700; color:var(--ink); }
+  .uv-cell.on span { font-weight:800; }
   .overlay { display: none; position: fixed; inset: 0; background: rgba(23,23,28,0.62); z-index: 200; }
   .modal-card { background: var(--yellow); border: var(--line); border-radius: 28px; padding: 24px 22px; width: 100%; max-width: 390px; max-height: 92vh; overflow-y: auto; box-shadow: var(--shadow); }
   .modal-card.sheet { border-radius: 34px 34px 0 0; border-bottom: none; padding: 14px 24px 28px; }
@@ -475,6 +481,7 @@
           <span style="font-size:0.8rem;font-weight:700;color:var(--soft);">Location</span>
           <span style="font-size:0.8rem;font-weight:700;color:var(--ink);" id="setup-loc">Detecting…</span>
         </div>
+        <div id="uv-scale" class="uv-scale" role="img" aria-label="UV scale. Current level not loaded yet."></div>
       </div>
  
       <!-- Per-child clothing and SPF inputs populated by JS -->
@@ -945,16 +952,71 @@ function uvLabel(uv) {
   return 'Extreme';
 }
  
+// UV scale: a sun that gains rays as UV rises (Low is a plain mint disc)
+const UV_LEVELS = [
+  { label: 'Low', rotations: [], color: '#5FDCA8' },
+  { label: 'Moderate', rotations: [0, 45], color: '#FFD23F' },
+  { label: 'High', rotations: [0, 30, 60], color: '#FF6A4D' },
+  { label: 'Very High', rotations: [0, 22.5, 45, 67.5], color: '#FF3D8B' },
+  { label: 'Extreme', rotations: [0, 22.5, 45, 67.5], color: '#7B4BD0' }
+];
+
+function uvSunSvg(level) {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 44 44');
+  svg.setAttribute('aria-hidden', 'true');
+  function shape(rot, fill, stroke) {
+    let node;
+    if (rot === null) {
+      node = document.createElementNS(SVG_NS, 'circle');
+      node.setAttribute('cx', '22'); node.setAttribute('cy', '22'); node.setAttribute('r', '14');
+    } else {
+      node = document.createElementNS(SVG_NS, 'rect');
+      node.setAttribute('x', '9'); node.setAttribute('y', '9'); node.setAttribute('width', '26'); node.setAttribute('height', '26');
+      if (rot) node.setAttribute('transform', 'rotate(' + rot + ' 22 22)');
+    }
+    node.setAttribute('fill', fill);
+    if (stroke) { node.setAttribute('stroke', stroke); node.setAttribute('stroke-width', '3.5'); node.setAttribute('stroke-linejoin', 'round'); }
+    return node;
+  }
+  if (level.rotations.length === 0) {
+    svg.appendChild(shape(null, level.color, '#17171C'));
+    return svg;
+  }
+  const outline = document.createElementNS(SVG_NS, 'g');
+  level.rotations.forEach(r => outline.appendChild(shape(r, '#17171C', '#17171C')));
+  const fill = document.createElementNS(SVG_NS, 'g');
+  level.rotations.forEach(r => fill.appendChild(shape(r, level.color, null)));
+  svg.appendChild(outline);
+  svg.appendChild(fill);
+  return svg;
+}
+
+function renderUVScale(uv) {
+  const box = document.getElementById('uv-scale');
+  if (!box) return;
+  clearEl(box);
+  const current = uv == null ? null : uvLabel(uv);
+  UV_LEVELS.forEach(lv => {
+    const on = lv.label === current;
+    box.appendChild(el('div', { className: 'uv-cell' + (on ? ' on' : '') }, [uvSunSvg(lv), el('span', { text: lv.label })]));
+  });
+  box.setAttribute('aria-label', current
+    ? 'UV scale: Low, Moderate, High, Very High, Extreme. Current level is ' + current + '.'
+    : 'UV scale. Current level not loaded yet.');
+}
+
 function updateAllUVDisplays() {
   const setupLoc = document.getElementById('setup-loc');
   if (setupLoc) setupLoc.textContent = APP.locationName;
   const uv = APP.uvIndex;
+  renderUVScale(uv);
   if (uv == null) return; // not loaded yet, keep the "Fetching" placeholders
   const lbl = uvLabel(uv) + (APP.uvIsEstimate ? ' (estimate, offline)' : '');
   const disp = document.getElementById('uv-display');
   if (disp) { disp.textContent = `UV ${uv} · ${lbl}`; }
   const setup = document.getElementById('uv-setup');
-  if (setup) setup.textContent = `${uv} — ${lbl}`;
+  if (setup) setup.textContent = `${uv} · ${lbl}`;
 }
  
 // Refresh UV every 5 min; an active session re-rates its exposure on each new reading
