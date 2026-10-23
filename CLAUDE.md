@@ -37,7 +37,7 @@ The app uses `goTo(id)` to toggle the `.active` class between named `<div id="sc
 | `screen-session` | Active tracking session (swipeable per-child cards) |
 | `screen-celebrate` | Goal reached prompt for one child |
 | `screen-dash` | Week chart, trends, per-child summary, history |
-| `screen-settings` | Goal-reached behaviour, link to legal notices, privacy |
+| `screen-settings` | Goal-reached behaviour, backup and restore, link to legal notices, privacy |
 | `screen-legal` | Medical disclaimer, privacy summary, placeholder for terms (opened from Welcome or Settings; returns via `APP.legalReturn`) |
 
 ---
@@ -48,6 +48,12 @@ The app uses `goTo(id)` to toggle the `.active` class between named `<div id="sc
 - `FREE_PROFILE_LIMIT = 2`. `APP.premium` is false by default. `canAddProfile()` / `showUpgrade()` handle the gate; the upgrade modal has no billing yet.
 - Local testing only: `http://localhost:8765/?premium=1` unlocks Premium (ignored on any other host).
 - Unsaved cards carry `draft: true` and can be removed; saved profiles cannot, because sessions store child indices.
+
+### Backup and restore
+
+- Settings → "Save backup file" writes one JSON file (`app`, `version`, `exportedAt`, `profiles` with photos, `sessions`, `sessionEndMode`) through the share sheet on phones or a download elsewhere. Nothing is uploaded.
+- Restore validates first (`parseBackup`), sanitises every profile (`cleanProfile`) and session (`cleanSessions`, drops records pointing at missing profiles), then asks for confirmation before replacing data. Restore is blocked during an active session.
+- If the stored data shape changes, bump `BACKUP_VERSION` and keep `parseBackup` able to read older versions.
 
 ## Key calculations
 

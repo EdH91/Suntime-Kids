@@ -356,8 +356,8 @@
   .uv-cell svg { width:40px; height:40px; display:block; margin:0 auto; overflow:visible; }
   .uv-cell span { display:block; font-size:0.7rem; font-weight:700; color:var(--ink); }
   .uv-cell.on span { font-weight:800; }
-  .overlay { display: none; position: absolute; inset: 0; background: rgba(23,23,28,0.62); z-index: 200; }
-  .modal-card { background: var(--yellow); border: var(--line); border-radius: 28px; padding: 24px 22px; width: 100%; box-shadow: var(--shadow); }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(23,23,28,0.62); z-index: 200; }
+  .modal-card { background: var(--yellow); border: var(--line); border-radius: 28px; padding: 24px 22px; width: 100%; max-width: 390px; max-height: 92vh; overflow-y: auto; box-shadow: var(--shadow); }
   .modal-card.sheet { border-radius: 34px 34px 0 0; border-bottom: none; padding: 14px 24px 28px; }
   .modal-title { font-family: var(--font-display); font-size: 1.9rem; font-weight: 400; line-height: 1.1; color: var(--ink); margin-bottom: 8px; }
   .modal-text { font-size: 0.95rem; color: var(--ink); font-weight: 600; line-height: 1.45; margin-bottom: 18px; }
@@ -369,7 +369,7 @@
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.2 1 2 2 2-.5-3-.5-5 1-8z"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></symbol><symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol><symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol><symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M12 9v6M9 12h6"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol><symbol id="i-gps" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></symbol><symbol id="i-thermo" viewBox="0 0 24 24"><path d="M10 4a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6.1L12 16.6 6.6 19.6l1.2-6.1L3.3 9.3l6.1-.7z"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol><symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol></defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.2 1 2 2 2-.5-3-.5-5 1-8z"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></symbol><symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol><symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol><symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol><symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M12 9v6M9 12h6"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></symbol><symbol id="i-gps" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></symbol><symbol id="i-thermo" viewBox="0 0 24 24"><path d="M10 4a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6.1L12 16.6 6.6 19.6l1.2-6.1L3.3 9.3l6.1-.7z"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol><symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7 9l5-5 5 5M5 20h14"/></symbol><symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol></defs></svg>
 <div class="phone">
   <!-- Status bar -->
   <div class="status-bar">
@@ -601,6 +601,16 @@
         <button class="btn-nav" id="btn-legal-settings"><svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg>Legal notices &amp; disclaimer</button>
       </div>
  
+      <div class="block-label">Backup</div>
+      <div class="card" style="padding:20px;">
+        <div style="font-size:0.85rem;font-weight:600;line-height:1.5;margin-bottom:14px;">Your data lives only on this device. Save a backup file to keep it safe or to move to a new phone. The file stays wherever you save it.</div>
+        <button class="btn-nav" id="btn-backup-export"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Save backup file</button>
+        <button class="btn-nav" style="margin-top:10px;" id="btn-backup-restore"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Restore from backup</button>
+        <input type="file" id="backup-file" accept=".json,application/json" style="display:none" aria-label="Backup file">
+        <div id="backup-status" role="status" style="margin-top:12px;font-size:0.82rem;font-weight:700;line-height:1.4;"></div>
+        <div id="backup-last" style="margin-top:4px;font-size:0.78rem;font-weight:600;color:var(--soft);"></div>
+      </div>
+
       <div class="block-label">Privacy</div>
       <div class="card" style="padding:20px;">
         <div style="font-size:0.82rem;font-weight:600;color:var(--ink);line-height:1.6;">All data including child profiles, photos, and session history is stored locally on your device only. No data is ever sent to any server. No account is required. SunTimeKids is designed to be fully COPPA compliant.</div>
@@ -647,6 +657,17 @@
     </div>
   </div>
  
+  <!-- Restore confirmation -->
+  <div id="restore-modal" class="overlay" style="align-items:flex-end;justify-content:center;">
+    <div role="dialog" aria-modal="true" aria-labelledby="restore-title" class="modal-card sheet">
+      <div style="width:48px;height:6px;border-radius:999px;background:var(--ink);margin:0 auto 18px;" aria-hidden="true"></div>
+      <div id="restore-title" class="modal-title" style="text-align:center;">Replace your data?</div>
+      <div id="restore-summary" class="modal-text" style="text-align:center;"></div>
+      <button class="modal-btn blue" id="btn-restore-confirm">Replace with backup</button>
+      <button class="modal-btn" id="btn-restore-cancel">Cancel</button>
+    </div>
+  </div>
+
   <!-- Premium upgrade prompt. Placeholder: no billing exists yet, so the action button is disabled. -->
   <!-- TODO(copy): final wording and pricing -->
   <div id="upgrade-modal" class="overlay" style="align-items:flex-end;justify-content:center;">
@@ -1065,6 +1086,7 @@ function goTo(id) {
   if (id === 'screen-dash') renderDash();
   if (id === 'screen-session') resumeSessionUI();
   if (id === 'screen-onboard') populateOnboarding();
+  if (id === 'screen-settings') { setBackupStatus('', false); storeLoad('stk_last_backup').then(renderBackupLast); }
 }
 
 function openLegal(from) {
@@ -2087,25 +2109,28 @@ function saveProfilesToStorage() {
   storeSet('stk_profiles', profiles, profiles.map(p => Object.assign({}, p, { photo: null })));
 }
  
+// Sanitise one stored or imported profile so bad data cannot break the math or the page
+function cleanProfile(p) {
+  p = p || {};
+  const age = parseInt(p.age, 10);
+  const fitz = parseInt(p.fitz, 10);
+  const isAdult = p.isAdult === true;
+  const safeAge = isNaN(age) ? 0 : Math.max(0, Math.min(99, age));
+  return {
+    name: typeof p.name === 'string' ? p.name.slice(0, 30) : '',
+    age: safeAge,
+    fitz: (fitz >= 1 && fitz <= 6) ? fitz : 3,
+    photo: (typeof p.photo === 'string' && p.photo.indexOf('data:image/') === 0) ? p.photo : null,
+    goal: (typeof p.goal === 'number' && p.goal > 0 && p.goal < 5000) ? p.goal : getVitDGoal(safeAge, isAdult),
+    isAdult: isAdult
+  };
+}
+
 async function loadProfiles() {
   const profiles = await storeLoad('stk_profiles');
   if (profiles && Array.isArray(profiles) && profiles.length > 0) {
     // Rebuild every saved profile (any count up to MAX_PROFILES), cleaning each field so bad data cannot break the math
-    APP.children = profiles.slice(0, MAX_PROFILES).map(p => {
-      p = p || {};
-      const age = parseInt(p.age, 10);
-      const fitz = parseInt(p.fitz, 10);
-      const isAdult = p.isAdult === true;
-      const safeAge = isNaN(age) ? 0 : age;
-      return {
-        name: typeof p.name === 'string' ? p.name : '',
-        age: safeAge,
-        fitz: (fitz >= 1 && fitz <= 6) ? fitz : 3,
-        photo: typeof p.photo === 'string' ? p.photo : null,
-        goal: typeof p.goal === 'number' && p.goal > 0 ? p.goal : getVitDGoal(safeAge, isAdult),
-        isAdult: isAdult
-      };
-    });
+    APP.children = profiles.slice(0, MAX_PROFILES).map(cleanProfile);
     syncSelection();
     return true;
   }
@@ -2431,6 +2456,162 @@ function renderSessionHistory() {
   });
 }
 
+
+// ============================================================
+// BACKUP AND RESTORE
+// ============================================================
+const BACKUP_APP_ID = 'SunTimeKids';
+const BACKUP_VERSION = 1;
+const MAX_RESTORE_SESSIONS = 5000;
+
+function setBackupStatus(msg, isError) {
+  const box = document.getElementById('backup-status');
+  if (!box) return;
+  box.textContent = msg;
+  box.style.color = isError ? '#A02020' : 'var(--ink)';
+}
+
+function renderBackupLast(iso) {
+  const box = document.getElementById('backup-last');
+  if (!box) return;
+  const d = iso ? new Date(iso) : null;
+  box.textContent = d && !isNaN(d.getTime())
+    ? 'Last backup saved ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : 'No backup saved yet';
+}
+
+function buildBackupObject() {
+  return {
+    app: BACKUP_APP_ID,
+    version: BACKUP_VERSION,
+    exportedAt: new Date().toISOString(),
+    profiles: APP.children.map(c => ({ name: c.name, age: c.age, fitz: c.fitz, goal: c.goal, photo: c.photo, isAdult: c.isAdult })),
+    sessions: APP.sessions,
+    sessionEndMode: APP.sessionEndMode
+  };
+}
+
+async function exportBackup() {
+  if (APP.children.length === 0) { setBackupStatus('Add a profile first, then save a backup.', true); return; }
+  const data = buildBackupObject();
+  const text = JSON.stringify(data);
+  const now = new Date();
+  const stamp = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  const filename = 'suntimekids-backup-' + stamp + '.json';
+  try {
+    const file = new File([text], filename, { type: 'application/json' });
+    // Phones: the share sheet lets the file go to Files, iCloud Drive, email and so on
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+      await navigator.share({ files: [file], title: 'SunTimeKids backup' });
+    } else {
+      const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
+    storeSet('stk_last_backup', data.exportedAt);
+    renderBackupLast(data.exportedAt);
+    setBackupStatus('Backup ready: ' + data.profiles.length + ' profile' + (data.profiles.length !== 1 ? 's' : '') + ' and ' + data.sessions.length + ' session' + (data.sessions.length !== 1 ? 's' : '') + '.', false);
+  } catch (e) {
+    if (e && e.name === 'AbortError') { setBackupStatus('Backup cancelled.', false); return; }
+    setBackupStatus('Could not save the backup on this device.', true);
+  }
+}
+
+// Keep only well-formed sessions that point at profiles that exist
+function cleanSessions(list, profileCount) {
+  const out = [];
+  (Array.isArray(list) ? list : []).slice(-MAX_RESTORE_SESSIONS).forEach(r => {
+    if (!r || typeof r !== 'object') return;
+    if (typeof r.date !== 'string' || isNaN(new Date(r.date).getTime())) return;
+    const idx = Array.isArray(r.childIndices) ? r.childIndices.filter(i => Number.isInteger(i) && i >= 0 && i < profileCount) : [];
+    if (idx.length === 0) return;
+    const num = v => (typeof v === 'number' && isFinite(v) ? v : 0);
+    const rec = {
+      id: num(r.id) || new Date(r.date).getTime(),
+      date: r.date,
+      childIndices: idx,
+      elapsedSeconds: num(r.elapsedSeconds),
+      uvIndex: num(r.uvIndex),
+      location: typeof r.location === 'string' ? r.location.slice(0, 80) : '',
+      vitdAccumulated: num(r.vitdAccumulated),
+      goalReached: r.goalReached === true
+    };
+    if (Array.isArray(r.perChild)) {
+      rec.perChild = r.perChild
+        .filter(pc => pc && Number.isInteger(pc.childIndex) && pc.childIndex >= 0 && pc.childIndex < profileCount)
+        .map(pc => ({ childIndex: pc.childIndex, vitd: num(pc.vitd), goal: num(pc.goal), goalReached: pc.goalReached === true, elapsedSeconds: num(pc.elapsedSeconds) }));
+    }
+    out.push(rec);
+  });
+  return out;
+}
+
+// Returns { ok, error, profiles, sessions, sessionEndMode, exportedAt }; never touches app data
+function parseBackup(text) {
+  let data;
+  try { data = JSON.parse(text); } catch (e) { return { ok: false, error: 'That file is not a SunTimeKids backup.' }; }
+  if (!data || data.app !== BACKUP_APP_ID) return { ok: false, error: 'That file is not a SunTimeKids backup.' };
+  if (typeof data.version !== 'number' || data.version > BACKUP_VERSION) return { ok: false, error: 'This backup comes from a newer version of the app. Update the app and try again.' };
+  if (!Array.isArray(data.profiles) || data.profiles.length === 0) return { ok: false, error: 'This backup has no profiles in it.' };
+  const profiles = data.profiles.slice(0, MAX_PROFILES).map(cleanProfile);
+  if (profiles.some(p => !p.name)) return { ok: false, error: 'This backup has a profile without a name.' };
+  return {
+    ok: true,
+    profiles: profiles,
+    sessions: cleanSessions(data.sessions, profiles.length),
+    sessionEndMode: data.sessionEndMode === 'keep' ? 'keep' : 'auto',
+    exportedAt: typeof data.exportedAt === 'string' ? data.exportedAt : null
+  };
+}
+
+function handleBackupFile(e) {
+  const input = e.target;
+  const file = input.files && input.files[0];
+  if (!file) return;
+  if (APP.session) { setBackupStatus('End the current session before restoring a backup.', true); input.value = ''; return; }
+  if (file.size > 25 * 1024 * 1024) { setBackupStatus('That file is too large to be a backup.', true); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const result = parseBackup(String(reader.result));
+    input.value = '';
+    if (!result.ok) { setBackupStatus(result.error, true); return; }
+    APP.pendingRestore = result;
+    const when = result.exportedAt && !isNaN(new Date(result.exportedAt).getTime())
+      ? ' from ' + new Date(result.exportedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+    document.getElementById('restore-summary').textContent =
+      'This backup' + when + ' has ' + result.profiles.length + ' profile' + (result.profiles.length !== 1 ? 's' : '') +
+      ' (' + result.profiles.map(p => p.name).join(', ') + ') and ' + result.sessions.length + ' session' + (result.sessions.length !== 1 ? 's' : '') +
+      '. Restoring replaces the profiles and history currently in the app.';
+    const m = document.getElementById('restore-modal');
+    if (m) m.style.display = 'flex';
+  };
+  reader.onerror = () => { input.value = ''; setBackupStatus('Could not read that file.', true); };
+  reader.readAsText(file);
+}
+
+function confirmRestore() {
+  const r = APP.pendingRestore;
+  hideRestore();
+  if (!r) return;
+  APP.pendingRestore = null;
+  APP.children = r.profiles;
+  APP.sessions = r.sessions;
+  APP.selectedChildren = APP.children.map((_, i) => i);
+  APP.childSetups = [];
+  storeSet('stk_sessions', APP.sessions);
+  saveProfilesToStorage();
+  setSessionEndMode(r.sessionEndMode, true);
+  setBackupStatus('Backup restored: ' + r.profiles.length + ' profile' + (r.profiles.length !== 1 ? 's' : '') + ' and ' + r.sessions.length + ' session' + (r.sessions.length !== 1 ? 's' : '') + '.', false);
+  renderHome();
+}
+
+function hideRestore() {
+  const m = document.getElementById('restore-modal');
+  if (m) m.style.display = 'none';
+}
+
 // ============================================================
 // SETTINGS
 // ============================================================
@@ -2529,6 +2710,13 @@ async function appInit() {
   // Settings
   safeOn('btn-settings-back', function() { goTo('screen-home'); });
   safeOn('btn-edit-profiles', function() { goTo('screen-onboard'); });
+  // Backup and restore
+  safeOn('btn-backup-export', function() { exportBackup(); });
+  safeOn('btn-backup-restore', function() { var f = document.getElementById('backup-file'); if (f) f.click(); });
+  safeOn('btn-restore-confirm', function() { confirmRestore(); });
+  safeOn('btn-restore-cancel', function() { APP.pendingRestore = null; hideRestore(); });
+  var backupFile = document.getElementById('backup-file');
+  if (backupFile) backupFile.addEventListener('change', handleBackupFile);
   safeOn('session-end-opt-auto', function() { setSessionEndMode('auto', true); });
   safeOn('session-end-opt-keep', function() { setSessionEndMode('keep', true); });
   // Location modal
