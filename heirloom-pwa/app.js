@@ -21,6 +21,10 @@ var LS_BACKUP = 'heirloom-lastBackup';
 var LS_BACKUP_SNOOZE = 'heirloom-backupSnooze';
 var BACKUP_EVERY_DAYS = 7;
 var DAY_MS = 24 * 60 * 60 * 1000;
+// Testing mode offers a backup after every new recording. On by default while
+// the app is being tested; set to false before launch (README: Testing mode).
+var TESTING_MODE_DEFAULT = true;
+var LS_TESTING = 'heirloom-testingMode';
 
 var CATEGORIES = [
   { id: 'family-stories', label: 'Family stories' },
@@ -1252,6 +1256,7 @@ async function saveSeal() {
     goTo('screen-home');
     startCarousel();
     toast(e.locked ? 'Sealed. ' + lockText(e) + '.' : 'Saved. It is available now.');
+    if (testingMode()) promptBackupAfterRecording();
   } catch (err) {
     storageError(err);
   } finally {
@@ -1280,7 +1285,7 @@ function renderDetail() {
 
   var meta = el('ul', { class: 'meta-list' });
   [
-    ['Recorded by', contrib ? contrib.name : 'Former contributor'],
+    ['Recorded by', contrib ? contrib.name : (e.contributorName || 'Former contributor')],
     ['Recorded', fmtDate(e.date)],
     ['For', childName(e.childId)],
     ['Category', categoryLabel(e.category)],
@@ -1406,7 +1411,7 @@ function heirloomFile(e) {
   var payload = {
     version: 1,
     entry: entry,
-    contributorName: contrib ? contrib.name : null,
+    contributorName: contrib ? contrib.name : (e.contributorName || null),
     childName: e.childId === 'all' ? null : childName(e.childId),
     exportedAt: new Date().toISOString()
   };
@@ -1465,6 +1470,8 @@ function renderSettings() {
   var data = el('section', { class: 'settings-section' }, [
     el('h2', { text: 'Your data' }),
     el('button', { type: 'button', class: 'list-row', dataset: { action: 'export-all' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Back up all recordings' }), el('span', { class: 'row-sub', text: lastBackupTime() ? 'One .zip file · last backup ' + fmtDate(new Date(lastBackupTime()).toISOString()) : 'One .zip file · not backed up yet' })]), icon('chevR')]),
+    el('button', { type: 'button', class: 'list-row', dataset: { action: 'restore' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Restore from backup' }), el('span', { class: 'row-sub', text: 'Add recordings from a backup .zip or a .heirloom file' })]), icon('chevR')]),
+    el('button', { type: 'button', class: 'list-row', dataset: { action: 'testing' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Testing mode: ' + (testingMode() ? 'on' : 'off') }), el('span', { class: 'row-sub', text: 'Offer a backup after every new recording' })]), el('span', { class: 'pin-mask', text: testingMode() ? 'On' : 'Off' })]),
     el('button', { type: 'button', class: 'list-row', dataset: { action: 'lock' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Switch contributor' }), el('span', { class: 'row-sub', text: 'Lock Heirloom and return to the PIN screen' })]), icon('lock')]),
     el('button', { type: 'button', class: 'list-row danger', dataset: { action: 'clear' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Clear all data' }), el('span', { class: 'row-sub', text: 'Delete every recording, child and contributor on this device' })])])
   ]);
@@ -1473,7 +1480,7 @@ function renderSettings() {
   b.appendChild(el('section', { class: 'settings-section about' }, [
     el('h2', { text: 'About' }),
     el('p', { text: 'Heirloom ' + APP_VERSION }),
-    el('p', { text: 'Everything you record stays on this device. Nothing is uploaded. Export regularly to keep a backup.' })
+    el('p', { text: 'Everything you record stays on this device. Nothing is uploaded. Back up regularly, and use Restore to move recordings to a new phone or address.' })
   ]));
 }
 
@@ -1613,7 +1620,156 @@ function saveBackup(blob, name) {
 function markBackedUp() {
   lsSet(LS_BACKUP, new Date().toISOString());
   lsRemove(LS_BACKUP_SNOOZE);
-  toast('Backup saved. Heirloom will remind you again in a week.');
+  toast(testingMode() ? 'Backup saved.' : 'Backup saved. Heirloom will remind you again in a week.');
+  if ($('screen-settings').classList.contains('active')) renderSettings();
+}
+
+/* ---------- Testing mode ---------- */
+
+function testingMode() {
+  var v = lsGet(LS_TESTING);
+  return v === null ? TESTING_MODE_DEFAULT : v === 'on';
+}
+
+function promptBackupAfterRecording() {
+  showModal({
+    title: 'Back up this recording?',
+    text: 'Testing mode is on, so Heirloom offers a backup after every new recording. You can turn this off in Settings.',
+    actions: [
+      { label: 'Back up now', kind: 'gold', onClick: function () { startBackup(false); } },
+      { label: 'Not now', kind: 'ghost' }
+    ]
+  });
+}
+
+/* ---------- Restore: add recordings from a backup zip or .heirloom files ---------- */
+
+var RESTORE_FIELDS = ['date', 'category', 'prompt', 'title', 'durationLimit', 'durationSec', 'mediaB64', 'mediaType',
+  'photos', 'locked', 'revealDate', 'revealMilestone', 'revealedAt', 'sharedAt'];
+
+function isZipFile(f) { return /\.zip$/i.test(f.name) || /zip/.test(f.type || ''); }
+
+function readFileText(f) {
+  return new Promise(function (resolve, reject) {
+    var r = new FileReader();
+    r.onload = function () { resolve(r.result); };
+    r.onerror = function () { reject(r.error); };
+    r.readAsText(f);
+  });
+}
+
+// Returns [{ text, source }] for every .heirloom payload in the chosen files.
+async function collectHeirloomTexts(files) {
+  var out = [];
+  for (var i = 0; i < files.length; i++) {
+    var f = files[i];
+    if (isZipFile(f)) {
+      if (!(await ensureJSZip())) throw new Error('zip-unavailable');
+      var zip = await window.JSZip.loadAsync(f);
+      var names = Object.keys(zip.files).filter(function (n) {
+        return !zip.files[n].dir && /\.heirloom$/i.test(n) && n.indexOf('__MACOSX') !== 0;
+      });
+      for (var k = 0; k < names.length; k++) out.push({ text: await zip.file(names[k]).async('string'), source: names[k] });
+    } else {
+      out.push({ text: await readFileText(f), source: f.name });
+    }
+  }
+  return out;
+}
+
+function parseHeirloom(text) {
+  var data;
+  try { data = JSON.parse(text); } catch (e) { return null; }
+  var e = data && data.entry;
+  if (!data || data.version !== 1 || !e || typeof e !== 'object') return null;
+  if (typeof e.title !== 'string' || typeof e.mediaB64 !== 'string' || e.mediaB64.indexOf('data:') !== 0) return null;
+  return data;
+}
+
+function entryFingerprint(e) { return [e.date, e.title, String(e.mediaB64 || '').length].join('|'); }
+
+function findByName(list, name) {
+  var n = String(name || '').trim().toLowerCase();
+  if (!n) return null;
+  return list.find(function (p) { return String(p.name || '').trim().toLowerCase() === n; }) || null;
+}
+
+async function handleRestoreInput(input) {
+  var files = Array.prototype.slice.call(input.files || []);
+  input.value = '';
+  if (!files.length) return;
+  toast('Reading your backup…');
+  var texts;
+  try { texts = await collectHeirloomTexts(files); } catch (e) {
+    toast(e && e.message === 'zip-unavailable' ? 'Opening a backup zip needs an internet connection the first time. Please try again online.'
+      : 'That file could not be read. Choose a Heirloom backup .zip or a .heirloom file.', 'error');
+    return;
+  }
+  var existing = {};
+  liveEntries().forEach(function (e) { existing[entryFingerprint(e)] = true; });
+  var fresh = [];
+  var dupes = 0;
+  var bad = 0;
+  var newChildren = {};
+  texts.forEach(function (t) {
+    var data = parseHeirloom(t.text);
+    if (!data) { bad++; return; }
+    var fp = entryFingerprint(data.entry);
+    if (existing[fp]) { dupes++; return; }
+    existing[fp] = true;
+    fresh.push(data);
+    var cn = data.entry.childId !== 'all' && data.childName;
+    if (cn && !findByName(children(), cn)) newChildren[cn.trim().toLowerCase()] = cn.trim();
+  });
+  if (!fresh.length) {
+    toast(texts.length && !bad ? 'Everything in that backup is already in Heirloom.'
+      : 'No Heirloom recordings were found in that file.', bad && !dupes ? 'error' : undefined);
+    return;
+  }
+  var kidNames = Object.keys(newChildren).map(function (k) { return newChildren[k]; });
+  var parts = ['Found ' + fresh.length + ' new recording' + (fresh.length === 1 ? '' : 's') + '.'];
+  if (dupes) parts.push(dupes + ' already in Heirloom will be skipped.');
+  if (bad) parts.push(bad + ' file' + (bad === 1 ? '' : 's') + ' could not be read.');
+  if (kidNames.length) parts.push('This will also add ' + kidNames.join(', ') + ' as ' + (kidNames.length === 1 ? 'a child' : 'children') + '. Add their date of birth in Settings afterwards.');
+  showModal({
+    title: 'Restore recordings?',
+    text: parts.join(' '),
+    actions: [
+      { label: 'Restore ' + fresh.length, kind: 'gold', onClick: function () { restoreEntries(fresh); } },
+      { label: 'Cancel', kind: 'ghost' }
+    ]
+  });
+}
+
+async function restoreEntries(list) {
+  var added = 0;
+  try {
+    for (var i = 0; i < list.length; i++) {
+      var data = list[i];
+      var src = data.entry;
+      var childId = 'all';
+      if (src.childId !== 'all') {
+        var kid = findByName(children(), data.childName);
+        if (!kid && data.childName) kid = await saveProfile({ type: 'child', name: String(data.childName).trim().slice(0, 40), dob: null, photo: null });
+        childId = kid ? kid.id : (APP.childId || 'all');
+      }
+      var contrib = findByName(contributors(), data.contributorName);
+      var e = { childId: childId, contributorId: contrib ? contrib.id : null, deleted: false };
+      if (!contrib && data.contributorName) e.contributorName = String(data.contributorName).slice(0, 40);
+      RESTORE_FIELDS.forEach(function (k) { e[k] = src[k] === undefined ? null : src[k]; });
+      e.locked = !!e.locked;
+      e.photos = Array.isArray(e.photos) ? e.photos.filter(function (p) { return typeof p === 'string' && p.indexOf('data:image/') === 0; }) : [];
+      if (!CATEGORIES.some(function (c) { return c.id === e.category; })) e.category = 'just-because';
+      if (!e.date) e.date = new Date().toISOString();
+      await saveEntry(e);
+      added++;
+    }
+  } catch (err) {
+    storageError(err);
+  }
+  await checkUnlocks();
+  if (!APP.childId && children().length) APP.childId = visibleChildren()[0].id;
+  if (added) toast('Restored ' + added + ' recording' + (added === 1 ? '' : 's') + '.');
   if ($('screen-settings').classList.contains('active')) renderSettings();
 }
 
@@ -1623,7 +1779,7 @@ function clearAllData() {
     var req;
     try { req = indexedDB.deleteDatabase(DB_NAME); } catch (e) { storageError(e); return; }
     var done = function () {
-      [LS_ONBOARDED, LS_CHILD, LS_BACKUP, LS_BACKUP_SNOOZE].forEach(lsRemove);
+      [LS_ONBOARDED, LS_CHILD, LS_BACKUP, LS_BACKUP_SNOOZE, LS_TESTING].forEach(lsRemove);
       window.location.reload();
     };
     req.onsuccess = done;
@@ -1927,6 +2083,7 @@ function wireStatic() {
 
   // Settings
   $('settings-back').addEventListener('click', backHome);
+  $('restore-input').addEventListener('change', function () { handleRestoreInput(this); });
   $('settings-body').addEventListener('click', function (ev) {
     var b = ev.target.closest('[data-action]');
     if (!b) return;
@@ -1936,6 +2093,8 @@ function wireStatic() {
     else if (a === 'contrib') openContrib(Number(b.dataset.id), 'settings');
     else if (a === 'add-contrib') openContrib(null, 'settings');
     else if (a === 'export-all') startBackup(true);
+    else if (a === 'restore') $('restore-input').click();
+    else if (a === 'testing') { lsSet(LS_TESTING, testingMode() ? 'off' : 'on'); renderSettings(); }
     else if (a === 'lock') showPinGate();
     else if (a === 'clear') clearAllData();
   });

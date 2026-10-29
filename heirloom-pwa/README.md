@@ -54,7 +54,7 @@ After changing any shell file, bump `CACHE` in `sw.js` (`heirloom-v1` → `heirl
 5. **Entry detail**: metadata, sealed panel with "Unlock now" (and "set the date" for milestones), player once unlocked, photo strip, Edit/Delete menu, share.
 6. **Share**: exports a `.heirloom` file and sets `sharedAt`.
 7. **Contributors**: add, rename, change PIN, link to children, view their entries, remove.
-8. **Settings**: children, contributors, back up all recordings (zip), switch contributor, clear all data.
+8. **Settings**: children, contributors, back up all recordings (zip), restore from backup, testing mode, switch contributor, clear all data.
 
 ## Data model
 
@@ -98,7 +98,7 @@ An entry left unsealed has `locked: false` and `revealedAt: null`. The "Ready to
 
 ### localStorage
 
-`onboardingComplete`, `heirloom-currentChild` (the last selected child), `heirloom-lastBackup` and `heirloom-backupSnooze` (ISO times, see Backups). Nothing else.
+`onboardingComplete`, `heirloom-currentChild` (the last selected child), `heirloom-lastBackup` and `heirloom-backupSnooze` (ISO times, see Backups), and `heirloom-testingMode` (`on`/`off`, see Testing mode). Nothing else.
 
 ## Time-lock
 
@@ -137,7 +137,20 @@ Everything lives only on the device, so Heirloom reminds the parent to save a co
 - Heirloom also asks the browser for persistent storage (`navigator.storage.persist()`), which makes eviction less likely where supported.
 - Backups do not set `sharedAt`, and do not include profiles or PINs.
 
-**There is no restore yet.** The `.heirloom` files in a backup open in Wide Eyes, but Heirloom itself cannot import a backup in Phase 1.
+## Restore
+
+Settings → "Restore from backup" adds recordings from a backup `.zip` or from one or more `.heirloom` files. Use it to move recordings to a new phone, between Safari and the Home Screen app, or from a test address to the live one (each web address keeps its own separate storage).
+
+- Nothing is replaced. A recording already in Heirloom (same recorded time, title and media size) is skipped.
+- A confirmation shows how many recordings are new, how many are skipped, and any files that could not be read.
+- Recordings are matched to children by name (`childName` in the file, ignoring case). A name with no match is added as a new child without a date of birth; the confirmation says so. Entries for "All children" stay that way.
+- Contributors are matched by name too. If there is no match, the recording keeps the original name (stored as `contributorName` on the entry) and shows it as "Recorded by".
+- Backups contain no profiles or PINs, so on a fresh install, complete onboarding first (using the same child names), then restore.
+- Reading a zip needs JSZip, which is cached for offline use after the first online visit.
+
+## Testing mode
+
+While the app is being tested, Heirloom offers a backup after every new recording instead of only weekly. It is on by default and can be switched off in Settings. **Before launch, set `TESTING_MODE_DEFAULT` in `app.js` to `false`** (or remove the feature) so new users only get the weekly reminder.
 
 ## Known limitations (Phase 1)
 
@@ -146,6 +159,6 @@ Everything lives only on the device, so Heirloom reminds the parent to save a co
 - **iOS.** Safari records `video/mp4` / `audio/mp4`; Chromium records MP4 or WebM depending on version. A WebM recording made on Android or desktop may not play on older iOS. Installed home-screen apps on iOS keep a separate storage area from Safari tabs.
 - **Sharing.** Export uses an `<a download>` blob link, as specified. On iOS this saves to Files and the parent shares from there; the Web Share API (direct AirDrop sheet) is not used yet.
 - **Recording only while visible.** Locking the phone or switching apps mid-recording can stop the browser's recorder.
-- **No sync or restore.** `.heirloom` files and backup zips are the only way data leaves the device. Heirloom cannot import them back yet, and there is no cloud or peer sync.
+- **No sync.** `.heirloom` files and backup zips are the only way data moves between devices or addresses, using Restore. There is no cloud or peer sync, and backups do not carry children, contributors or PINs.
 - **Removing a child** keeps their recordings on the device but hides them from the home screen.
 - **Fonts** come from Google Fonts; they are cached by the service worker after the first online visit and fall back to system serif/sans offline.

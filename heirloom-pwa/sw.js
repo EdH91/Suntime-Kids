@@ -1,6 +1,6 @@
 /* Heirloom service worker — cache-first app shell.
  * Bump CACHE whenever a shell file changes so installed copies update. */
-const CACHE = 'heirloom-v2';
+const CACHE = 'heirloom-v3';
 const SHELL = [
   './',
   './index.html',
