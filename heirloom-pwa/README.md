@@ -54,7 +54,7 @@ After changing any shell file, bump `CACHE` in `sw.js` (`heirloom-v1` → `heirl
 5. **Entry detail**: metadata, sealed panel with "Unlock now" (and "set the date" for milestones), player once unlocked, photo strip, Edit/Delete menu, share.
 6. **Share**: exports a `.heirloom` file and sets `sharedAt`.
 7. **Contributors**: add, rename, change PIN, link to children, view their entries, remove.
-8. **Settings**: children, contributors, export all (zip), switch contributor, clear all data.
+8. **Settings**: children, contributors, back up all recordings (zip), switch contributor, clear all data.
 
 ## Data model
 
@@ -98,7 +98,7 @@ An entry left unsealed has `locked: false` and `revealedAt: null`. The "Ready to
 
 ### localStorage
 
-`onboardingComplete` and `heirloom-currentChild` (the last selected child). Nothing else.
+`onboardingComplete`, `heirloom-currentChild` (the last selected child), `heirloom-lastBackup` and `heirloom-backupSnooze` (ISO times, see Backups). Nothing else.
 
 ## Time-lock
 
@@ -122,15 +122,30 @@ A UTF-8 JSON file, MIME `application/x-heirloom`, named `<child-name>-<YYYY-MM-D
 
 `version` and `entry` are the contract. `contributorName`, `childName` and `exportedAt` are convenience fields for the receiving app (ids are local to this device). A sealed entry is exported with its lock fields so Wide Eyes can keep it sealed.
 
-"Export all entries" in Settings bundles every non-deleted entry as `.heirloom` files in a zip, using JSZip loaded on demand from cdnjs. If that fails (for example offline) the files download one at a time. Bulk export does not set `sharedAt`.
+## Backups
+
+Everything lives only on the device, so Heirloom reminds the parent to save a copy elsewhere. A web app cannot write files off the phone on its own (iOS gives websites no background tasks and no file system access), so the backup is a reminder plus one tap.
+
+- **Weekly prompt.** After PIN entry, at most once per app open, a "Time for a backup" prompt appears when:
+  - there has never been a backup and the oldest recording is at least a day old, or
+  - the last backup is 7 or more days old and at least one recording was made since.
+
+  "Remind me tomorrow" snoozes it for 24 hours.
+- **One file.** "Back up now" (or Settings → "Back up all recordings") zips every non-deleted entry as `.heirloom` files into `heirloom-backup-YYYY-MM-DD.zip`, using JSZip from cdnjs. Entries are stored uncompressed in the zip, since media and photos are already compressed.
+- **Saving it.** A second tap, "Save backup", opens the share sheet where the browser supports sharing files (iOS: Save to Files / iCloud Drive, AirDrop, Mail). Elsewhere it downloads. iOS only allows the share sheet straight after a tap, which is why there are two steps. Cancelling the share sheet does not count as a backup.
+- **Offline.** JSZip is prefetched after login while online and cached by the service worker, so backups work offline afterwards. If it has never been fetched, the prompt asks to try again online; Settings falls back to downloading the `.heirloom` files one at a time.
+- Heirloom also asks the browser for persistent storage (`navigator.storage.persist()`), which makes eviction less likely where supported.
+- Backups do not set `sharedAt`, and do not include profiles or PINs.
+
+**There is no restore yet.** The `.heirloom` files in a backup open in Wide Eyes, but Heirloom itself cannot import a backup in Phase 1.
 
 ## Known limitations (Phase 1)
 
 - **PINs are not security.** They are stored in plain text in IndexedDB, and anyone holding the unlocked device can add a contributor from the PIN screen. The PIN separates family members; it does not protect data.
-- **Storage size.** Media is stored as base64 DataURLs (about 33% larger than the raw file). Video is recorded at roughly 0.8 Mbps, so a 5-minute video is around 40 MB in storage and in the exported file. Browsers, especially iOS Safari, may evict or cap storage; export regularly. `navigator.storage.persist()` is not requested yet.
+- **Storage size.** Media is stored as base64 DataURLs (about 33% larger than the raw file). Video is recorded at roughly 0.8 Mbps, so a 5-minute video is around 40 MB in storage and in the exported file. Browsers, especially iOS Safari, may evict or cap storage; the weekly backup prompt exists for this reason.
 - **iOS.** Safari records `video/mp4` / `audio/mp4`; Chromium records MP4 or WebM depending on version. A WebM recording made on Android or desktop may not play on older iOS. Installed home-screen apps on iOS keep a separate storage area from Safari tabs.
 - **Sharing.** Export uses an `<a download>` blob link, as specified. On iOS this saves to Files and the parent shares from there; the Web Share API (direct AirDrop sheet) is not used yet.
 - **Recording only while visible.** Locking the phone or switching apps mid-recording can stop the browser's recorder.
-- **No sync.** The `.heirloom` file is the only way data leaves the device. There is no import in Heirloom itself, and no cloud or peer sync.
+- **No sync or restore.** `.heirloom` files and backup zips are the only way data leaves the device. Heirloom cannot import them back yet, and there is no cloud or peer sync.
 - **Removing a child** keeps their recordings on the device but hides them from the home screen.
 - **Fonts** come from Google Fonts; they are cached by the service worker after the first online visit and fall back to system serif/sans offline.

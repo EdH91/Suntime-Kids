@@ -17,6 +17,10 @@ var CAROUSEL_MS = 5000;
 var JSZIP_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
 var LS_ONBOARDED = 'onboardingComplete';
 var LS_CHILD = 'heirloom-currentChild';
+var LS_BACKUP = 'heirloom-lastBackup';
+var LS_BACKUP_SNOOZE = 'heirloom-backupSnooze';
+var BACKUP_EVERY_DAYS = 7;
+var DAY_MS = 24 * 60 * 60 * 1000;
 
 var CATEGORIES = [
   { id: 'family-stories', label: 'Family stories' },
@@ -126,7 +130,8 @@ var APP = {
   childPhoto: null,
   lockTab: 'date',
   milestone: null,
-  sealCategory: 'just-because'
+  sealCategory: 'just-because',
+  backupPrompted: false // the weekly backup prompt shows at most once per app open
 };
 
 var DRAFT = null;      // the recording being made
@@ -533,6 +538,9 @@ async function login(contrib) {
   renderHome();
   goTo('screen-home');
   startCarousel();
+  requestPersistentStorage();
+  prefetchJSZip();
+  maybePromptBackup();
 }
 
 /* ======================================================================
@@ -1456,7 +1464,7 @@ function renderSettings() {
 
   var data = el('section', { class: 'settings-section' }, [
     el('h2', { text: 'Your data' }),
-    el('button', { type: 'button', class: 'list-row', dataset: { action: 'export-all' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Export all entries' }), el('span', { class: 'row-sub', text: 'A .zip of .heirloom files, for safekeeping' })]), icon('chevR')]),
+    el('button', { type: 'button', class: 'list-row', dataset: { action: 'export-all' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Back up all recordings' }), el('span', { class: 'row-sub', text: lastBackupTime() ? 'One .zip file · last backup ' + fmtDate(new Date(lastBackupTime()).toISOString()) : 'One .zip file · not backed up yet' })]), icon('chevR')]),
     el('button', { type: 'button', class: 'list-row', dataset: { action: 'lock' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Switch contributor' }), el('span', { class: 'row-sub', text: 'Lock Heirloom and return to the PIN screen' })]), icon('lock')]),
     el('button', { type: 'button', class: 'list-row danger', dataset: { action: 'clear' } }, [el('span', { class: 'grow' }, [el('span', { class: 'row-title', text: 'Clear all data' }), el('span', { class: 'row-sub', text: 'Delete every recording, child and contributor on this device' })])])
   ]);
@@ -1479,36 +1487,134 @@ function loadScript(src, timeoutMs) {
   });
 }
 
-async function exportAll() {
-  var list = liveEntries();
-  if (!list.length) { toast('There are no recordings to export yet.'); return; }
+/* ---------- Backup: every live entry as .heirloom files in one zip ---------- */
+
+function backupFiles() {
   var files = [];
   var used = {};
-  list.forEach(function (e) {
+  liveEntries().forEach(function (e) {
     var f = heirloomFile(e);
     var name = f.name;
     if (used[name]) name = name.replace(/\.heirloom$/, '-' + e.id + '.heirloom');
     used[name] = true;
     files.push({ name: name, json: f.json });
   });
-  toast('Preparing your export…');
+  return files;
+}
+
+function lastBackupTime() { return Date.parse(lsGet(LS_BACKUP) || '') || 0; }
+
+// Due when nothing has been backed up for a week (or ever) and there is
+// something new since the last backup. "Remind me tomorrow" snoozes it.
+function backupDue() {
+  var list = liveEntries();
+  if (!list.length) return false;
+  var now = Date.now();
+  var snooze = Date.parse(lsGet(LS_BACKUP_SNOOZE) || '') || 0;
+  if (snooze > now) return false;
+  var last = lastBackupTime();
+  if (!last) {
+    var oldest = Math.min.apply(null, list.map(function (e) { return Date.parse(e.date) || now; }));
+    return now - oldest >= DAY_MS;
+  }
+  if (now - last < BACKUP_EVERY_DAYS * DAY_MS) return false;
+  return list.some(function (e) { return (Date.parse(e.date) || 0) > last; });
+}
+
+function maybePromptBackup() {
+  if (APP.backupPrompted || !backupDue()) return;
+  APP.backupPrompted = true;
+  var n = liveEntries().length;
+  showModal({
+    title: 'Time for a backup',
+    text: 'Heirloom keeps your ' + n + ' recording' + (n === 1 ? '' : 's') + ' on this phone only. Save a backup file somewhere safe, like iCloud Drive or your computer, so nothing gets lost.',
+    actions: [
+      { label: 'Back up now', kind: 'gold', onClick: function () { startBackup(false); } },
+      { label: 'Remind me tomorrow', kind: 'ghost', onClick: function () {
+        lsSet(LS_BACKUP_SNOOZE, new Date(Date.now() + DAY_MS).toISOString());
+      } }
+    ]
+  });
+}
+
+async function ensureJSZip() {
+  if (window.JSZip) return true;
+  try { await loadScript(JSZIP_URL, 10000); } catch (e) { /* offline or blocked */ }
+  return !!window.JSZip;
+}
+
+// Fetch JSZip while online so the service worker can serve it offline later.
+function prefetchJSZip() {
+  if (window.JSZip || !navigator.onLine || !window.fetch) return;
+  fetch(JSZIP_URL, { mode: 'cors', credentials: 'omit' }).catch(function () { /* next time */ });
+}
+
+function requestPersistentStorage() {
   try {
-    if (!window.JSZip) await loadScript(JSZIP_URL, 8000);
-  } catch (e) { /* offline or blocked: fall back below */ }
-  if (window.JSZip) {
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persisted().then(function (p) { if (!p) return navigator.storage.persist(); }).catch(function () {});
+    }
+  } catch (e) { /* not supported */ }
+}
+
+// allowLooseFiles: from Settings, fall back to one-by-one downloads if zip is unavailable.
+async function startBackup(allowLooseFiles) {
+  var files = backupFiles();
+  if (!files.length) { toast('There are no recordings to back up yet.'); return; }
+  toast('Preparing your backup…');
+  var blob = null;
+  if (await ensureJSZip()) {
     try {
       var zip = new window.JSZip();
-      files.forEach(function (f) { zip.file(f.name, f.json); });
-      var blob = await zip.generateAsync({ type: 'blob' });
-      download(blob, 'heirloom-export-' + localDateStr(new Date()) + '.zip');
-      toast('Exported ' + files.length + ' recording' + (files.length === 1 ? '' : 's') + '.');
-      return;
+      // Media and photos are already compressed; storing is faster and no bigger.
+      files.forEach(function (f) { zip.file(f.name, f.json, { compression: 'STORE' }); });
+      blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/zip' });
     } catch (e) { console.warn(e); }
   }
-  toast('Zip is not available offline, so files will download one at a time.');
-  files.forEach(function (f, i) {
-    setTimeout(function () { download(new Blob([f.json], { type: 'application/x-heirloom' }), f.name); }, i * 700);
+  if (!blob) {
+    if (!allowLooseFiles) {
+      toast('Backups need an internet connection the first time. Please try again when you are online.', 'error');
+      return;
+    }
+    toast('Zip is not available offline, so files will download one at a time.');
+    files.forEach(function (f, i) {
+      setTimeout(function () { download(new Blob([f.json], { type: 'application/x-heirloom' }), f.name); }, i * 700);
+    });
+    return;
+  }
+  var name = 'heirloom-backup-' + localDateStr(new Date()) + '.zip';
+  var mb = Math.max(0.1, blob.size / 1048576).toFixed(1);
+  // A second tap opens the share sheet: iOS only allows it straight after a tap.
+  showModal({
+    title: 'Your backup is ready',
+    text: files.length + ' recording' + (files.length === 1 ? '' : 's') + ', ' + mb + ' MB, in one file. Save it somewhere off this phone, such as iCloud Drive, Google Drive or your computer.',
+    actions: [
+      { label: 'Save backup', kind: 'gold', onClick: function () { saveBackup(blob, name); } },
+      { label: 'Not now', kind: 'ghost' }
+    ]
   });
+}
+
+function saveBackup(blob, name) {
+  var file = null;
+  try { file = new File([blob], name, { type: 'application/zip' }); } catch (e) { file = null; }
+  if (file && navigator.canShare && navigator.share && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file], title: 'Heirloom backup' }).then(markBackedUp).catch(function (err) {
+      if (err && err.name === 'AbortError') { toast('Backup not saved. You can back up any time from Settings.'); return; }
+      download(blob, name);
+      markBackedUp();
+    });
+    return;
+  }
+  download(blob, name);
+  markBackedUp();
+}
+
+function markBackedUp() {
+  lsSet(LS_BACKUP, new Date().toISOString());
+  lsRemove(LS_BACKUP_SNOOZE);
+  toast('Backup saved. Heirloom will remind you again in a week.');
+  if ($('screen-settings').classList.contains('active')) renderSettings();
 }
 
 function clearAllData() {
@@ -1517,7 +1623,7 @@ function clearAllData() {
     var req;
     try { req = indexedDB.deleteDatabase(DB_NAME); } catch (e) { storageError(e); return; }
     var done = function () {
-      [LS_ONBOARDED, LS_CHILD].forEach(lsRemove);
+      [LS_ONBOARDED, LS_CHILD, LS_BACKUP, LS_BACKUP_SNOOZE].forEach(lsRemove);
       window.location.reload();
     };
     req.onsuccess = done;
@@ -1829,7 +1935,7 @@ function wireStatic() {
     else if (a === 'add-child') openChild(null);
     else if (a === 'contrib') openContrib(Number(b.dataset.id), 'settings');
     else if (a === 'add-contrib') openContrib(null, 'settings');
-    else if (a === 'export-all') exportAll();
+    else if (a === 'export-all') startBackup(true);
     else if (a === 'lock') showPinGate();
     else if (a === 'clear') clearAllData();
   });
